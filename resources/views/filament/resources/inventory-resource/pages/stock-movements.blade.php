@@ -1,0 +1,3 @@
+<div>
+    {{ $this->renderTable() }}
+</div>
