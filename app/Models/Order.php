@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\CodeGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -92,7 +93,7 @@ class Order extends Model
 
     public static function generateCode(): string
     {
-        return 'ORD-'.now()->format('Ymd').'-'.str_pad((string) (static::query()->whereDate('created_at', today())->count() + 1), 3, '0', STR_PAD_LEFT);
+        return CodeGenerator::next('ORD');
     }
 
     public function recalculateTotalsFromItems(): void

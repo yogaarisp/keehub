@@ -25,7 +25,7 @@ class PaymentService
 
         return DB::transaction(function () use ($invoice, $method, $amount, $paidAt, $reference, $notes, $userId) {
             return Payment::query()->create([
-                'code' => 'PAY-'.now()->format('Ymd').'-'.str_pad((string) (Payment::query()->whereDate('created_at', today())->count() + 1), 3, '0', STR_PAD_LEFT),
+                'code' => CodeGenerator::next('PAY'),
                 'invoice_id' => $invoice->id,
                 'method' => $method,
                 'amount' => $amount,

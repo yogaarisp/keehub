@@ -26,6 +26,7 @@ class CheckoutController extends Controller
         return response()->view('shop.checkout', [
             'items' => CartService::itemsWithDetails(),
             'subtotal' => CartService::subtotal(),
+            'shipShippingCost' => CartService::shippingCost('ship'),
             'customer' => $customer,
         ]);
     }
@@ -35,13 +36,12 @@ class CheckoutController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'whatsapp' => ['required', 'string', 'max:25'],
-            'address' => ['required', 'string'],
+            'address' => ['required_if:shipping_method,ship', 'nullable', 'string'],
             'shipping_method' => ['required', 'in:ship,pickup'],
-            'shipping_cost' => ['nullable', 'integer', 'min:0'],
             'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        $shippingCost = $validated['shipping_method'] === 'pickup' ? 0 : (int) ($validated['shipping_cost'] ?? 15000);
+        $shippingCost = CartService::shippingCost($validated['shipping_method']);
 
         try {
             $order = CartService::checkout([

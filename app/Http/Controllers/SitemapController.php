@@ -5,10 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class SitemapController extends Controller
 {
     public function index(): Response
+    {
+        $xml = Cache::remember('sitemap.xml', now()->addHour(), fn () => $this->buildXml());
+
+        return response($xml, 200, ['Content-Type' => 'application/xml']);
+    }
+
+    private function buildXml(): string
     {
         $products = Product::query()->active()->get(['slug', 'updated_at']);
         $categories = Category::query()->where('is_active', true)->get(['slug', 'updated_at']);
@@ -21,8 +29,7 @@ class SitemapController extends Controller
         foreach ($urls as $u) {
             $xml .= "  <url>\n    <loc>{$u['loc']}</loc>\n".(isset($u['lastmod']) ? "    <lastmod>{$u['lastmod']}</lastmod>\n" : '')."    <priority>{$u['priority']}</priority>\n  </url>\n";
         }
-        $xml .= '</urlset>';
 
-        return response($xml, 200, ['Content-Type' => 'application/xml']);
+        return $xml.'</urlset>';
     }
 }

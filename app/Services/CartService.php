@@ -6,11 +6,21 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class CartService
 {
+    public static function shippingCost(string $shippingMethod): int
+    {
+        if ($shippingMethod === 'pickup') {
+            return 0;
+        }
+
+        return (int) (Setting::get('shipping_cost', '15000') ?: 15000);
+    }
+
     public static function current(): Cart
     {
         $user = auth()->user();
@@ -28,6 +38,22 @@ class CartService
         }
 
         return $cart;
+    }
+
+    public static function count(): int
+    {
+        $user = auth()->user();
+        $sessionId = session()->getId();
+
+        $cart = Cart::query()
+            ->when($user, fn ($q) => $q->where('user_id', $user->id), fn ($q) => $q->where('session_id', $sessionId)->whereNull('user_id'))
+            ->first();
+
+        if (! $cart) {
+            return 0;
+        }
+
+        return (int) $cart->items()->sum('quantity');
     }
 
     public static function addProduct(Product $product, int $quantity = 1): void

@@ -3,7 +3,7 @@
 @section('title', 'Checkout — KeeHub')
 
 @section('content')
-<div class="x-container py-8" x-data="{ shipping: '{{ old('shipping_method', 'pickup') }}' }">
+<div class="x-container py-8" x-data="{ shipping: '{{ old('shipping_method', 'pickup') }}', shipCost: {{ $shipShippingCost }} }">
     <h1 class="x-section-title">Checkout</h1>
 
     @if ($errors->any())
@@ -75,9 +75,8 @@
             </div>
             <div class="mt-4 space-y-2 border-t border-gray-100 pt-4 text-sm dark:border-gray-800">
                 <div class="flex justify-between"><span class="text-gray-500">Subtotal</span><span class="font-semibold">Rp{{ number_format($subtotal, 0, ',', '.') }}</span></div>
-                <div class="flex justify-between"><span class="text-gray-500">Ongkir</span><span class="font-semibold" x-text="shipping === 'pickup' ? 'Gratis (pickup)' : 'Rp15.000'"></span></div>
-                <input type="hidden" name="shipping_cost" value="15000">
-                <div class="flex justify-between border-t border-gray-100 pt-3 text-base dark:border-gray-800"><span class="font-bold">Total</span><span class="font-extrabold text-kee-600 dark:text-kee-400" x-text="'Rp' + ({{ $subtotal }} + (shipping === 'pickup' ? 0 : 15000)).toLocaleString('id-ID')"></span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Ongkir</span><span class="font-semibold" x-text="shipping === 'pickup' ? 'Gratis (pickup)' : 'Rp' + shipCost.toLocaleString('id-ID')"></span></div>
+                <div class="flex justify-between border-t border-gray-100 pt-3 text-base dark:border-gray-800"><span class="font-bold">Total</span><span class="font-extrabold text-kee-600 dark:text-kee-400" x-text="'Rp' + ({{ $subtotal }} + (shipping === 'pickup' ? 0 : shipCost)).toLocaleString('id-ID')"></span></div>
             </div>
             <button type="submit" class="x-btn-primary mt-5 w-full">Buat Order</button>
             <p class="mt-3 text-center text-xs text-gray-400">Pembayaran dicatat manual oleh admin setelah order dibuat.</p>

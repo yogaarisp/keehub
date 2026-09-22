@@ -5,23 +5,27 @@ namespace Database\Seeders;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $adminPassword = env('KEEHUB_ADMIN_PASSWORD') ?: Str::random(16);
+        $staffPassword = env('KEEHUB_STAFF_PASSWORD') ?: Str::random(16);
+
         User::query()->create([
             'name' => 'Owner KeeHub',
-            'email' => 'admin@ketech.my.id',
-            'password' => 'password',
+            'email' => env('KEEHUB_ADMIN_EMAIL', 'admin@ketech.my.id'),
+            'password' => $adminPassword,
             'role' => 'owner',
             'phone' => '081234567890',
         ]);
 
         User::query()->create([
             'name' => 'Staff Gudang',
-            'email' => 'staff@keetech.my.id',
-            'password' => 'password',
+            'email' => env('KEEHUB_STAFF_EMAIL', 'staff@ketech.my.id'),
+            'password' => $staffPassword,
             'role' => 'staff',
             'phone' => '081234567891',
         ]);

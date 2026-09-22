@@ -49,7 +49,7 @@ class BuilderController extends Controller
 
         $query = Product::query()
             ->active()
-            ->with(['brand', 'images', 'inventory'])
+            ->with(['brand', 'images', 'inventory', 'specs'])
             ->whereHas('category', fn ($q) => $q->where('slug', $this->categorySlug($slot)))
             ->when($request->filled('q'), fn ($q) => $q->where('name', 'like', '%'.$request->q.'%'));
 
