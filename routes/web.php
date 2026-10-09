@@ -24,8 +24,9 @@ Route::get('/produk/{slug}', [ShopController::class, 'show'])->name('shop.show')
 // PC Rakitan
 Route::get('/pc-rakitan', [RakitanController::class, 'index'])->name('rakitan.index');
 
-// Service
-Route::get('/service', [ServiceRequestController::class, 'create'])->name('service.create');
+// Service Tracker & Request
+Route::get('/service', [ServiceRequestController::class, 'index'])->name('service.index');
+Route::get('/service/request', [ServiceRequestController::class, 'create'])->name('service.create');
 Route::post('/service', [ServiceRequestController::class, 'store'])->name('service.store')->middleware('throttle:10,1');
 
 // PC Builder (share view public)

@@ -28,10 +28,18 @@ class Service extends Model
 
     protected $fillable = [
         'code',
+        'invoice_number',
         'customer_id',
+        'company_name',
         'source',
         'service_type',
+        'device_name',
+        'serial_number',
+        'device_specs',
+        'completeness',
         'status',
+        'due_date',
+        'completed_at',
         'problem_description',
         'diagnosis',
         'estimated_cost',
@@ -45,6 +53,8 @@ class Service extends Model
         return [
             'estimated_cost' => 'integer',
             'total_cost' => 'integer',
+            'due_date' => 'date',
+            'completed_at' => 'datetime',
         ];
     }
 
@@ -76,5 +86,49 @@ class Service extends Model
     public static function generateCode(): string
     {
         return CodeGenerator::next('SVC');
+    }
+
+    public static function generateInvoiceNumber(): string
+    {
+        return CodeGenerator::next('INV-SVC');
+    }
+
+    public function invoiceTotal(): int
+    {
+        return (int) $this->items
+            ->filter(fn (ServiceItem $item) => $item->part_source !== 'vendor')
+            ->sum('total');
+    }
+
+    public function workOrderTotal(): int
+    {
+        return (int) $this->items->sum('total');
+    }
+
+    public function vendorPartsTotal(): int
+    {
+        return (int) $this->items
+            ->filter(fn (ServiceItem $item) => $item->part_source === 'vendor')
+            ->sum('total');
+    }
+
+    public function keehubPartsTotal(): int
+    {
+        return (int) $this->items
+            ->filter(fn (ServiceItem $item) => $item->item_type === 'product' && $item->part_source === 'keehub')
+            ->sum('total');
+    }
+
+    public function laborTotal(): int
+    {
+        return (int) $this->items
+            ->filter(fn (ServiceItem $item) => $item->item_type === 'labor')
+            ->sum('total');
+    }
+
+    public function syncTotalCost(): void
+    {
+        $this->total_cost = $this->invoiceTotal();
+        $this->save();
     }
 }
