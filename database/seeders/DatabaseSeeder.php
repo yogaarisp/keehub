@@ -5,30 +5,33 @@ namespace Database\Seeders;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $adminPassword = env('KEEHUB_ADMIN_PASSWORD') ?: Str::random(16);
-        $staffPassword = env('KEEHUB_STAFF_PASSWORD') ?: Str::random(16);
+        $adminPassword = env('KEEHUB_ADMIN_PASSWORD') ?: 'admin123';
+        $staffPassword = env('KEEHUB_STAFF_PASSWORD') ?: 'staff123';
 
-        User::query()->create([
-            'name' => 'Owner KeeHub',
-            'email' => env('KEEHUB_ADMIN_EMAIL', 'admin@ketech.my.id'),
-            'password' => $adminPassword,
-            'role' => 'owner',
-            'phone' => '081234567890',
-        ]);
+        User::query()->updateOrCreate(
+            ['email' => env('KEEHUB_ADMIN_EMAIL', 'admin@keetech.my.id')],
+            [
+                'name' => 'Owner KeeHub',
+                'password' => $adminPassword,
+                'role' => 'owner',
+                'phone' => '081234567890',
+            ]
+        );
 
-        User::query()->create([
-            'name' => 'Staff Gudang',
-            'email' => env('KEEHUB_STAFF_EMAIL', 'staff@ketech.my.id'),
-            'password' => $staffPassword,
-            'role' => 'staff',
-            'phone' => '081234567891',
-        ]);
+        User::query()->updateOrCreate(
+            ['email' => env('KEEHUB_STAFF_EMAIL', 'staff@keetech.my.id')],
+            [
+                'name' => 'Staff Gudang',
+                'password' => $staffPassword,
+                'role' => 'staff',
+                'phone' => '081234567891',
+            ]
+        );
 
         Setting::put('whatsapp_number', '6281234567890');
         Setting::put('instagram_url', 'https://instagram.com/keehub');
