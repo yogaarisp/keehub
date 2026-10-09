@@ -56,7 +56,7 @@ class PaymentResource extends Resource
             ])
             ->actions([DeleteAction::make()
                 ->requiresConfirmation()
-                ->visible(fn ($record) => $record->invoice->status !== 'void')])
+                ->visible(fn ($record) => $record->invoice?->status !== 'void')])
             ->defaultSort('created_at', 'desc');
     }
 

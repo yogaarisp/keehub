@@ -10,7 +10,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -59,7 +59,7 @@ class QuotationResource extends Resource
             ->filters([
                 SelectFilter::make('status')->options(array_combine(Quotation::STATUSES, array_map(ucfirst(...), Quotation::STATUSES))),
             ])
-            ->actions([EditAction::make()])
+            ->actions([ViewAction::make()])
             ->defaultSort('created_at', 'desc');
     }
 

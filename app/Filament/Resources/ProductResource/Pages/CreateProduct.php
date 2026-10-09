@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ProductResource\Pages;
 
 use App\Filament\Resources\ProductResource;
+use App\Models\Inventory;
 use App\Models\ProductImage;
 use App\Models\ProductSpec;
 use Filament\Resources\Pages\CreateRecord;
@@ -39,6 +40,11 @@ class CreateProduct extends CreateRecord
                 'sort_order' => $i,
             ]);
         }
+
+        Inventory::query()->firstOrCreate(
+            ['product_id' => $record->id],
+            ['current_stock' => 0, 'min_stock' => 2]
+        );
 
         return $record;
     }

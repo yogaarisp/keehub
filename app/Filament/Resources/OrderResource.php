@@ -15,6 +15,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -100,7 +101,7 @@ class OrderResource extends Resource
             ->filters([
                 SelectFilter::make('status')->options(array_combine(Order::STATUSES, array_map(ucfirst(...), Order::STATUSES))),
             ])
-            ->actions([EditAction::make()])
+            ->actions([ViewAction::make(), EditAction::make()])
             ->defaultSort('created_at', 'desc')
             ->poll('60s');
     }

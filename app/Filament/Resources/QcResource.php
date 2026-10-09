@@ -65,6 +65,7 @@ class QcResource extends Resource
                     'pass' => 'success',
                     'fail' => 'danger',
                     'pending' => 'warning',
+                    default => 'gray',
                 }),
                 TextColumn::make('checked_at')->dateTime('d M Y H:i'),
             ])

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\QuotationResource\Pages;
 
+use App\Filament\Resources\OrderResource;
 use App\Filament\Resources\QuotationResource;
 use App\Services\QuotationService;
 use Filament\Actions\Action;
@@ -23,7 +24,7 @@ class ViewQuotation extends ViewRecord
                 TextEntry::make('customer.name')->default('—')->label('Customer'),
                 TextEntry::make('status')->badge(),
                 TextEntry::make('quotation_date')->date('d M Y'),
-                TextEntry::make('expired_date')->date('d M Y')->default('—'),
+                TextEntry::make('expired_date')->date('d M Y')->placeholder('—'),
                 TextEntry::make('subtotal')->money('IDR'),
                 TextEntry::make('discount')->money('IDR'),
                 TextEntry::make('shipping')->money('IDR'),

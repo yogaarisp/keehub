@@ -37,7 +37,10 @@ class UserResource extends Resource
                 TextInput::make('name')->required(),
                 TextInput::make('email')->email()->required()->unique(ignoreRecord: true),
                 TextInput::make('phone')->tel(),
-                Select::make('role')->options(User::ROLES)->required()->default('staff'),
+                Select::make('role')
+                    ->options(array_combine(User::ROLES, array_map(ucfirst(...), User::ROLES)))
+                    ->required()
+                    ->default('staff'),
                 TextInput::make('password')->password()->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null)
                     ->dehydrated(fn ($state) => filled($state))->required(fn (string $operation) => $operation === 'create')
                     ->maxLength(255),
