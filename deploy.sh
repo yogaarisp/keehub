@@ -30,32 +30,34 @@ command -v npm      >/dev/null || die "npm tidak ditemukan"
 WEB_USER="www"
 WEB_GROUP="www"
 
-say "1/7 Optimize clear (mode lama)"
+say "1/8 Git pull update terbaru"
+git pull origin main
+
+say "2/8 Bersihkan cache lama"
 $PHP artisan optimize:clear
 
-say "2/7 Install dependensi PHP (no-dev)"
+say "3/8 Install dependensi PHP (no-dev)"
 composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
-say "3/7 Build frontend"
-[ -d node_modules ] || npm ci --ignore-scripts
+say "4/8 Build frontend aset produksi"
 npm run build
 
-say "4/7 Migrasi database"
+say "5/8 Migrasi database"
 $PHP artisan migrate --force
 
-say "5/7 Storage link & permission"
+say "6/8 Storage link & permission folder"
 $PHP artisan storage:link || true
 mkdir -p storage/framework/{sessions,views,cache}
 chmod -R 775 storage bootstrap/cache
 chown -R "$WEB_USER:$WEB_GROUP" storage bootstrap/cache 2>/dev/null || true
 
-say "6/7 Cache produksi"
+say "7/8 Cache produksi"
 $PHP artisan config:cache
 $PHP artisan route:cache
 $PHP artisan view:cache
 $PHP artisan event:cache || true
 
-say "7/7 Cek environment"
+say "8/8 Cek environment"
 $PHP artisan about
 
-say "Selesai. Cek layanan Nginx di port 111 sudah reload & akses https://keehub.keetech.my.id"
+say "Selesai! Aplikasi KeeHub sudah bersih, ter-update, dan ter-cache untuk produksi."
