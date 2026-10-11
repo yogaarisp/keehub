@@ -14,6 +14,7 @@ set -euo pipefail
 
 ROOT="/www/wwwroot/keehub"
 PHP="php"
+export COMPOSER_ALLOW_SUPERUSER=1
 
 say()  { printf "\n\033[1;32m==> %s\033[0m\n" "$*"; }
 die()  { printf "\033[1;31m[ERROR] %s\033[0m\n" "$*" >&2; exit 1; }
