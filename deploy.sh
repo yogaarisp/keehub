@@ -35,9 +35,11 @@ git pull origin main
 
 say "2/8 Bersihkan cache lama"
 $PHP artisan optimize:clear
+$PHP artisan filament:optimize-clear || true
 
 say "3/8 Install dependensi PHP (no-dev)"
 composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+$PHP artisan filament:assets || true
 
 say "4/8 Build frontend aset produksi"
 npm run build
@@ -61,3 +63,4 @@ say "8/8 Cek environment"
 $PHP artisan about
 
 say "Selesai! Aplikasi KeeHub sudah bersih, ter-update, dan ter-cache untuk produksi."
+say "PENTING: Jangan lupa Reload/Restart PHP-FPM di aaPanel agar OPcache me-refresh kode terbaru."
