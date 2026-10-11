@@ -40,6 +40,9 @@ $PHP artisan filament:optimize-clear || true
 say "3/8 Install dependensi PHP (no-dev)"
 composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 $PHP artisan filament:assets || true
+$PHP artisan livewire:publish --assets || true
+mkdir -p public/livewire
+cp -f public/vendor/livewire/* public/livewire/ 2>/dev/null || true
 
 say "4/8 Build frontend aset produksi"
 npm run build
@@ -51,7 +54,8 @@ say "6/8 Storage link & permission folder"
 $PHP artisan storage:link || true
 mkdir -p storage/framework/{sessions,views,cache}
 chmod -R 775 storage bootstrap/cache
-chown -R "$WEB_USER:$WEB_GROUP" storage bootstrap/cache 2>/dev/null || true
+chmod -R 755 public/livewire public/vendor/livewire 2>/dev/null || true
+chown -R "$WEB_USER:$WEB_GROUP" storage bootstrap/cache public/livewire public/vendor/livewire 2>/dev/null || true
 
 say "7/8 Cache produksi"
 $PHP artisan config:cache
