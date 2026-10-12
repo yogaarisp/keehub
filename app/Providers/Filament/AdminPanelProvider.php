@@ -11,9 +11,12 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -32,10 +35,38 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->font('Plus Jakarta Sans')
             ->brandName('KeeHub Admin')
-            ->brandLogo(asset('logo-96.png'))
-            ->brandLogoHeight('2.25rem')
+            ->brandLogo(fn () => view('filament.brand-logo'))
+            ->brandLogoHeight('2.5rem')
             ->darkMode(true)
+            ->sidebarCollapsibleOnDesktop()
+            ->sidebarWidth('16.75rem')
+            ->collapsedSidebarWidth('4.5rem')
+            ->collapsibleNavigationGroups(true)
+            ->navigationGroups([
+                'Sales' => NavigationGroup::make('Penjualan'),
+                'Service' => NavigationGroup::make('Layanan Servis'),
+                'Catalog' => NavigationGroup::make('Katalog Produk'),
+                'Inventory' => NavigationGroup::make('Stok & Gudang'),
+                'Reports' => NavigationGroup::make('Laporan'),
+                'System' => NavigationGroup::make('Sistem & Pengaturan'),
+            ])
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Kunjungi Toko')
+                    ->url('/')
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->openUrlInNewTab(),
+            ])
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn () => view('filament.custom-sidebar-styles')
+            )
+            ->renderHook(
+                PanelsRenderHook::SIDEBAR_FOOTER,
+                fn () => view('filament.sidebar-footer')
+            )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

@@ -22,7 +22,9 @@ class PaymentResource extends Resource
 
     protected static ?string $navigationGroup = 'Sales';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?string $navigationLabel = 'Pembayaran';
+
+    protected static ?int $navigationSort = 3;
 
     public static function canCreate(): bool
     {

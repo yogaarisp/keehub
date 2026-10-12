@@ -23,6 +23,8 @@ class QuotationResource extends Resource
 
     protected static ?string $navigationGroup = 'Sales';
 
+    protected static ?string $navigationLabel = 'Penawaran';
+
     protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form

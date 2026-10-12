@@ -24,7 +24,9 @@ class ShipmentResource extends Resource
 
     protected static ?string $navigationGroup = 'Sales';
 
-    protected static ?int $navigationSort = 5;
+    protected static ?string $navigationLabel = 'Pengiriman';
+
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {

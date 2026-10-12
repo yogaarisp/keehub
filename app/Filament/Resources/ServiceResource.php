@@ -30,6 +30,8 @@ class ServiceResource extends Resource
 
     protected static ?string $navigationGroup = 'Service';
 
+    protected static ?string $navigationLabel = 'Servis Keyboard';
+
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form

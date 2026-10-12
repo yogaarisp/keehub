@@ -19,11 +19,13 @@ class ManageSettings extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
 
+    protected static ?string $navigationGroup = 'System';
+
     protected static ?string $title = 'Pengaturan';
 
     protected static ?string $navigationLabel = 'Pengaturan';
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 2;
 
     public array $data = [];
 

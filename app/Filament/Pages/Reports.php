@@ -24,7 +24,7 @@ class Reports extends Page implements HasForms
 
     protected static ?string $navigationGroup = 'Reports';
 
-    protected static ?string $navigationLabel = 'Reports';
+    protected static ?string $navigationLabel = 'Laporan';
 
     protected static ?int $navigationSort = 1;
 
