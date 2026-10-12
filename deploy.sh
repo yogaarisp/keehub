@@ -12,7 +12,15 @@
 #   - PHP & composer tersedia di PATH (sesuaikan $PHP jika perlu)
 set -euo pipefail
 
-ROOT="/www/wwwroot/keehub"
+# Deteksi folder web di aaPanel
+if [ -d "/www/wwwroot/keehub.keetech.my.id" ]; then
+    ROOT="/www/wwwroot/keehub.keetech.my.id"
+elif [ -d "/www/wwwroot/keehub" ]; then
+    ROOT="/www/wwwroot/keehub"
+else
+    ROOT="$(pwd)"
+fi
+
 PHP="php"
 export COMPOSER_ALLOW_SUPERUSER=1
 
