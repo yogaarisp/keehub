@@ -27,32 +27,78 @@
     /* Sidebar Header */
     .fi-sidebar-header {
         height: 4.25rem !important;
-        padding-left: 1.15rem !important;
-        padding-right: 1.15rem !important;
-        border-bottom: 1px solid rgba(241, 245, 249, 1) !important;
+        padding-left: 0.85rem !important;
+        padding-right: 0.85rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
         background-color: #ffffff !important;
+        box-shadow: none !important;
     }
 
     .dark .fi-sidebar-header {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
         background-color: #0b0f19 !important;
+    }
+
+    .fi-sidebar-header > div:first-child {
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+        display: flex !important;
+        align-items: center !important;
     }
 
     /* Brand Logo & Title Area */
     .fi-sidebar-header .fi-logo {
         display: flex !important;
         align-items: center !important;
-        gap: 0.75rem !important;
-        transition: transform 0.2s ease !important;
+        min-width: 0 !important;
     }
 
-    .fi-sidebar-header .fi-logo:hover {
-        transform: translateY(-1px) !important;
-    }
-
-    .fi-sidebar-header img {
+    /* Collapse & Expand Button inside Sidebar Header */
+    .fi-sidebar-header button,
+    .fi-sidebar-header .fi-icon-btn {
+        flex-shrink: 0 !important;
+        margin-left: auto !important;
+        width: 1.85rem !important;
+        height: 1.85rem !important;
         border-radius: 0.5rem !important;
-        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15) !important;
+        border: 1px solid rgba(226, 232, 240, 0.8) !important;
+        background-color: #f8fafc !important;
+        color: #64748b !important;
+        transition: all 0.15s ease !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .fi-sidebar-header button[style*="display: none"],
+    .fi-sidebar-header .fi-icon-btn[style*="display: none"],
+    .fi-sidebar-header button.hidden,
+    .fi-sidebar-header .fi-icon-btn.hidden {
+        display: none !important;
+    }
+
+    .fi-sidebar-header button:hover,
+    .fi-sidebar-header .fi-icon-btn:hover {
+        background-color: #f1f5f9 !important;
+        color: #0f172a !important;
+        border-color: rgba(203, 213, 225, 1) !important;
+        transform: scale(1.05) !important;
+    }
+
+    .dark .fi-sidebar-header button,
+    .dark .fi-sidebar-header .fi-icon-btn {
+        background-color: #111827 !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        color: #94a3b8 !important;
+    }
+
+    .dark .fi-sidebar-header button:hover,
+    .dark .fi-sidebar-header .fi-icon-btn:hover {
+        background-color: #1f2937 !important;
+        color: #f8fafc !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
     }
 
     /* Sidebar Nav Container */
