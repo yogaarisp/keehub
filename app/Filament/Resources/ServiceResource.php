@@ -30,7 +30,11 @@ class ServiceResource extends Resource
 
     protected static ?string $navigationGroup = 'Service';
 
-    protected static ?string $navigationLabel = 'Servis Keyboard';
+    protected static ?string $navigationLabel = 'Servis';
+
+    protected static ?string $modelLabel = 'Servis';
+
+    protected static ?string $pluralModelLabel = 'Servis';
 
     protected static ?int $navigationSort = 1;
 
