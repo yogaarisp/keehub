@@ -24,15 +24,15 @@
         background-color: #0b0f19 !important;
     }
 
-    /* Sidebar Header */
+    /* Sidebar Header (Clean & Minimalist) */
     .fi-sidebar-header {
         height: 4.25rem !important;
-        padding-left: 0.85rem !important;
+        padding-left: 1rem !important;
         padding-right: 0.85rem !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
-        border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.7) !important;
         background-color: #ffffff !important;
         box-shadow: none !important;
     }
@@ -54,51 +54,49 @@
         display: flex !important;
         align-items: center !important;
         min-width: 0 !important;
+        text-decoration: none !important;
     }
 
-    /* Collapse & Expand Button inside Sidebar Header */
-    .fi-sidebar-header button,
-    .fi-sidebar-header .fi-icon-btn {
-        flex-shrink: 0 !important;
-        margin-left: auto !important;
-        width: 1.85rem !important;
-        height: 1.85rem !important;
-        border-radius: 0.5rem !important;
-        border: 1px solid rgba(226, 232, 240, 0.8) !important;
-        background-color: #f8fafc !important;
-        color: #64748b !important;
-        transition: all 0.15s ease !important;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .fi-sidebar-header button[style*="display: none"],
-    .fi-sidebar-header .fi-icon-btn[style*="display: none"],
-    .fi-sidebar-header button.hidden,
-    .fi-sidebar-header .fi-icon-btn.hidden {
+    /* Alpine Cloak - Prevent pre-render flash of hidden elements */
+    [x-cloak] {
         display: none !important;
     }
 
-    .fi-sidebar-header button:hover,
-    .fi-sidebar-header .fi-icon-btn:hover {
-        background-color: #f1f5f9 !important;
-        color: #0f172a !important;
-        border-color: rgba(203, 213, 225, 1) !important;
-        transform: scale(1.05) !important;
-    }
-
-    .dark .fi-sidebar-header button,
-    .dark .fi-sidebar-header .fi-icon-btn {
-        background-color: #111827 !important;
-        border-color: rgba(255, 255, 255, 0.08) !important;
+    /* Minimalist Collapse / Expand Toggle Button */
+    .fi-sidebar-header button.fi-icon-btn,
+    .fi-sidebar-header .fi-icon-btn {
+        flex-shrink: 0 !important;
+        width: 1.75rem !important;
+        height: 1.75rem !important;
+        border-radius: 0.375rem !important;
+        border: none !important;
+        background-color: transparent !important;
         color: #94a3b8 !important;
+        transition: all 0.15s ease !important;
+        box-shadow: none !important;
     }
 
-    .dark .fi-sidebar-header button:hover,
+    .fi-sidebar-header button.fi-icon-btn:hover,
+    .fi-sidebar-header .fi-icon-btn:hover {
+        background-color: rgba(241, 245, 249, 0.9) !important;
+        color: #0f172a !important;
+    }
+
+    .dark .fi-sidebar-header button.fi-icon-btn,
+    .dark .fi-sidebar-header .fi-icon-btn {
+        color: #64748b !important;
+        background-color: transparent !important;
+    }
+
+    .dark .fi-sidebar-header button.fi-icon-btn:hover,
     .dark .fi-sidebar-header .fi-icon-btn:hover {
-        background-color: #1f2937 !important;
+        background-color: rgba(255, 255, 255, 0.08) !important;
         color: #f8fafc !important;
-        border-color: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    .fi-sidebar-header .fi-icon-btn svg {
+        width: 1.05rem !important;
+        height: 1.05rem !important;
     }
 
     /* Sidebar Nav Container */
@@ -279,20 +277,6 @@
     body:not([class*="fi-sidebar-open"]) .fi-sidebar-item-button {
         justify-content: center !important;
         padding: 0.6rem !important;
-    }
-
-    /* Smooth Collapse Button */
-    .fi-sidebar-header button {
-        border-radius: 0.5rem !important;
-        transition: background-color 0.15s ease, color 0.15s ease !important;
-    }
-
-    .fi-sidebar-header button:hover {
-        background-color: rgba(241, 245, 249, 1) !important;
-    }
-
-    .dark .fi-sidebar-header button:hover {
-        background-color: rgba(255, 255, 255, 0.08) !important;
     }
 
     /* ========================================================
