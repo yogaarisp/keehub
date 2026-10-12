@@ -9,10 +9,15 @@
     <div class="grid gap-8 md:grid-cols-3">
         <div>
             <div class="flex items-center gap-2">
-                <img src="/logo-96.png" alt="KeeHub" class="h-8 w-8">
-                <span class="text-base font-extrabold">Kee<span class="text-kee-500">Hub</span></span>
+                <img src="{{ \App\Models\Setting::logoUrl() }}" alt="{{ \App\Models\Setting::get('store_name', 'KeeHub') }}" class="h-8 w-8 object-contain">
+                @php $storeName = \App\Models\Setting::get('store_name', 'KeeHub'); @endphp
+                @if ($storeName === 'KeeHub')
+                    <span class="text-base font-extrabold">Kee<span class="text-kee-500">Hub</span></span>
+                @else
+                    <span class="text-base font-extrabold">{{ $storeName }}</span>
+                @endif
             </div>
-            <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">PC Parts • PC Builder • PC Rakitan • IT Service</p>
+            <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">{{ \App\Models\Setting::get('store_tagline', 'PC Parts • PC Builder • PC Rakitan • IT Service') }}</p>
             <p class="mt-2 text-sm font-semibold text-gray-800 dark:text-gray-200">Build. Buy. Upgrade.</p>
         </div>
         <div>

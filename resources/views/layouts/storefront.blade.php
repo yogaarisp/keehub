@@ -6,9 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#f59e0b">
     <link rel="manifest" href="/manifest.json">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/logo-96.png">
-    <link rel="apple-touch-icon" href="/logo-192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ \App\Models\Setting::faviconUrl() }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ \App\Models\Setting::logoUrl() }}">
+    <link rel="apple-touch-icon" href="{{ \App\Models\Setting::logoUrl() }}">
     <title>@yield('title', 'KeeHub — Build. Buy. Upgrade.')</title>
     <meta name="description" content="@yield('meta_description', 'KeeHub — toko PC parts, PC builder, PC rakitan, dan IT service. Build Your PC. Your Way.')">
     @stack('meta')

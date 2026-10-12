@@ -5,8 +5,13 @@
 
 <div class="x-container flex h-16 items-center justify-between gap-4">
     <a href="{{ route('home') }}" class="flex items-center gap-2.5">
-        <img src="/logo-96.png" alt="KeeHub" class="h-9 w-9">
-        <span class="text-lg font-extrabold tracking-tight">Kee<span class="text-kee-500">Hub</span></span>
+        <img src="{{ \App\Models\Setting::logoUrl() }}" alt="{{ \App\Models\Setting::get('store_name', 'KeeHub') }}" class="h-9 w-9 object-contain">
+        @php $currentStoreName = \App\Models\Setting::get('store_name', 'KeeHub'); @endphp
+        @if ($currentStoreName === 'KeeHub')
+            <span class="text-lg font-extrabold tracking-tight">Kee<span class="text-kee-500">Hub</span></span>
+        @else
+            <span class="text-lg font-extrabold tracking-tight">{{ $currentStoreName }}</span>
+        @endif
     </a>
 
     <nav class="hidden items-center gap-1 lg:flex">

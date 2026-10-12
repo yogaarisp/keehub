@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/logo-96.png">
-    <link rel="apple-touch-icon" href="/logo-192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ \App\Models\Setting::faviconUrl() }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ \App\Models\Setting::logoUrl() }}">
+    <link rel="apple-touch-icon" href="{{ \App\Models\Setting::logoUrl() }}">
 
     <title>{{ config('app.name', 'KeeHub') }} — Masuk Akun</title>
 
@@ -28,10 +28,15 @@
         <!-- Brand Header -->
         <div class="text-center">
             <a href="{{ route('home') }}" class="inline-flex items-center gap-2.5 transition hover:opacity-90">
-                <img src="/logo-96.png" alt="KeeHub" class="h-11 w-11 shadow-sm">
-                <span class="text-2xl font-black tracking-tight">Kee<span class="text-kee-500">Hub</span></span>
+                <img src="{{ \App\Models\Setting::logoUrl() }}" alt="{{ \App\Models\Setting::get('store_name', 'KeeHub') }}" class="h-11 w-11 object-contain shadow-sm">
+                @php $storeName = \App\Models\Setting::get('store_name', 'KeeHub'); @endphp
+                @if ($storeName === 'KeeHub')
+                    <span class="text-2xl font-black tracking-tight">Kee<span class="text-kee-500">Hub</span></span>
+                @else
+                    <span class="text-2xl font-black tracking-tight">{{ $storeName }}</span>
+                @endif
             </a>
-            <p class="mt-1 text-xs font-semibold tracking-wider uppercase text-gray-500 dark:text-gray-400">Build • Buy • Upgrade • Service</p>
+            <p class="mt-1 text-xs font-semibold tracking-wider uppercase text-gray-500 dark:text-gray-400">{{ \App\Models\Setting::get('store_tagline', 'Build • Buy • Upgrade • Service') }}</p>
         </div>
 
         <!-- Auth Card Container -->

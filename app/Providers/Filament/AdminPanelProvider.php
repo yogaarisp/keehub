@@ -7,6 +7,7 @@ use App\Filament\Widgets\LowStock;
 use App\Filament\Widgets\RecentOrders;
 use App\Filament\Widgets\StatsOverview;
 use App\Http\Middleware\EnsureAdminAccess;
+use App\Models\Setting;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -36,10 +37,10 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->font('Plus Jakarta Sans')
-            ->brandName('KeeHub Admin')
+            ->brandName(fn () => Setting::get('store_name', 'KeeHub').' Admin')
             ->brandLogo(fn () => view('filament.brand-logo'))
             ->brandLogoHeight('2.5rem')
-            ->favicon(asset('favicon-32.png'))
+            ->favicon(fn () => Setting::faviconUrl())
             ->darkMode(true)
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('16.75rem')
