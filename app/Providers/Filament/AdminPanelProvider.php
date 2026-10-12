@@ -39,6 +39,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('KeeHub Admin')
             ->brandLogo(fn () => view('filament.brand-logo'))
             ->brandLogoHeight('2.5rem')
+            ->favicon(asset('favicon-32.png'))
             ->darkMode(true)
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('16.75rem')
