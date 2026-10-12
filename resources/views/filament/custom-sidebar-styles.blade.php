@@ -391,4 +391,87 @@
         color: #fbbf24;
         background-color: rgba(255, 255, 255, 0.08);
     }
+
+    /* ========================================================
+       TOPBAR / HEADER MODERN & MINIMALIST REDESIGN
+       ======================================================== */
+    .fi-topbar {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 20 !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+    }
+
+    .fi-topbar > nav {
+        height: 4.25rem !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+        box-shadow: none !important;
+        padding-left: 1.25rem !important;
+        padding-right: 1.25rem !important;
+        transition: background-color 0.2s ease, border-color 0.2s ease !important;
+    }
+
+    .dark .fi-topbar > nav {
+        background-color: rgba(11, 15, 25, 0.9) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    }
+
+    /* Theme Switcher in Topbar */
+    .fi-theme-switcher {
+        background-color: rgba(241, 245, 249, 0.85) !important;
+        border: 1px solid rgba(226, 232, 240, 0.9) !important;
+        border-radius: 0.6rem !important;
+        padding: 0.15rem !important;
+        gap: 0.1rem !important;
+    }
+
+    .dark .fi-theme-switcher {
+        background-color: rgba(15, 23, 42, 0.8) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .fi-theme-switcher-btn {
+        border-radius: 0.45rem !important;
+        padding: 0.25rem 0.35rem !important;
+        transition: all 0.15s ease !important;
+    }
+
+    .fi-theme-switcher-btn svg {
+        width: 0.95rem !important;
+        height: 0.95rem !important;
+    }
+
+    /* Quick Add Button */
+    .fi-quick-add-btn {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25) !important;
+    }
+
+    .fi-quick-add-btn:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35) !important;
+    }
+
+    /* User Menu Button */
+    .fi-user-menu button {
+        border-radius: 0.65rem !important;
+        padding: 0.2rem !important;
+        transition: all 0.15s ease !important;
+    }
+
+    .fi-user-menu button:hover {
+        background-color: rgba(241, 245, 249, 0.9) !important;
+    }
+
+    .dark .fi-user-menu button:hover {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .fi-user-menu img,
+    .fi-user-menu .fi-avatar {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        border-radius: 0.55rem !important;
+    }
 </style>

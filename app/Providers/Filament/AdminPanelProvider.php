@@ -64,6 +64,14 @@ class AdminPanelProvider extends PanelProvider
                 fn () => view('filament.custom-sidebar-styles')
             )
             ->renderHook(
+                PanelsRenderHook::TOPBAR_START,
+                fn () => view('filament.topbar-start')
+            )
+            ->renderHook(
+                PanelsRenderHook::USER_MENU_BEFORE,
+                fn () => view('filament.topbar-actions')
+            )
+            ->renderHook(
                 PanelsRenderHook::SIDEBAR_FOOTER,
                 fn () => view('filament.sidebar-footer')
             )
