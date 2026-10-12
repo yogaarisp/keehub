@@ -68,13 +68,14 @@
         <div
             x-data="{}"
             x-show="! $store.sidebar.isOpen"
+            x-cloak
             x-transition:enter="transition ease-out duration-150 delay-75"
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100"
-            style="display: flex; align-items: center; justify-content: center; padding: 0.25rem 0;"
+            class="fi-footer-collapsed"
         >
             <div
-                style="position: relative; flex-shrink: 0; cursor: pointer;"
+                class="fi-collapsed-avatar-wrap"
                 title="{{ $name }} ({{ $roleLabel }})"
             >
                 <div class="fi-user-avatar">

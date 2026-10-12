@@ -41,12 +41,18 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
         background-color: #0b0f19 !important;
     }
-
     .fi-sidebar-header > div:first-child {
         min-width: 0 !important;
         flex: 1 1 auto !important;
-        display: flex !important;
         align-items: center !important;
+    }
+
+    .fi-sidebar.fi-sidebar-open .fi-sidebar-header > div:first-child {
+        display: flex !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header > div:first-child {
+        display: none !important;
     }
 
     /* Brand Logo & Title Area */
@@ -273,11 +279,210 @@
         box-shadow: none !important;
     }
 
-    /* Collapsed Sidebar Mode */
-    body:not([class*="fi-sidebar-open"]) .fi-sidebar-item-button {
-        justify-content: center !important;
-        padding: 0.6rem !important;
+    /* ========================================================
+       COLLAPSED (MINIMIZED) SIDEBAR MODE - SLEEK DOCK STYLE
+       ======================================================== */
+    aside.fi-sidebar:not(.fi-sidebar-open) {
+        width: 4.5rem !important;
+        overflow-x: hidden !important;
     }
+
+    /* Collapsed Header */
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.ms-auto,
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.ms-auto {
+        display: none !important;
+    }
+
+    aside.fi-sidebar.fi-sidebar-open .fi-sidebar-header button.mx-auto,
+    aside.fi-sidebar.fi-sidebar-open .fi-sidebar-header .fi-icon-btn.mx-auto {
+        display: none !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto,
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto {
+        margin: 0 auto !important;
+        width: 2.15rem !important;
+        height: 2.15rem !important;
+        border-radius: 0.5rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: #f8fafc !important;
+        border: 1px solid rgba(226, 232, 240, 0.8) !important;
+        color: #64748b !important;
+        transition: all 0.15s ease !important;
+    }
+
+    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto,
+    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        color: #94a3b8 !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto:hover,
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto:hover {
+        background-color: #f1f5f9 !important;
+        color: #0f172a !important;
+        transform: scale(1.08) !important;
+    }
+
+    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto:hover,
+    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #ffffff !important;
+    }
+
+    /* Collapsed Nav Container */
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-nav {
+        padding: 0.85rem 0.35rem !important;
+        overflow-x: hidden !important;
+        align-items: center !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-nav-groups {
+        row-gap: 0.65rem !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-group {
+        width: 100% !important;
+        row-gap: 0.35rem !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-group-button {
+        display: none !important;
+    }
+
+    /* Collapsed Items: Perfect Centered Squares */
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin-bottom: 0.25rem !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-button {
+        width: 2.65rem !important;
+        height: 2.65rem !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+        border-radius: 0.65rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transform: none !important;
+        border: 1px solid transparent !important;
+        box-shadow: none !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-button:hover {
+        transform: scale(1.08) !important;
+        background-color: rgba(241, 245, 249, 1) !important;
+        color: #0f172a !important;
+    }
+
+    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-button:hover {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        color: #f8fafc !important;
+    }
+
+    /* Collapsed Active Item (Centered Glowing Tile) */
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-button,
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-active > .fi-sidebar-item-button {
+        background: linear-gradient(135deg, rgba(254, 243, 199, 0.75) 0%, rgba(254, 243, 199, 0.4) 100%) !important;
+        border: 1px solid rgba(245, 158, 11, 0.35) !important;
+        box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15) !important;
+        color: #b45309 !important;
+        transform: none !important;
+    }
+
+    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-button,
+    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-active > .fi-sidebar-item-button {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(245, 158, 11, 0.08) 100%) !important;
+        border: 1px solid rgba(245, 158, 11, 0.35) !important;
+        box-shadow: 0 0 14px rgba(245, 158, 11, 0.15) !important;
+        color: #fbbf24 !important;
+    }
+
+    /* Disable side indicator bar when collapsed */
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-button::before,
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-active > .fi-sidebar-item-button::before {
+        display: none !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-icon {
+        width: 1.35rem !important;
+        height: 1.35rem !important;
+        margin: 0 !important;
+    }
+
+    /* Hide text & badges completely in collapsed items */
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-label,
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-badge {
+        display: none !important;
+    }
+
+    /* Collapsed Footer */
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-custom-footer {
+        padding: 0.75rem 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+
+    aside.fi-sidebar.fi-sidebar-open .fi-footer-collapsed {
+        display: none !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-footer-expanded {
+        display: none !important;
+    }
+
+    aside.fi-sidebar:not(.fi-sidebar-open) .fi-footer-collapsed {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+    }
+
+    .fi-collapsed-avatar-wrap {
+        position: relative !important;
+        width: 2.35rem !important;
+        height: 2.35rem !important;
+        flex-shrink: 0 !important;
+        cursor: pointer !important;
+        transition: transform 0.15s ease !important;
+    }
+
+    .fi-collapsed-avatar-wrap:hover {
+        transform: scale(1.08) !important;
+    }
+
+    .fi-collapsed-avatar-wrap .fi-user-avatar {
+        width: 2.35rem !important;
+        height: 2.35rem !important;
+        border-radius: 0.6rem !important;
+    }
+
+    .fi-collapsed-avatar-wrap .fi-online-badge {
+        position: absolute !important;
+        bottom: -1px !important;
+        right: -1px !important;
+    }
+
 
     /* ========================================================
        SIDEBAR FOOTER CARD STYLES
