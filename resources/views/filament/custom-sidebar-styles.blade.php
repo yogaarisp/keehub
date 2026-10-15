@@ -1365,19 +1365,24 @@
                 }
 
                 const doc = iframe.contentWindow.document;
+                const html = [
+                    '<!DOCTYPE html>',
+                    '<html><head><meta charset="utf-8"><title>Uji Coba Struk Thermal - KeeHub<' + '/title>',
+                    '<style>',
+                    '@page { size: ' + width + ' auto; margin: 0; }',
+                    '* { box-sizing: border-box; }',
+                    'body { margin: 0; padding: ' + (is80 ? '5mm 4mm' : '3mm 2mm') + '; font-family: "Courier New", Courier, monospace; font-size: ' + (is80 ? '12px' : '10.5px') + '; line-height: 1.25; color: #000; background: #fff; width: ' + width + '; -webkit-print-color-adjust: exact; }',
+                    '.text-center { text-align: center; } .text-right { text-align: right; } .text-left { text-align: left; } .font-bold { font-weight: bold; }',
+                    '.dashed-line { border-top: 1px dashed #000; margin: 5px 0; }',
+                    '.double-line { border-top: 2px solid #000; margin: 6px 0; }',
+                    '.flex-row { display: flex; justify-content: space-between; }',
+                    'img.receipt-logo { max-width: ' + (is80 ? '45mm' : '32mm') + '; max-height: 18mm; margin: 0 auto 4px auto; display: block; filter: grayscale(100%) contrast(150%); }',
+                    '<' + '/style><' + '/head><body>',
+                    contentEl.innerHTML,
+                    '<' + '/body><' + '/html>'
+                ].join('\n');
                 doc.open();
-                doc.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Uji Coba Struk Thermal - KeeHub</title><style>');
-                doc.write('@page { size: ' + width + ' auto; margin: 0; }');
-                doc.write('* { box-sizing: border-box; }');
-                doc.write('body { margin: 0; padding: ' + (is80 ? '5mm 4mm' : '3mm 2mm') + '; font-family: "Courier New", Courier, monospace; font-size: ' + (is80 ? '12px' : '10.5px') + '; line-height: 1.25; color: #000; background: #fff; width: ' + width + '; -webkit-print-color-adjust: exact; }');
-                doc.write('.text-center { text-align: center; } .text-right { text-align: right; } .text-left { text-align: left; } .font-bold { font-weight: bold; }');
-                doc.write('.dashed-line { border-top: 1px dashed #000; margin: 5px 0; }');
-                doc.write('.double-line { border-top: 2px solid #000; margin: 6px 0; }');
-                doc.write('.flex-row { display: flex; justify-content: space-between; }');
-                doc.write('img.receipt-logo { max-width: ' + (is80 ? '45mm' : '32mm') + '; max-height: 18mm; margin: 0 auto 4px auto; display: block; filter: grayscale(100%) contrast(150%); }');
-                doc.write('</style></head><body>');
-                doc.write(contentEl.innerHTML);
-                doc.write('</body></html>');
+                doc.write(html);
                 doc.close();
 
                 setTimeout(() => {
