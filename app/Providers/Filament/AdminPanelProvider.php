@@ -77,6 +77,10 @@ class AdminPanelProvider extends PanelProvider
                 PanelsRenderHook::SIDEBAR_FOOTER,
                 fn () => view('filament.sidebar-footer')
             )
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn () => view('filament.mobile-bottom-nav')
+            )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

@@ -621,12 +621,12 @@
             transform: scale(0.95) !important;
         }
 
-        /* Mobile Main Content Area Padding */
+        /* Mobile Main Content Area Padding (Leaves space for fixed bottom navigation bar) */
         .fi-main {
             padding-left: 0.85rem !important;
             padding-right: 0.85rem !important;
             padding-top: 1rem !important;
-            padding-bottom: 2.5rem !important;
+            padding-bottom: 5.5rem !important;
         }
 
         /* Ensure Tables Scroll Horizontally without Breaking Layout */
@@ -1097,8 +1097,157 @@
     }
 
     /* ========================================================
-       END MOBILE ADMIN CONTENT OPTIMIZATION
+       MOBILE BOTTOM NAVIGATION BAR STYLES
        ======================================================== */
+    .fi-mobile-bottom-nav {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100vw !important;
+        height: 4.25rem !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border-top: 1px solid rgba(226, 232, 240, 0.9) !important;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06) !important;
+        z-index: 35 !important;
+        display: block !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+        box-sizing: border-box !important;
+    }
+
+    .dark .fi-mobile-bottom-nav {
+        background-color: rgba(11, 15, 25, 0.95) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    @media (min-width: 1024px) {
+        .fi-mobile-bottom-nav {
+            display: none !important;
+        }
+    }
+
+    .fi-bottom-nav-grid {
+        display: grid !important;
+        grid-template-columns: repeat(5, 1fr) !important;
+        height: 100% !important;
+        max-width: 32rem !important;
+        margin: 0 auto !important;
+        align-items: center !important;
+    }
+
+    .fi-bottom-nav-item {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 0.25rem !important;
+        height: 100% !important;
+        width: 100% !important;
+        text-decoration: none !important;
+        color: #64748b !important;
+        transition: all 0.15s ease !important;
+        cursor: pointer !important;
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    .dark .fi-bottom-nav-item {
+        color: #94a3b8 !important;
+    }
+
+    .fi-bottom-nav-item:hover,
+    .fi-bottom-nav-item:active {
+        color: #0f172a !important;
+    }
+
+    .dark .fi-bottom-nav-item:hover,
+    .dark .fi-bottom-nav-item:active {
+        color: #ffffff !important;
+    }
+
+    .fi-bottom-nav-item.active {
+        color: #d97706 !important;
+        font-weight: 600 !important;
+    }
+
+    .dark .fi-bottom-nav-item.active {
+        color: #fbbf24 !important;
+    }
+
+    .fi-bottom-nav-item svg {
+        width: 1.35rem !important;
+        height: 1.35rem !important;
+    }
+
+    .fi-bottom-nav-item span {
+        font-size: 0.6875rem !important;
+        line-height: 1 !important;
+        letter-spacing: -0.01em !important;
+    }
+
+    /* Center Prominent Button (Pesanan) */
+    .fi-bottom-nav-center {
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-decoration: none !important;
+        margin-top: -1.25rem !important;
+        height: 100% !important;
+    }
+
+    .fi-bottom-nav-center-btn {
+        width: 3.15rem !important;
+        height: 3.15rem !important;
+        border-radius: 1rem !important;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        color: #ffffff !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4) !important;
+        border: 3px solid #ffffff !important;
+        transition: transform 0.15s ease !important;
+    }
+
+    .dark .fi-bottom-nav-center-btn {
+        border-color: #0b0f19 !important;
+        box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35) !important;
+    }
+
+    .fi-bottom-nav-center:active .fi-bottom-nav-center-btn {
+        transform: scale(0.92) !important;
+    }
+
+    .fi-bottom-nav-center-btn svg {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+    }
+
+    .fi-bottom-nav-center span {
+        font-size: 0.6875rem !important;
+        font-weight: 700 !important;
+        line-height: 1 !important;
+        margin-top: 0.25rem !important;
+        color: #1e293b !important;
+    }
+
+    .dark .fi-bottom-nav-center span {
+        color: #f1f5f9 !important;
+    }
+
+    .fi-bottom-nav-center.active span {
+        color: #d97706 !important;
+    }
+
+    .dark .fi-bottom-nav-center.active span {
+        color: #fbbf24 !important;
+    }
 </style>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
