@@ -1255,4 +1255,136 @@
             }
         });
     });
+
+    window.keehubPrinterPreview = function() {
+        return {
+            paperSize: '58mm',
+            connectionType: 'browser',
+            printerName: '',
+            printLogo: true,
+            headerText: '',
+            footerText: '',
+            autoCut: true,
+            cashDrawer: false,
+            copies: '1',
+            bluetoothStatus: 'idle',
+            bluetoothDeviceName: '',
+            usbStatus: 'idle',
+            usbDeviceName: '',
+
+            init() {
+                if (this.$wire) {
+                    this.paperSize = this.$wire.get('data.printer_paper_size') || '58mm';
+                    this.connectionType = this.$wire.get('data.printer_connection_type') || 'browser';
+                    this.printerName = this.$wire.get('data.printer_name') || '';
+                    this.printLogo = this.$wire.get('data.printer_print_logo') ?? true;
+                    this.headerText = this.$wire.get('data.printer_header_text') || '';
+                    this.footerText = this.$wire.get('data.printer_footer_text') || '';
+                    this.autoCut = this.$wire.get('data.printer_auto_cut') ?? true;
+                    this.cashDrawer = this.$wire.get('data.printer_open_cash_drawer') ?? false;
+
+                    this.$watch('$wire.data.printer_paper_size', (val) => { this.paperSize = val || '58mm'; });
+                    this.$watch('$wire.data.printer_connection_type', (val) => { this.connectionType = val || 'browser'; });
+                    this.$watch('$wire.data.printer_name', (val) => { this.printerName = val || ''; });
+                    this.$watch('$wire.data.printer_print_logo', (val) => { this.printLogo = !!val; });
+                    this.$watch('$wire.data.printer_header_text', (val) => { this.headerText = val || ''; });
+                    this.$watch('$wire.data.printer_footer_text', (val) => { this.footerText = val || ''; });
+                    this.$watch('$wire.data.printer_auto_cut', (val) => { this.autoCut = !!val; });
+                    this.$watch('$wire.data.printer_open_cash_drawer', (val) => { this.cashDrawer = !!val; });
+                }
+            },
+
+            async pairBluetooth() {
+                if (!navigator.bluetooth) {
+                    alert('Browser ini tidak mendukung Web Bluetooth API. Silakan gunakan Google Chrome / Microsoft Edge di Android, Windows, atau macOS. Anda tetap bisa mencetak menggunakan metode Sistem Driver / Browser!');
+                    return;
+                }
+                try {
+                    this.bluetoothStatus = 'connecting';
+                    const device = await navigator.bluetooth.requestDevice({
+                        acceptAllDevices: true,
+                        optionalServices: [
+                            '000018f0-0000-1000-8000-00805f9b34fb',
+                            'e7810a71-73ae-499d-8c15-faa9aef0c3f2',
+                            '49535343-fe7d-4ae5-8fa9-9fafd205e455'
+                        ]
+                    });
+                    this.bluetoothDeviceName = device.name || 'Printer Bluetooth';
+                    this.bluetoothStatus = 'connected';
+                    if (this.$wire && device.name) {
+                        this.$wire.set('data.printer_device_name', device.name);
+                    }
+                } catch (err) {
+                    if (err.name !== 'NotFoundError') {
+                        console.error('Bluetooth pair error:', err);
+                        alert('Gagal menghubungkan Bluetooth: ' + err.message);
+                    }
+                    this.bluetoothStatus = 'idle';
+                }
+            },
+
+            async pairUsb() {
+                if (!navigator.usb) {
+                    alert('Browser ini tidak mendukung WebUSB API. Pastikan menggunakan Chrome/Edge versi terbaru pada Laptop/PC.');
+                    return;
+                }
+                try {
+                    this.usbStatus = 'connecting';
+                    const device = await navigator.usb.requestDevice({ filters: [] });
+                    this.usbDeviceName = (device.productName || 'Printer Thermal USB') + (device.manufacturerName ? ' - ' + device.manufacturerName : '');
+                    this.usbStatus = 'connected';
+                    if (this.$wire && device.productName) {
+                        this.$wire.set('data.printer_device_name', device.productName);
+                    }
+                } catch (err) {
+                    if (err.name !== 'NotFoundError') {
+                        console.error('USB pair error:', err);
+                        alert('Gagal mendeteksi perangkat USB: ' + err.message);
+                    }
+                    this.usbStatus = 'idle';
+                }
+            },
+
+            printThermalReceipt() {
+                const is80 = (this.paperSize || '58mm') === '80mm';
+                const width = is80 ? '80mm' : '58mm';
+                const contentEl = document.getElementById('keehub-live-thermal-receipt-body');
+                if (!contentEl) return;
+
+                let iframe = document.getElementById('keehub-thermal-print-frame');
+                if (!iframe) {
+                    iframe = document.createElement('iframe');
+                    iframe.id = 'keehub-thermal-print-frame';
+                    iframe.style.position = 'fixed';
+                    iframe.style.right = '0';
+                    iframe.style.bottom = '0';
+                    iframe.style.width = '0';
+                    iframe.style.height = '0';
+                    iframe.style.border = '0';
+                    document.body.appendChild(iframe);
+                }
+
+                const doc = iframe.contentWindow.document;
+                doc.open();
+                doc.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Uji Coba Struk Thermal - KeeHub</title><style>');
+                doc.write('@page { size: ' + width + ' auto; margin: 0; }');
+                doc.write('* { box-sizing: border-box; }');
+                doc.write('body { margin: 0; padding: ' + (is80 ? '5mm 4mm' : '3mm 2mm') + '; font-family: "Courier New", Courier, monospace; font-size: ' + (is80 ? '12px' : '10.5px') + '; line-height: 1.25; color: #000; background: #fff; width: ' + width + '; -webkit-print-color-adjust: exact; }');
+                doc.write('.text-center { text-align: center; } .text-right { text-align: right; } .text-left { text-align: left; } .font-bold { font-weight: bold; }');
+                doc.write('.dashed-line { border-top: 1px dashed #000; margin: 5px 0; }');
+                doc.write('.double-line { border-top: 2px solid #000; margin: 6px 0; }');
+                doc.write('.flex-row { display: flex; justify-content: space-between; }');
+                doc.write('img.receipt-logo { max-width: ' + (is80 ? '45mm' : '32mm') + '; max-height: 18mm; margin: 0 auto 4px auto; display: block; filter: grayscale(100%) contrast(150%); }');
+                doc.write('</style></head><body>');
+                doc.write(contentEl.innerHTML);
+                doc.write('</body></html>');
+                doc.close();
+
+                setTimeout(() => {
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+                }, 300);
+            }
+        };
+    };
 </script>

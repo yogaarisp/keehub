@@ -5,16 +5,23 @@ namespace App\Filament\Pages;
 use App\Models\Setting;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\View as ViewComponent;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\HtmlString;
 
 class ManageSettings extends Page implements HasForms
 {
@@ -54,6 +61,18 @@ class ManageSettings extends Page implements HasForms
             'bank_account_holder' => Setting::get('bank_account_holder', ''),
             'invoice_footer_notes' => Setting::get('invoice_footer_notes', ''),
             'service_warranty_terms' => Setting::get('service_warranty_terms', ''),
+            'printer_connection_type' => Setting::get('printer_connection_type', 'browser'),
+            'printer_name' => Setting::get('printer_name', 'Thermal Receipt Printer 58mm'),
+            'printer_paper_size' => Setting::get('printer_paper_size', '58mm'),
+            'printer_device_name' => Setting::get('printer_device_name', ''),
+            'printer_ip_address' => Setting::get('printer_ip_address', '192.168.1.200'),
+            'printer_port' => Setting::get('printer_port', '9100'),
+            'printer_print_logo' => (bool) Setting::get('printer_print_logo', '1'),
+            'printer_auto_cut' => (bool) Setting::get('printer_auto_cut', '1'),
+            'printer_open_cash_drawer' => (bool) Setting::get('printer_open_cash_drawer', '0'),
+            'printer_copies' => Setting::get('printer_copies', '1'),
+            'printer_header_text' => Setting::get('printer_header_text', ''),
+            'printer_footer_text' => Setting::get('printer_footer_text', 'Terima kasih telah berbelanja di KeeHub!'),
         ]);
     }
 
@@ -201,6 +220,136 @@ class ManageSettings extends Page implements HasForms
                                     ->placeholder('Garansi servis berlaku selama 14 hari terhitung sejak tanggal unit selesai dikerjakan. Tidak mencakup kerusakan akibat cairan atau kelalaian pengguna.')
                                     ->helperText('Ketentuan garansi pengerjaan reparasi / servis keyboard & PC.'),
                             ]),
+
+                        Tab::make('Printer & Struk Kasir')
+                            ->icon('heroicon-o-printer')
+                            ->schema([
+                                Section::make('Metode Koneksi & Perangkat Printer')
+                                    ->description('Pilih cara komputer kasir atau tablet terhubung ke printer thermal struk.')
+                                    ->schema([
+                                        Placeholder::make('printer_intro')
+                                            ->label('')
+                                            ->content(new HtmlString('
+                                                <div class="flex items-center gap-3 p-3.5 rounded-lg bg-primary-500/10 border border-primary-500/20 text-xs text-primary-950 dark:text-primary-200">
+                                                    <span class="text-xl">🖨️</span>
+                                                    <div>
+                                                        <span class="font-semibold text-sm">Dukungan Lengkap Semua Jenis Printer Thermal</span>
+                                                        <p class="text-xs text-gray-600 dark:text-gray-300 mt-0.5">
+                                                            Mendukung printer struk kasir USB (Kabel/OTG), Bluetooth portabel (HP Android/Tablet/Laptop), Jaringan LAN/WiFi IP, serta driver sistem operasi bawaan. Cocok untuk semua merk seperti Epson, Panda, Iware, Xprinter, RPP02N, Zijiang, dll.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ')),
+
+                                        Radio::make('printer_connection_type')
+                                            ->label('Tipe Sambungan Printer')
+                                            ->options([
+                                                'browser' => 'Sistem Driver / Browser (USB & Bluetooth terinstal di Windows/macOS/Linux)',
+                                                'bluetooth' => 'Bluetooth Thermal POS (Mobile POS Bluetooth - Langsung dari HP Android & Laptop)',
+                                                'usb' => 'Direct USB Thermal (Kabel USB Printer / OTG WebUSB)',
+                                                'network' => 'Jaringan LAN / WiFi (IP Raw Socket Port 9100 / ESC POS Network Printer)',
+                                            ])
+                                            ->descriptions([
+                                                'browser' => 'Paling stabil dan direkomendasikan. Memanfaatkan dialog cetak bawaan browser yang terhubung ke printer thermal USB maupun Bluetooth yang sudah terinstal drivernya.',
+                                                'bluetooth' => 'Koneksi nirkabel langsung ke printer thermal portabel mini kasir via Bluetooth tanpa ribet install driver.',
+                                                'usb' => 'Koneksi langsung ke kabel USB printer thermal via protokol WebUSB.',
+                                                'network' => 'Printer kasir jaringan yang memiliki port kabel LAN atau modul WiFi terhubung ke router toko.',
+                                            ])
+                                            ->live()
+                                            ->required(),
+
+                                        Grid::make(['default' => 1, 'md' => 2])->schema([
+                                            TextInput::make('printer_name')
+                                                ->label('Nama / Label Printer')
+                                                ->required()
+                                                ->maxLength(60)
+                                                ->placeholder('Contoh: Thermal POS 58mm Kasir')
+                                                ->helperText('Nama pengenal printer struk ini di sistem kasir KeeHub.'),
+
+                                            Select::make('printer_paper_size')
+                                                ->label('Ukuran Roll Kertas Thermal')
+                                                ->options([
+                                                    '58mm' => '58mm (Kertas Struk Mini / Portable POS - Lebar ~32 Karakter)',
+                                                    '80mm' => '80mm (Kertas Struk Standar Kasir / Desktop - Lebar ~48 Karakter)',
+                                                ])
+                                                ->required()
+                                                ->live()
+                                                ->helperText('Sesuaikan dengan roll kertas thermal struk yang Anda gunakan di toko.'),
+                                        ]),
+
+                                        Grid::make(['default' => 1, 'md' => 2])
+                                            ->visible(fn (Get $get) => $get('printer_connection_type') === 'network')
+                                            ->schema([
+                                                TextInput::make('printer_ip_address')
+                                                    ->label('Alamat IP Printer (LAN / WiFi)')
+                                                    ->placeholder('192.168.1.200')
+                                                    ->required(fn (Get $get) => $get('printer_connection_type') === 'network')
+                                                    ->helperText('Alamat IP statis printer pada jaringan router toko.'),
+
+                                                TextInput::make('printer_port')
+                                                    ->label('Port Printer (Default: 9100)')
+                                                    ->placeholder('9100')
+                                                    ->numeric()
+                                                    ->helperText('Port socket standar RAW printing untuk printer ESC/POS.'),
+                                            ]),
+
+                                        TextInput::make('printer_device_name')
+                                            ->label('Nama Perangkat Bluetooth / USB (Opsional)')
+                                            ->placeholder('Contoh: RPP02N / Panda POS / MPT-II / Thermal Printer')
+                                            ->visible(fn (Get $get) => in_array($get('printer_connection_type'), ['bluetooth', 'usb']))
+                                            ->helperText('Nama bluetooth atau vendor ID yang terdeteksi saat pairing.'),
+                                    ]),
+
+                                Section::make('Format & Opsi Struk Kasir (Receipt Customization)')
+                                    ->description('Kustomisasi konten struk belanja, header/footer, dan perintah laci uang.')
+                                    ->schema([
+                                        Grid::make(['default' => 1, 'md' => 3])->schema([
+                                            Toggle::make('printer_print_logo')
+                                                ->label('Cetak Logo KeeHub di Struk')
+                                                ->helperText('Menampilkan logo toko di bagian atas struk thermal.')
+                                                ->default(true),
+
+                                            Toggle::make('printer_auto_cut')
+                                                ->label('Potong Kertas Otomatis (Auto Cut)')
+                                                ->helperText('Kirim perintah pemotong kertas otomatis setelah selesai cetak.')
+                                                ->default(true),
+
+                                            Toggle::make('printer_open_cash_drawer')
+                                                ->label('Buka Laci Uang (Kick Cash Drawer)')
+                                                ->helperText('Kirim sinyal pulsa RJ11 untuk membuka laci kasir otomatis.')
+                                                ->default(false),
+                                        ]),
+
+                                        Grid::make(['default' => 1, 'md' => 2])->schema([
+                                            Select::make('printer_copies')
+                                                ->label('Jumlah Salinan Cetak')
+                                                ->options([
+                                                    '1' => '1 Salinan (Untuk Pelanggan)',
+                                                    '2' => '2 Salinan (Pelanggan + Arsip Kasir)',
+                                                ])
+                                                ->helperText('Berapa lembar struk dicetak untuk setiap transaksi kasir.')
+                                                ->default('1'),
+
+                                            Textarea::make('printer_header_text')
+                                                ->label('Teks Header Tambahan (Opsional)')
+                                                ->rows(2)
+                                                ->placeholder("Spesialis Custom Keyboard & PC Assembly\nCabang Sleman, DI Yogyakarta")
+                                                ->helperText('Teks catatan atau slogan tambahan di bawah identitas toko.'),
+                                        ]),
+
+                                        Textarea::make('printer_footer_text')
+                                            ->label('Catatan Kaki Struk Belanja (Footer)')
+                                            ->rows(2)
+                                            ->placeholder("Terima kasih telah berbelanja di KeeHub!\nBarang yang sudah dibeli bergaransi resmi toko.")
+                                            ->helperText('Pesan penutup, ucapan terima kasih, dan syarat garansi pada struk.'),
+                                    ]),
+
+                                Section::make('Simulasi & Uji Coba Cetak Langsung')
+                                    ->description('Lihat simulasi visual kertas thermal dan lakukan uji coba cetak ke printer Anda.')
+                                    ->schema([
+                                        ViewComponent::make('filament.components.printer-test-preview'),
+                                    ]),
+                            ]),
                     ])
                     ->persistTabInQueryString(),
             ]);
@@ -214,12 +363,15 @@ class ManageSettings extends Page implements HasForms
             if ($key === 'whatsapp_number' && $value) {
                 $value = preg_replace('/\D/', '', (string) $value);
             }
+            if (is_bool($value)) {
+                $value = $value ? '1' : '0';
+            }
             Setting::put($key, is_null($value) ? '' : (string) $value);
         }
 
         Notification::make()
             ->title('Pengaturan Berhasil Disimpan')
-            ->body('Seluruh perubahan identitas toko dan branding telah diperbarui.')
+            ->body('Seluruh perubahan identitas toko, operasional, dan printer telah diperbarui.')
             ->success()
             ->send();
     }
