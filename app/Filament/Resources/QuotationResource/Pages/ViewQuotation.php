@@ -31,7 +31,7 @@ class ViewQuotation extends ViewRecord
                 TextEntry::make('total')->money('IDR')->weight('bold'),
                 TextEntry::make('notes')->columnSpanFull()->placeholder('—'),
                 TextEntry::make('terms')->columnSpanFull()->placeholder('—'),
-            ])->columns(4),
+            ])->columns(['default' => 1, 'sm' => 2, 'lg' => 4]),
 
             InfoSection::make('Items')->schema([
                 RepeatableEntry::make('items')->schema([
@@ -40,7 +40,7 @@ class ViewQuotation extends ViewRecord
                     TextEntry::make('quantity'),
                     TextEntry::make('price')->money('IDR'),
                     TextEntry::make('total')->money('IDR'),
-                ])->columns(5)->contained(false),
+                ])->columns(['default' => 1, 'sm' => 2, 'lg' => 5])->contained(false),
             ]),
         ]);
     }

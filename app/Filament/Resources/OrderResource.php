@@ -48,7 +48,7 @@ class OrderResource extends Resource
                 TextInput::make('discount')->numeric()->prefix('Rp')->default(0),
                 TextInput::make('shipping_cost')->numeric()->prefix('Rp')->default(0),
                 Textarea::make('notes'),
-            ])->columns(2),
+            ])->columns(['default' => 1, 'sm' => 2]),
 
             Section::make('Items')->schema([
                 Repeater::make('items')->relationship()->schema([
@@ -70,7 +70,7 @@ class OrderResource extends Resource
                     }, OrderItem::TYPES)))->default('product'),
                     TextInput::make('quantity')->numeric()->minValue(1)->default(1),
                     TextInput::make('price')->numeric()->prefix('Rp'),
-                ])->columns(5)->defaultItems(1)
+                ])->columns(['default' => 1, 'sm' => 2, 'lg' => 5])->defaultItems(1)
                     ->deletable()
                     ->reorderable(false),
             ])->collapsible(),
@@ -79,7 +79,7 @@ class OrderResource extends Resource
                 TextInput::make('shipping_name'),
                 TextInput::make('shipping_phone')->tel(),
                 Textarea::make('shipping_address')->rows(2),
-            ])->columns(2)->collapsible(),
+            ])->columns(['default' => 1, 'sm' => 2])->collapsible(),
         ]);
     }
 

@@ -46,7 +46,7 @@ class UserResource extends Resource
                 TextInput::make('password')->password()->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null)
                     ->dehydrated(fn ($state) => filled($state))->required(fn (string $operation) => $operation === 'create')
                     ->maxLength(255),
-            ])->columns(2),
+            ])->columns(['default' => 1, 'sm' => 2]),
         ]);
     }
 

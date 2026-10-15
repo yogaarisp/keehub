@@ -48,7 +48,7 @@ class ProductResource extends Resource
                 Select::make('category_id')->relationship('category', 'name')->required()->searchable()->preload(),
                 Select::make('brand_id')->relationship('brand', 'name')->searchable()->preload(),
                 Textarea::make('description')->columnSpanFull(),
-            ])->columns(2),
+            ])->columns(['default' => 1, 'sm' => 2]),
 
             Section::make('Harga & Fisik')->schema([
                 TextInput::make('price')->numeric()->prefix('Rp')->minValue(0)->required(),
@@ -56,7 +56,7 @@ class ProductResource extends Resource
                 TextInput::make('weight_grams')->numeric()->label('Berat (gram)'),
                 TextInput::make('dimensions')->label('Dimensi (P x L x T)'),
                 TextInput::make('warranty')->label('Garansi'),
-            ])->columns(2),
+            ])->columns(['default' => 1, 'sm' => 2]),
 
             Section::make('Gambar')->schema([
                 FileUpload::make('images_upload')->image()->imageEditor()->directory('products')->multiple()->minFiles(0)->maxFiles(10)
@@ -77,7 +77,7 @@ class ProductResource extends Resource
                         TextInput::make('value')->required(),
                         TextInput::make('value_numeric')->numeric()->nullable()->label('Nilai Angka'),
                         TextInput::make('unit')->label('Satuan'),
-                    ])->columns(4)
+                    ])->columns(['default' => 1, 'sm' => 2, 'lg' => 4])
                     ->reorderable()
                     ->helperText('Field teknis harus terstruktur — digunakan Compatibility Engine & Power Calculator (PRD #8, #10, #11).'),
             ])->collapsible(),
@@ -88,7 +88,7 @@ class ProductResource extends Resource
                 TextInput::make('meta_title')->maxLength(255),
                 Textarea::make('meta_description')->maxLength(500),
                 TextInput::make('keywords'),
-            ])->columns(2),
+            ])->columns(['default' => 1, 'sm' => 2]),
         ]);
     }
 

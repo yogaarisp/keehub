@@ -41,7 +41,7 @@ class ViewService extends ViewRecord
                     default => 'gray',
                 }),
                 TextEntry::make('due_date')->label('Target Selesai')->date('d M Y')->placeholder('—'),
-            ])->columns(3),
+            ])->columns(['default' => 1, 'sm' => 2, 'lg' => 3]),
 
             InfoSection::make('Detail Unit PC / Perangkat')->schema([
                 TextEntry::make('device_name')->label('Nama / Tipe PC')->placeholder('—'),
@@ -51,7 +51,7 @@ class ViewService extends ViewRecord
                 TextEntry::make('device_specs')->label('Spesifikasi Unit')->placeholder('—')->columnSpan(2),
                 TextEntry::make('problem_description')->label('Keluhan Klien')->columnSpanFull(),
                 TextEntry::make('diagnosis')->label('Diagnosa & Tindakan Teknisi')->columnSpanFull(),
-            ])->columns(3),
+            ])->columns(['default' => 1, 'sm' => 2, 'lg' => 3]),
 
             InfoSection::make('Rincian Suku Cadang & Jasa')->schema([
                 RepeatableEntry::make('items')->schema([
@@ -67,7 +67,7 @@ class ViewService extends ViewRecord
                     TextEntry::make('price')->label('Harga Asli')->money('IDR'),
                     TextEntry::make('total')->label('Subtotal Riil')->money('IDR'),
                     TextEntry::make('warranty_info')->label('Garansi')->placeholder('—'),
-                ])->columns(7)->contained(false),
+                ])->columns(['default' => 1, 'sm' => 2, 'lg' => 4])->contained(false),
             ]),
 
             InfoSection::make('Ringkasan Biaya')->schema([
@@ -85,7 +85,7 @@ class ViewService extends ViewRecord
                     ->badge()
                     ->color('success')
                     ->helperText('Hanya menghitung Part KeeHub + Jasa'),
-            ])->columns(3),
+            ])->columns(['default' => 1, 'sm' => 3]),
 
             InfoSection::make('Riwayat Perubahan Status')->schema([
                 RepeatableEntry::make('statusHistory')->schema([
@@ -94,7 +94,7 @@ class ViewService extends ViewRecord
                     TextEntry::make('user.name')->placeholder('system'),
                     TextEntry::make('created_at')->dateTime('d M Y H:i'),
                     TextEntry::make('notes')->placeholder('—'),
-                ])->columns(5)->contained(false),
+                ])->columns(['default' => 1, 'sm' => 2, 'lg' => 5])->contained(false),
             ]),
         ]);
     }

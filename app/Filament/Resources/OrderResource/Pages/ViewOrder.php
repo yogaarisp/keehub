@@ -33,7 +33,7 @@ class ViewOrder extends ViewRecord
                 TextEntry::make('shipping_cost')->money('IDR'),
                 TextEntry::make('total')->money('IDR')->weight('bold'),
                 TextEntry::make('notes')->columnSpanFull(),
-            ])->columns(4),
+            ])->columns(['default' => 1, 'sm' => 2, 'lg' => 4]),
 
             InfoSection::make('Items')->schema([
                 RepeatableEntry::make('items')->schema([
@@ -43,7 +43,7 @@ class ViewOrder extends ViewRecord
                     TextEntry::make('quantity'),
                     TextEntry::make('price')->money('IDR'),
                     TextEntry::make('total')->money('IDR'),
-                ])->columns(5)->contained(false),
+                ])->columns(['default' => 1, 'sm' => 2, 'lg' => 5])->contained(false),
             ]),
 
             InfoSection::make('Status History')->schema([
@@ -53,7 +53,7 @@ class ViewOrder extends ViewRecord
                     TextEntry::make('user.name')->placeholder('system'),
                     TextEntry::make('created_at')->dateTime('d M Y H:i'),
                     TextEntry::make('notes')->placeholder('—'),
-                ])->columns(5)->contained(false),
+                ])->columns(['default' => 1, 'sm' => 2, 'lg' => 5])->contained(false),
             ]),
         ]);
     }

@@ -42,7 +42,7 @@ class CategoryResource extends Resource
                 TextInput::make('icon'),
                 TextInput::make('sort_order')->numeric()->default(0),
                 Toggle::make('is_active')->default(true),
-            ])->columns(2),
+            ])->columns(['default' => 1, 'sm' => 2]),
             Section::make('SEO')->schema([
                 TextInput::make('meta_title')->maxLength(255),
                 Textarea::make('meta_description')->maxLength(500),

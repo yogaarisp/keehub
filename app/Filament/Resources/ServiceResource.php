@@ -66,7 +66,7 @@ class ServiceResource extends Resource
                     ->options(fn () => User::query()->whereIn('role', ['owner', 'staff'])->pluck('name', 'id'))
                     ->searchable()
                     ->preload(),
-            ])->columns(2),
+            ])->columns(['default' => 1, 'sm' => 2]),
 
             Section::make('Detail Unit PC / Perangkat')->schema([
                 TextInput::make('device_name')
@@ -87,7 +87,7 @@ class ServiceResource extends Resource
                     ->label('Spesifikasi Singkat PC')
                     ->placeholder('Contoh: Ryzen 9 7900X, RAM 64GB, RTX 4080, PSU 850W')
                     ->columnSpanFull(),
-            ])->columns(2),
+            ])->columns(['default' => 1, 'sm' => 2]),
 
             Section::make('Status & Diagnosa Pekerjaan')->schema([
                 Select::make('status')
@@ -108,7 +108,7 @@ class ServiceResource extends Resource
                     ->label('Catatan Tambahan / Internal')
                     ->rows(2)
                     ->columnSpanFull(),
-            ])->columns(2),
+            ])->columns(['default' => 1, 'sm' => 2]),
 
             Section::make('Detail Barang & Jasa (Sparepart & Labor)')->schema([
                 Repeater::make('items')
@@ -163,7 +163,7 @@ class ServiceResource extends Resource
                             ->label('Keterangan / Serial Part')
                             ->placeholder('SN / Catatan teknis'),
                     ])
-                    ->columns(3)
+                    ->columns(['default' => 1, 'sm' => 2, 'lg' => 3])
                     ->defaultItems(0)
                     ->addActionLabel('+ Tambah Item / Jasa')
                     ->collapsible()

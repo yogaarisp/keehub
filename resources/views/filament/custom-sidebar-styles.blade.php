@@ -47,12 +47,14 @@
         align-items: center !important;
     }
 
-    .fi-sidebar.fi-sidebar-open .fi-sidebar-header > div:first-child {
-        display: flex !important;
-    }
+    @media (min-width: 1024px) {
+        .fi-sidebar.fi-sidebar-open .fi-sidebar-header > div:first-child {
+            display: flex !important;
+        }
 
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header > div:first-child {
-        display: none !important;
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header > div:first-child {
+            display: none !important;
+        }
     }
 
     /* Brand Logo & Title Area */
@@ -280,207 +282,367 @@
     }
 
     /* ========================================================
-       COLLAPSED (MINIMIZED) SIDEBAR MODE - SLEEK DOCK STYLE
+       COLLAPSED (MINIMIZED) SIDEBAR MODE - SLEEK DOCK STYLE (DESKTOP >= 1024px)
        ======================================================== */
-    aside.fi-sidebar:not(.fi-sidebar-open) {
-        width: 4.5rem !important;
-        overflow-x: hidden !important;
+    @media (min-width: 1024px) {
+        aside.fi-sidebar:not(.fi-sidebar-open) {
+            width: 4.5rem !important;
+            overflow-x: hidden !important;
+        }
+
+        /* Collapsed Header */
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+        }
+
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.ms-auto,
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.ms-auto {
+            display: none !important;
+        }
+
+        aside.fi-sidebar.fi-sidebar-open .fi-sidebar-header button.mx-auto,
+        aside.fi-sidebar.fi-sidebar-open .fi-sidebar-header .fi-icon-btn.mx-auto {
+            display: none !important;
+        }
+
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto,
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto {
+            margin: 0 auto !important;
+            width: 2.15rem !important;
+            height: 2.15rem !important;
+            border-radius: 0.5rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background-color: #f8fafc !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            color: #64748b !important;
+            transition: all 0.15s ease !important;
+        }
+
+        .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto,
+        .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
+            color: #94a3b8 !important;
+        }
+
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto:hover,
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto:hover {
+            background-color: #f1f5f9 !important;
+            color: #0f172a !important;
+            transform: scale(1.08) !important;
+        }
+
+        .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto:hover,
+        .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+        }
+
+        /* Collapsed Nav Container */
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-nav {
+            padding: 0.85rem 0.35rem !important;
+            overflow-x: hidden !important;
+            align-items: center !important;
+        }
+
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-nav-groups {
+            row-gap: 0.65rem !important;
+            width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-group {
+            width: 100% !important;
+            row-gap: 0.35rem !important;
+        }
+
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-group-button {
+            display: none !important;
+        }
+
+        /* Collapsed Items: Perfect Centered Squares */
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin-bottom: 0.25rem !important;
+        }
+
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-button {
+            width: 2.65rem !important;
+            height: 2.65rem !important;
+            padding: 0 !important;
+            margin: 0 auto !important;
+            border-radius: 0.65rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transform: none !important;
+            border: 1px solid transparent !important;
+            box-shadow: none !important;
+        }
+
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-button:hover {
+            transform: scale(1.08) !important;
+            background-color: rgba(241, 245, 249, 1) !important;
+            color: #0f172a !important;
+        }
+
+        .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-button:hover {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            color: #f8fafc !important;
+        }
+
+        /* Collapsed Active Item (Centered Glowing Tile) */
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-button,
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-active > .fi-sidebar-item-button {
+            background: linear-gradient(135deg, rgba(254, 243, 199, 0.75) 0%, rgba(254, 243, 199, 0.4) 100%) !important;
+            border: 1px solid rgba(245, 158, 11, 0.35) !important;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15) !important;
+            color: #b45309 !important;
+            transform: none !important;
+        }
+
+        .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-button,
+        .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-active > .fi-sidebar-item-button {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(245, 158, 11, 0.08) 100%) !important;
+            border: 1px solid rgba(245, 158, 11, 0.35) !important;
+            box-shadow: 0 0 14px rgba(245, 158, 11, 0.15) !important;
+            color: #fbbf24 !important;
+        }
+
+        /* Disable side indicator bar when collapsed */
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-button::before,
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-active > .fi-sidebar-item-button::before {
+            display: none !important;
+        }
+
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-icon {
+            width: 1.35rem !important;
+            height: 1.35rem !important;
+            margin: 0 !important;
+        }
+
+        /* Hide text & badges completely in collapsed items */
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-label,
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-badge {
+            display: none !important;
+        }
+
+        /* Collapsed Footer */
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-custom-footer {
+            padding: 0.75rem 0 !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+        }
+
+        aside.fi-sidebar.fi-sidebar-open .fi-footer-collapsed {
+            display: none !important;
+        }
+
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-footer-expanded {
+            display: none !important;
+        }
+
+        aside.fi-sidebar:not(.fi-sidebar-open) .fi-footer-collapsed {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+        }
+
+        .fi-collapsed-avatar-wrap {
+            position: relative !important;
+            width: 2.35rem !important;
+            height: 2.35rem !important;
+            flex-shrink: 0 !important;
+            cursor: pointer !important;
+            transition: transform 0.15s ease !important;
+        }
+
+        .fi-collapsed-avatar-wrap:hover {
+            transform: scale(1.08) !important;
+        }
+
+        .fi-collapsed-avatar-wrap .fi-user-avatar {
+            width: 2.35rem !important;
+            height: 2.35rem !important;
+            border-radius: 0.6rem !important;
+        }
+
+        .fi-collapsed-avatar-wrap .fi-online-badge {
+            position: absolute !important;
+            bottom: -1px !important;
+            right: -1px !important;
+        }
     }
 
-    /* Collapsed Header */
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        justify-content: center !important;
-        align-items: center !important;
-        width: 100% !important;
-    }
+    /* ========================================================
+       MOBILE SIDEBAR DRAWER & RESPONSIVE LAYOUT (< 1024px)
+       ======================================================== */
+    @media (max-width: 1023px) {
+        /* Mobile Sidebar Drawer */
+        aside.fi-sidebar {
+            width: min(18.5rem, 85vw) !important;
+            max-width: 18.5rem !important;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3) !important;
+            z-index: 50 !important;
+        }
 
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.ms-auto,
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.ms-auto {
-        display: none !important;
-    }
+        /* Ensure header shows logo, brand name, and mobile close button */
+        aside.fi-sidebar .fi-sidebar-header {
+            padding-left: 1.25rem !important;
+            padding-right: 1rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+        }
 
-    aside.fi-sidebar.fi-sidebar-open .fi-sidebar-header button.mx-auto,
-    aside.fi-sidebar.fi-sidebar-open .fi-sidebar-header .fi-icon-btn.mx-auto {
-        display: none !important;
-    }
+        aside.fi-sidebar .fi-sidebar-header > div:first-child {
+            display: flex !important;
+            align-items: center !important;
+            min-width: 0 !important;
+            flex: 1 1 auto !important;
+        }
 
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto,
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto {
-        margin: 0 auto !important;
-        width: 2.15rem !important;
-        height: 2.15rem !important;
-        border-radius: 0.5rem !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background-color: #f8fafc !important;
-        border: 1px solid rgba(226, 232, 240, 0.8) !important;
-        color: #64748b !important;
-        transition: all 0.15s ease !important;
-    }
+        /* Mobile Close Button in Header */
+        aside.fi-sidebar .fi-sidebar-header button.fi-icon-btn,
+        aside.fi-sidebar .fi-sidebar-header .fi-icon-btn {
+            width: 2.15rem !important;
+            height: 2.15rem !important;
+            border-radius: 0.5rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background-color: rgba(241, 245, 249, 0.8) !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            color: #64748b !important;
+            flex-shrink: 0 !important;
+        }
 
-    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto,
-    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        border-color: rgba(255, 255, 255, 0.08) !important;
-        color: #94a3b8 !important;
-    }
+        /* Prevent desktop-only collapse button from showing on mobile */
+        aside.fi-sidebar .fi-sidebar-header button.hidden,
+        aside.fi-sidebar .fi-sidebar-header button.lg\:flex {
+            display: none !important;
+        }
 
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto:hover,
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto:hover {
-        background-color: #f1f5f9 !important;
-        color: #0f172a !important;
-        transform: scale(1.08) !important;
-    }
+        .dark aside.fi-sidebar .fi-sidebar-header button.fi-icon-btn,
+        .dark aside.fi-sidebar .fi-sidebar-header .fi-icon-btn {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+            color: #94a3b8 !important;
+        }
 
-    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto:hover,
-    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto:hover {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        color: #ffffff !important;
-    }
+        /* Navigation in Mobile Drawer */
+        aside.fi-sidebar .fi-sidebar-nav {
+            padding: 1rem 0.85rem !important;
+        }
 
-    /* Collapsed Nav Container */
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-nav {
-        padding: 0.85rem 0.35rem !important;
-        overflow-x: hidden !important;
-        align-items: center !important;
-    }
+        aside.fi-sidebar .fi-sidebar-group-button {
+            display: flex !important;
+        }
 
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-nav-groups {
-        row-gap: 0.65rem !important;
-        width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-    }
+        aside.fi-sidebar .fi-sidebar-item {
+            display: block !important;
+            width: 100% !important;
+        }
 
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-group {
-        width: 100% !important;
-        row-gap: 0.35rem !important;
-    }
+        aside.fi-sidebar .fi-sidebar-item-button {
+            width: 100% !important;
+            height: auto !important;
+            padding: 0.625rem 0.85rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 0.75rem !important;
+            border-radius: 0.65rem !important;
+        }
 
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-group-button {
-        display: none !important;
-    }
+        aside.fi-sidebar .fi-sidebar-item-label {
+            display: inline-block !important;
+            font-size: 0.85rem !important;
+            font-weight: 500 !important;
+        }
 
-    /* Collapsed Items: Perfect Centered Squares */
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        width: 100% !important;
-        margin-bottom: 0.25rem !important;
-    }
+        aside.fi-sidebar .fi-badge {
+            display: inline-flex !important;
+            margin-left: auto !important;
+        }
 
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-button {
-        width: 2.65rem !important;
-        height: 2.65rem !important;
-        padding: 0 !important;
-        margin: 0 auto !important;
-        border-radius: 0.65rem !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        transform: none !important;
-        border: 1px solid transparent !important;
-        box-shadow: none !important;
-    }
+        /* Full footer on mobile */
+        aside.fi-sidebar .fi-footer-expanded {
+            display: flex !important;
+        }
 
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-button:hover {
-        transform: scale(1.08) !important;
-        background-color: rgba(241, 245, 249, 1) !important;
-        color: #0f172a !important;
-    }
+        aside.fi-sidebar .fi-footer-collapsed {
+            display: none !important;
+        }
 
-    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-button:hover {
-        background-color: rgba(255, 255, 255, 0.08) !important;
-        color: #f8fafc !important;
-    }
+        /* Dimmed Backdrop Overlay with Smooth Blur */
+        .fi-sidebar-close-overlay {
+            background-color: rgba(15, 23, 42, 0.65) !important;
+            backdrop-filter: blur(4px) !important;
+            -webkit-backdrop-filter: blur(4px) !important;
+            z-index: 40 !important;
+        }
 
-    /* Collapsed Active Item (Centered Glowing Tile) */
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-button,
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-active > .fi-sidebar-item-button {
-        background: linear-gradient(135deg, rgba(254, 243, 199, 0.75) 0%, rgba(254, 243, 199, 0.4) 100%) !important;
-        border: 1px solid rgba(245, 158, 11, 0.35) !important;
-        box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15) !important;
-        color: #b45309 !important;
-        transform: none !important;
-    }
+        /* Mobile Topbar Adjustments */
+        .fi-topbar > nav {
+            height: 3.75rem !important;
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+            gap: 0.5rem !important;
+        }
 
-    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-button,
-    .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-active > .fi-sidebar-item-button {
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(245, 158, 11, 0.08) 100%) !important;
-        border: 1px solid rgba(245, 158, 11, 0.35) !important;
-        box-shadow: 0 0 14px rgba(245, 158, 11, 0.15) !important;
-        color: #fbbf24 !important;
-    }
+        /* Prominent Mobile Hamburger Button */
+        button.fi-topbar-open-sidebar-btn {
+            width: 2.25rem !important;
+            height: 2.25rem !important;
+            border-radius: 0.5rem !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: #334155 !important;
+            background-color: #f1f5f9 !important;
+            border: 1px solid rgba(226, 232, 240, 0.9) !important;
+            flex-shrink: 0 !important;
+            transition: all 0.15s ease !important;
+        }
 
-    /* Disable side indicator bar when collapsed */
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-button::before,
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-active > .fi-sidebar-item-button::before {
-        display: none !important;
-    }
+        .dark button.fi-topbar-open-sidebar-btn {
+            color: #cbd5e1 !important;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
 
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-icon {
-        width: 1.35rem !important;
-        height: 1.35rem !important;
-        margin: 0 !important;
-    }
+        button.fi-topbar-open-sidebar-btn:active {
+            transform: scale(0.95) !important;
+        }
 
-    /* Hide text & badges completely in collapsed items */
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-label,
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-badge {
-        display: none !important;
-    }
+        /* Mobile Main Content Area Padding */
+        .fi-main {
+            padding-left: 0.85rem !important;
+            padding-right: 0.85rem !important;
+            padding-top: 1rem !important;
+            padding-bottom: 2.5rem !important;
+        }
 
-    /* Collapsed Footer */
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-custom-footer {
-        padding: 0.75rem 0 !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        width: 100% !important;
-    }
-
-    aside.fi-sidebar.fi-sidebar-open .fi-footer-collapsed {
-        display: none !important;
-    }
-
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-footer-expanded {
-        display: none !important;
-    }
-
-    aside.fi-sidebar:not(.fi-sidebar-open) .fi-footer-collapsed {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: 100% !important;
-    }
-
-    .fi-collapsed-avatar-wrap {
-        position: relative !important;
-        width: 2.35rem !important;
-        height: 2.35rem !important;
-        flex-shrink: 0 !important;
-        cursor: pointer !important;
-        transition: transform 0.15s ease !important;
-    }
-
-    .fi-collapsed-avatar-wrap:hover {
-        transform: scale(1.08) !important;
-    }
-
-    .fi-collapsed-avatar-wrap .fi-user-avatar {
-        width: 2.35rem !important;
-        height: 2.35rem !important;
-        border-radius: 0.6rem !important;
-    }
-
-    .fi-collapsed-avatar-wrap .fi-online-badge {
-        position: absolute !important;
-        bottom: -1px !important;
-        right: -1px !important;
+        /* Ensure Tables Scroll Horizontally without Breaking Layout */
+        .fi-ta-content {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
     }
 
 
@@ -709,4 +871,241 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
         border-radius: 0.55rem !important;
     }
+
+    /* ========================================================
+       MOBILE ADMIN CONTENT OPTIMIZATION (< 1024px)
+       Dashboard widgets, tables, forms, infolists, repeater
+       ======================================================== */
+
+    /* ---- Force 1-column grids on mobile for form/infolist/repeater ---- */
+    /* Filament uses --cols-default CSS var for non-responsive column count.
+       Override to 1 col when no responsive --cols-sm breakpoint is set. */
+    @media (max-width: 639px) {
+        [style*="--cols-default"]:not([style*="--cols-sm"]) {
+            --cols-default: repeat(1, minmax(0, 1fr)) !important;
+        }
+    }
+
+    /* At sm (640px+), cap at 2 columns for sections that had 3+ */
+    @media (min-width: 640px) and (max-width: 767px) {
+        [style*="--cols-default"]:not([style*="--cols-sm"]):not([style*="--cols-md"]) {
+            --cols-default: repeat(2, minmax(0, 1fr)) !important;
+        }
+    }
+
+    @media (max-width: 1023px) {
+        /* ---- Dashboard: Stats overview 2-col compact on mobile ---- */
+        .fi-wi-stats-overview-stats-ctn {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 0.65rem !important;
+        }
+
+        /* Stats card: compact */
+        .fi-wi-stats-overview-stat {
+            padding: 0.75rem !important;
+        }
+        .fi-wi-stats-overview-stat-label,
+        .fi-wi-stats-overview-stat-value {
+            font-size: 0.85rem !important;
+        }
+
+        /* Dashboard widgets: tighter gap */
+        .fi-wi {
+            gap: 0.75rem !important;
+        }
+
+        /* Dashboard table widget: compact heading */
+        .fi-wi-table-widget-heading {
+            font-size: 0.875rem !important;
+        }
+
+        /* ---- Page header: compact ---- */
+        .fi-header-heading {
+            font-size: 1.25rem !important;
+            line-height: 1.3 !important;
+        }
+
+        .fi-header-subheading {
+            font-size: 0.85rem !important;
+            margin-top: 0.35rem !important;
+        }
+
+        /* Page header actions: wrap on mobile */
+        .fi-header > div:last-child {
+            flex-wrap: wrap !important;
+        }
+
+        /* ---- Page section: compact spacing ---- */
+        .fi-page > section {
+            padding-top: 1rem !important;
+            padding-bottom: 2rem !important;
+            gap: 1.25rem !important;
+        }
+
+        /* ---- Form sections: compact padding ---- */
+        .fi-section-content {
+            padding: 0.85rem !important;
+        }
+
+        /* Form field labels: slightly smaller */
+        .fi-component-label,
+        .fi-form-field-label,
+        .fi-form-field-label-text {
+            font-size: 0.8rem !important;
+        }
+
+        /* ---- Infolist sections: compact padding ---- */
+        .fi-infolist-section-content {
+            padding: 0.85rem !important;
+        }
+
+        /* Infolist entry label: smaller */
+        .fi-infolist-entry-label {
+            font-size: 0.75rem !important;
+        }
+
+        /* ---- Repeater items: compact ---- */
+        .fi-repeater-item {
+            padding: 0.75rem !important;
+            gap: 0.625rem !important;
+        }
+
+        /* Repeater add button: full width */
+        .fi-repeater-add-action {
+            width: 100% !important;
+        }
+        .fi-repeater-add-action button {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+
+        /* ---- Table: compact & scrollable ---- */
+        .fi-ta-header {
+            padding: 0.75rem !important;
+            gap: 0.625rem !important;
+        }
+
+        /* Table header heading: compact */
+        .fi-ta-header-heading {
+            font-size: 0.875rem !important;
+        }
+
+        /* Table search: full width */
+        .fi-ta-search-ctn {
+            width: 100% !important;
+        }
+
+        /* Table cells: compact */
+        .fi-ta-table td,
+        .fi-ta-table th {
+            padding-left: 0.65rem !important;
+            padding-right: 0.65rem !important;
+            padding-top: 0.45rem !important;
+            padding-bottom: 0.45rem !important;
+            font-size: 0.78rem !important;
+        }
+
+        /* Table header cells: prevent wrapping */
+        .fi-ta-table th {
+            white-space: nowrap !important;
+        }
+
+        /* Table pagination: compact, wrap, center */
+        .fi-ta-pagination {
+            padding: 0.5rem 0.75rem !important;
+            flex-wrap: wrap !important;
+            gap: 0.5rem !important;
+            justify-content: center !important;
+        }
+
+        /* Table empty state: compact */
+        .fi-ta-empty-state {
+            padding: 1.5rem 1rem !important;
+        }
+
+        /* Table action icons: tappable but compact */
+        .fi-ta-actions .fi-icon-btn {
+            width: 2rem !important;
+            height: 2rem !important;
+        }
+
+        /* ---- Action buttons: min touch target (44px) ---- */
+        .fi-btn {
+            min-height: 2.5rem !important;
+        }
+
+        /* ---- Form footer actions: sticky on mobile ---- */
+        .fi-footer-actions {
+            position: sticky !important;
+            bottom: 0 !important;
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            padding: 0.75rem 0.85rem !important;
+            margin: 0 -0.85rem !important;
+            z-index: 10 !important;
+        }
+
+        .dark .fi-footer-actions {
+            background-color: rgba(11, 15, 25, 0.95) !important;
+        }
+
+        /* ---- Tabs (relation managers): horizontal scroll ---- */
+        .fi-tabs {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+        }
+
+        .fi-tabs-list {
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+
+        /* ---- Reports page: table scroll ---- */
+        .fi-page table {
+            display: block !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+
+        /* ---- Notification: compact on mobile ---- */
+        .fi-notification {
+            max-width: calc(100vw - 2rem) !important;
+        }
+
+        /* ---- Breadcrumb: already hidden by Filament (hidden sm:block) ---- */
+
+        /* ---- Form select/date inputs: prevent iOS zoom ---- */
+        .fi-form-input,
+        .fi-select,
+        .fi-ta-search-input input {
+            font-size: 16px !important;
+        }
+
+        /* ---- Manage Settings / custom pages: responsive ---- */
+        .fi-page form .flex-wrap {
+            gap: 0.75rem !important;
+        }
+    }
+
+    /* ---- Very narrow screens (< 380px): stats 1-column ---- */
+    @media (max-width: 379px) {
+        .fi-wi-stats-overview-stats-ctn {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    /* ---- Tablet portrait (768px-1023px): refine grid overrides ---- */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        /* Cap non-responsive grids at 2 columns on tablet portrait */
+        [style*="--cols-default"]:not([style*="--cols-sm"]):not([style*="--cols-md"]):not([style*="--cols-lg"]) {
+            --cols-default: repeat(2, minmax(0, 1fr)) !important;
+        }
+    }
+
+    /* ========================================================
+       END MOBILE ADMIN CONTENT OPTIMIZATION
+       ======================================================== */
 </style>

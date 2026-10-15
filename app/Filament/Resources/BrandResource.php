@@ -40,7 +40,7 @@ class BrandResource extends Resource
                 TextInput::make('slug')->required()->unique(ignoreRecord: true),
                 FileUpload::make('logo')->image()->directory('brands'),
                 Toggle::make('is_active')->default(true),
-            ])->columns(2),
+            ])->columns(['default' => 1, 'sm' => 2]),
         ]);
     }
 

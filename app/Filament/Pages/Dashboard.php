@@ -18,6 +18,9 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     public function getColumns(): int|string|array
     {
-        return 2;
+        return [
+            'default' => 1,
+            'sm' => 2,
+        ];
     }
 }

@@ -38,15 +38,15 @@ class QcResource extends Resource
             Select::make('technician_id')->label('Technician')->options(fn () => User::query()->whereIn('role', ['owner', 'staff'])->pluck('name', 'id'))->searchable(),
 
             Section::make('Hardware')->schema([
-                CheckboxList::make('checklist_hardware')->columns(3)->dehydrated(false)
+                CheckboxList::make('checklist_hardware')->columns(['default' => 1, 'sm' => 2, 'md' => 3])->dehydrated(false)
                     ->options(collect(QcRecord::CHECKLIST['hardware'])->mapWithKeys(fn ($label, $key) => [$key => $label])->all()),
             ]),
             Section::make('Software')->schema([
-                CheckboxList::make('checklist_software')->columns(4)->dehydrated(false)
+                CheckboxList::make('checklist_software')->columns(['default' => 1, 'sm' => 2, 'md' => 4])->dehydrated(false)
                     ->options(collect(QcRecord::CHECKLIST['software'])->mapWithKeys(fn ($label, $key) => [$key => $label])->all()),
             ]),
             Section::make('Testing')->schema([
-                CheckboxList::make('checklist_testing')->columns(4)->dehydrated(false)
+                CheckboxList::make('checklist_testing')->columns(['default' => 1, 'sm' => 2, 'md' => 4])->dehydrated(false)
                     ->options(collect(QcRecord::CHECKLIST['testing'])->mapWithKeys(fn ($label, $key) => [$key => $label])->all()),
             ]),
             Radio::make('result')->options(['pass' => 'PASS', 'fail' => 'FAIL', 'pending' => 'PENDING'])->default('pending')->inline(),
