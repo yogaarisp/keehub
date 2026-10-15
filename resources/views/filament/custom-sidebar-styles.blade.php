@@ -596,29 +596,9 @@
             gap: 0.5rem !important;
         }
 
-        /* Prominent Mobile Hamburger Button */
+        /* Hide Topbar Hamburger Button on Mobile (Replaced by Bottom Navigation 'Menu' Button) */
         button.fi-topbar-open-sidebar-btn {
-            width: 2.25rem !important;
-            height: 2.25rem !important;
-            border-radius: 0.5rem !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            color: #334155 !important;
-            background-color: #f1f5f9 !important;
-            border: 1px solid rgba(226, 232, 240, 0.9) !important;
-            flex-shrink: 0 !important;
-            transition: all 0.15s ease !important;
-        }
-
-        .dark button.fi-topbar-open-sidebar-btn {
-            color: #cbd5e1 !important;
-            background-color: rgba(255, 255, 255, 0.08) !important;
-            border-color: rgba(255, 255, 255, 0.1) !important;
-        }
-
-        button.fi-topbar-open-sidebar-btn:active {
-            transform: scale(0.95) !important;
+            display: none !important;
         }
 
         /* Mobile Main Content Area Padding (Leaves space for fixed bottom navigation bar) */
