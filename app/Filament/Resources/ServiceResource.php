@@ -16,7 +16,6 @@ use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -201,7 +200,12 @@ class ServiceResource extends Resource
             ->actions([
                 ActionGroup::make([
                     ViewAction::make(),
-                    EditAction::make(),
+                    Action::make('thermal_receipt')
+                        ->label('Cetak Struk Thermal')
+                        ->icon('heroicon-o-printer')
+                        ->color('success')
+                        ->url(fn (Service $record) => route('admin.service.receipt', $record))
+                        ->openUrlInNewTab(),
                     Action::make('work_order_pdf')
                         ->label('Cetak Work Order (PDF)')
                         ->icon('heroicon-o-document-text')

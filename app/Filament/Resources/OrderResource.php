@@ -14,6 +14,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -103,7 +104,16 @@ class OrderResource extends Resource
             ->filters([
                 SelectFilter::make('status')->options(array_combine(Order::STATUSES, array_map(ucfirst(...), Order::STATUSES))),
             ])
-            ->actions([ViewAction::make(), EditAction::make()])
+            ->actions([
+                ViewAction::make(),
+                EditAction::make(),
+                Action::make('thermal_receipt')
+                    ->label('Struk')
+                    ->icon('heroicon-o-printer')
+                    ->color('success')
+                    ->url(fn (Order $record) => route('admin.order.receipt', $record))
+                    ->openUrlInNewTab(),
+            ])
             ->defaultSort('created_at', 'desc')
             ->poll('60s');
     }

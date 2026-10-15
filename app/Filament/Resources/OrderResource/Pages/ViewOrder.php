@@ -64,6 +64,13 @@ class ViewOrder extends ViewRecord
             EditAction::make(),
             ViewAction::make()->hidden(),
 
+            Action::make('thermal_receipt')
+                ->label('Cetak Struk Thermal')
+                ->icon('heroicon-m-printer')
+                ->color('success')
+                ->url(fn () => route('admin.order.receipt', $this->getRecord()))
+                ->openUrlInNewTab(),
+
             Action::make('invoice_pdf')
                 ->label('Download Invoice PDF')
                 ->icon('heroicon-m-document-arrow-down')

@@ -104,6 +104,13 @@ class ViewService extends ViewRecord
         return [
             EditAction::make(),
 
+            Action::make('thermal_receipt')
+                ->label('Cetak Struk Thermal')
+                ->icon('heroicon-o-printer')
+                ->color('success')
+                ->url(fn () => route('admin.service.receipt', $this->getRecord()))
+                ->openUrlInNewTab(),
+
             Action::make('work_order_pdf')
                 ->label('Cetak Work Order (PDF)')
                 ->icon('heroicon-o-document-text')
