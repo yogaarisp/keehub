@@ -516,32 +516,23 @@
             flex: 1 1 auto !important;
         }
 
-        /* Mobile Close Button in Header */
-        aside.fi-sidebar .fi-sidebar-header button.fi-icon-btn,
-        aside.fi-sidebar .fi-sidebar-header .fi-icon-btn {
-            width: 2.15rem !important;
-            height: 2.15rem !important;
-            border-radius: 0.5rem !important;
+        /* Mobile Header and Logo Container */
+        aside.fi-sidebar .fi-sidebar-header > div:first-child {
+            width: 100% !important;
+            flex: 1 1 100% !important;
             display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            background-color: rgba(241, 245, 249, 0.8) !important;
-            border: 1px solid rgba(226, 232, 240, 0.8) !important;
-            color: #64748b !important;
-            flex-shrink: 0 !important;
         }
 
-        /* Prevent desktop-only collapse button from showing on mobile */
-        aside.fi-sidebar .fi-sidebar-header button.hidden,
-        aside.fi-sidebar .fi-sidebar-header button.lg\:flex {
+        aside.fi-sidebar .fi-sidebar-header .fi-logo {
+            width: 100% !important;
+            display: flex !important;
+        }
+
+        /* Hide Filament's default collapse/expand buttons on mobile header in favor of dedicated close button */
+        aside.fi-sidebar .fi-sidebar-header > button.fi-icon-btn,
+        aside.fi-sidebar .fi-sidebar-header > button.mx-auto,
+        aside.fi-sidebar .fi-sidebar-header > button.ms-auto {
             display: none !important;
-        }
-
-        .dark aside.fi-sidebar .fi-sidebar-header button.fi-icon-btn,
-        .dark aside.fi-sidebar .fi-sidebar-header .fi-icon-btn {
-            background-color: rgba(255, 255, 255, 0.08) !important;
-            border-color: rgba(255, 255, 255, 0.1) !important;
-            color: #94a3b8 !important;
         }
 
         /* Navigation in Mobile Drawer */
@@ -1109,3 +1100,30 @@
        END MOBILE ADMIN CONTENT OPTIMIZATION
        ======================================================== */
 </style>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Toggle mobile sidebar when topbar hamburger button is clicked while open
+        document.addEventListener('click', (e) => {
+            const toggleBtn = e.target.closest('.fi-topbar-open-sidebar-btn');
+            if (toggleBtn && window.Alpine) {
+                const sidebar = window.Alpine.store('sidebar');
+                if (sidebar && sidebar.isOpen) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    sidebar.close();
+                }
+            }
+        }, true);
+
+        // Auto-close sidebar on mobile when navigating via sidebar link
+        document.addEventListener('click', (e) => {
+            const navLink = e.target.closest('.fi-sidebar-nav a');
+            if (navLink && window.innerWidth < 1024 && window.Alpine) {
+                const sidebar = window.Alpine.store('sidebar');
+                if (sidebar && sidebar.isOpen) {
+                    sidebar.close();
+                }
+            }
+        });
+    });
+</script>
