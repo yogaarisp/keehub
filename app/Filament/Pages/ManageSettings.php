@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
@@ -70,6 +71,13 @@ class ManageSettings extends Page implements HasForms
             'printer_copies' => Setting::get('printer_copies', '1'),
             'printer_header_text' => Setting::get('printer_header_text', ''),
             'printer_footer_text' => Setting::get('printer_footer_text', 'Terima kasih telah berbelanja di KeeHub!'),
+            'courier_api_enabled' => (bool) Setting::get('courier_api_enabled', '0'),
+            'courier_api_provider' => Setting::get('courier_api_provider', 'rajaongkir'),
+            'courier_api_key' => Setting::get('courier_api_key', ''),
+            'courier_origin_city' => Setting::get('courier_origin_city', 'Sleman'),
+            'courier_origin_subdistrict' => Setting::get('courier_origin_subdistrict', ''),
+            'courier_available_list' => json_decode(Setting::get('courier_available_list', '["jne","jnt","sicepat"]'), true) ?: ['jne', 'jnt', 'sicepat'],
+            'courier_coming_soon_note' => Setting::get('courier_coming_soon_note', 'Fitur cek ongkir otomatis via kurir segera hadir. Saat ini kami melayani Pickup di Toko atau koordinasi pengiriman langsung via WhatsApp.'),
         ]);
     }
 
@@ -320,6 +328,75 @@ class ManageSettings extends Page implements HasForms
                                     ]),
                                 ]),
                             ]),
+
+                        Tab::make('Ekspedisi & Kurir (API)')
+                            ->icon('heroicon-o-truck')
+                            ->schema([
+                                Section::make('Integrasi API Cek Ongkir & Ekspedisi')
+                                    ->description('Konfigurasi API pihak ketiga (RajaOngkir, Biteship, Binderbyte, Komship) untuk cek tarif ongkos kirim real-time.')
+                                    ->schema([
+                                        Grid::make(['default' => 1, 'md' => 2])->schema([
+                                            Toggle::make('courier_api_enabled')
+                                                ->label('Aktifkan Cek Ongkir Otomatis via API')
+                                                ->helperText('Jika nonaktif, sistem di halaman checkout akan berstatus "Coming Soon" untuk opsi pengiriman kurir.')
+                                                ->live(),
+
+                                            Select::make('courier_api_provider')
+                                                ->label('Penyedia Layanan API Kurir')
+                                                ->options([
+                                                    'rajaongkir' => 'RajaOngkir (Starter / Basic / Pro)',
+                                                    'biteship' => 'Biteship API (E-Commerce Logistics)',
+                                                    'binderbyte' => 'Binderbyte (Cek Resi & Ongkir)',
+                                                    'komship' => 'Komship API',
+                                                    'custom' => 'Custom Webhook / Internal API',
+                                                ])
+                                                ->default('rajaongkir')
+                                                ->required(),
+                                        ]),
+
+                                        Grid::make(['default' => 1, 'md' => 2])->schema([
+                                            TextInput::make('courier_api_key')
+                                                ->label('API Key / Secret Token Ekspedisi')
+                                                ->password()
+                                                ->revealable()
+                                                ->placeholder('Masukkan API Key Anda di sini')
+                                                ->helperText('Kunci API yang diperoleh dari dashboard penyedia kurir/ongkir.')
+                                                ->maxLength(255),
+
+                                            TextInput::make('courier_origin_city')
+                                                ->label('Kota / Kabupaten Asal Pengiriman (Origin)')
+                                                ->placeholder('Contoh: Sleman / Yogyakarta / 501')
+                                                ->helperText('Kota atau ID kota asal tempat paket dikirimkan.')
+                                                ->maxLength(100),
+                                        ]),
+
+                                        Grid::make(['default' => 1, 'md' => 2])->schema([
+                                            TextInput::make('courier_origin_subdistrict')
+                                                ->label('Kecamatan Asal (Khusus Biteship / RajaOngkir Pro)')
+                                                ->placeholder('Contoh: Depok / Mlati / Godean')
+                                                ->maxLength(100),
+
+                                            CheckboxList::make('courier_available_list')
+                                                ->label('Pilihan Kurir yang Didukung')
+                                                ->options([
+                                                    'jne' => 'JNE Express (REG, YES, OKE, JTR)',
+                                                    'jnt' => 'J&T Express (EZ, J&T Cargo)',
+                                                    'sicepat' => 'SiCepat Ekspres (SIUNT, GOKIL)',
+                                                    'anteraja' => 'AnterAja',
+                                                    'pos' => 'POS Indonesia (Pos Reguler, NextDay)',
+                                                    'tiki' => 'TIKI',
+                                                    'wahana' => 'Wahana Express',
+                                                ])
+                                                ->columns(2),
+                                        ]),
+
+                                        Textarea::make('courier_coming_soon_note')
+                                            ->label('Pesan Pemberitahuan Saat Kurir Belum Siap (Coming Soon)')
+                                            ->rows(3)
+                                            ->placeholder('Fitur kalkulasi otomatis cek ongkir kurir (JNE, J&T, SiCepat) sedang dalam tahap integrasi API...')
+                                            ->helperText('Pesan yang ditampilkan kepada pembeli di halaman checkout saat mengklik opsi Pengiriman Kurir.'),
+                                    ]),
+                            ]),
                     ])
                     ->persistTabInQueryString(),
             ]);
@@ -333,7 +410,9 @@ class ManageSettings extends Page implements HasForms
             if ($key === 'whatsapp_number' && $value) {
                 $value = preg_replace('/\D/', '', (string) $value);
             }
-            if (is_bool($value)) {
+            if (is_array($value)) {
+                $value = json_encode($value);
+            } elseif (is_bool($value)) {
                 $value = $value ? '1' : '0';
             }
             Setting::put($key, is_null($value) ? '' : (string) $value);
@@ -341,7 +420,7 @@ class ManageSettings extends Page implements HasForms
 
         Notification::make()
             ->title('Pengaturan Berhasil Disimpan')
-            ->body('Seluruh perubahan identitas toko, operasional, dan printer telah diperbarui.')
+            ->body('Seluruh perubahan identitas toko, operasional, printer, dan ekspedisi kurir telah diperbarui.')
             ->success()
             ->send();
     }

@@ -54,4 +54,29 @@ class ManageSettingsTest extends TestCase
         $this->assertSame('Cabang Utama', Setting::get('printer_header_text'));
         $this->assertSame('Terima kasih telah berbelanja!', Setting::get('printer_footer_text'));
     }
+
+    public function test_owner_can_update_courier_api_settings(): void
+    {
+        $owner = User::factory()->create(['role' => 'owner']);
+
+        Livewire::actingAs($owner)
+            ->test(ManageSettings::class)
+            ->set('data.courier_api_enabled', true)
+            ->set('data.courier_api_provider', 'biteship')
+            ->set('data.courier_api_key', 'biteship_test_key_123456')
+            ->set('data.courier_origin_city', 'Kota Yogyakarta')
+            ->set('data.courier_origin_subdistrict', 'Gondokusuman')
+            ->set('data.courier_available_list', ['jne', 'sicepat'])
+            ->set('data.courier_coming_soon_note', 'Sedang dalam pengujian kurir.')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertSame('1', Setting::get('courier_api_enabled'));
+        $this->assertSame('biteship', Setting::get('courier_api_provider'));
+        $this->assertSame('biteship_test_key_123456', Setting::get('courier_api_key'));
+        $this->assertSame('Kota Yogyakarta', Setting::get('courier_origin_city'));
+        $this->assertSame('Gondokusuman', Setting::get('courier_origin_subdistrict'));
+        $this->assertSame(json_encode(['jne', 'sicepat']), Setting::get('courier_available_list'));
+        $this->assertSame('Sedang dalam pengujian kurir.', Setting::get('courier_coming_soon_note'));
+    }
 }

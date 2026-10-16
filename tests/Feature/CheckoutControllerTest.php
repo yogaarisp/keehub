@@ -48,6 +48,22 @@ class CheckoutControllerTest extends TestCase
             ->assertRedirect(route('cart.index'));
     }
 
+    public function test_checkout_page_renders_with_courier_coming_soon_badge(): void
+    {
+        $product = Product::factory()->create(['price' => 100000]);
+        $this->addGuestProductToCart($product, 1);
+
+        $response = $this
+            ->withoutMiddleware([EncryptCookies::class])
+            ->withUnencryptedCookie(config('session.cookie'), $this->guestSessionId())
+            ->get(route('checkout.index'));
+
+        $response->assertOk();
+        $response->assertSee('Coming Soon');
+        $response->assertSee('Pickup at Store');
+        $response->assertSee('Kirim via Kurir');
+    }
+
     public function test_shipping_cost_from_request_is_ignored_for_ship(): void
     {
         Setting::put('shipping_cost', '20000');
