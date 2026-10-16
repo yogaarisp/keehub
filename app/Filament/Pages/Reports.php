@@ -93,9 +93,7 @@ class Reports extends Page implements HasForms
                     $bestSellers = $this->getBestSellers();
                     $filename = 'keehub-report-'.now()->format('YmdHis').'.xlsx';
 
-                    Excel::store(new ReportExport($summary, $bestSellers), $filename, 'local');
-
-                    return response()->download(storage_path('app/'.$filename))->deleteFileAfterSend();
+                    return Excel::download(new ReportExport($summary, $bestSellers), $filename);
                 }),
         ];
     }

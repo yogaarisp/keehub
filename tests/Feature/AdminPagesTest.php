@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Pages\Reports;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Customer;
@@ -13,6 +14,7 @@ use App\Models\Service;
 use App\Models\Shipment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class AdminPagesTest extends TestCase
@@ -129,5 +131,18 @@ class AdminPagesTest extends TestCase
             }
             $this->assertEquals(200, $response->status(), "Failed on route {$name}: {$url}");
         }
+    }
+
+    public function test_reports_page_and_export_works(): void
+    {
+        $admin = User::factory()->create(['role' => 'owner']);
+
+        $response = $this->actingAs($admin)->get(route('filament.admin.pages.reports'));
+        $response->assertOk();
+
+        Livewire::actingAs($admin)
+            ->test(Reports::class)
+            ->callAction('export_excel')
+            ->assertSuccessful();
     }
 }
