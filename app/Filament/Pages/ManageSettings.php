@@ -219,64 +219,82 @@ class ManageSettings extends Page implements HasForms
                         Tab::make('Nota & Ketentuan Servis')
                             ->icon('heroicon-o-document-text')
                             ->schema([
-                                Section::make('Header Dokumen & Invoice PDF')
-                                    ->description('Kustomisasi kop surat/header pada cetak invoice servis, work order, dan faktur PDF.')
-                                    ->schema([
-                                        Grid::make(['default' => 1, 'md' => 2])->schema([
-                                            TextInput::make('invoice_header_brand')
-                                                ->label('Nama Brand / Usaha di Header')
-                                                ->placeholder('Contoh: KEETECH • KEEHUB')
-                                                ->helperText('Kosongkan untuk menggunakan format bawaan.'),
+                                Grid::make(['default' => 1, 'lg' => 12])->schema([
+                                    // Kolom Kiri: Form Pengaturan (7 cols di desktop)
+                                    Grid::make(1)->columnSpan(['default' => 12, 'lg' => 7])->schema([
+                                        Section::make('Header Dokumen & Invoice PDF')
+                                            ->description('Kustomisasi kop surat/header pada cetak invoice servis, work order, dan faktur PDF.')
+                                            ->schema([
+                                                Grid::make(['default' => 1, 'md' => 2])->schema([
+                                                    TextInput::make('invoice_header_brand')
+                                                        ->label('Nama Brand / Usaha di Header')
+                                                        ->placeholder('Contoh: KEETECH • KEEHUB')
+                                                        ->helperText('Kosongkan untuk menggunakan format bawaan.')
+                                                        ->live(debounce: 300),
 
-                                            TextInput::make('invoice_header_tagline')
-                                                ->label('Tagline / Slogan Dokumen')
-                                                ->placeholder('Contoh: IT Solutions & PC Hardware Specialist')
-                                                ->helperText('Kosongkan untuk menggunakan Tagline Toko bawaan.'),
-                                        ]),
+                                                    TextInput::make('invoice_header_tagline')
+                                                        ->label('Tagline / Slogan Dokumen')
+                                                        ->placeholder('Contoh: IT Solutions & PC Hardware Specialist')
+                                                        ->helperText('Kosongkan untuk menggunakan Tagline Toko bawaan.')
+                                                        ->live(debounce: 300),
+                                                ]),
 
-                                        Textarea::make('invoice_header_contact')
-                                            ->label('Kontak & Alamat Header (Opsional)')
-                                            ->rows(2)
-                                            ->placeholder("Jl. IT Technology Hub • WhatsApp: 0812-3456-7890\nEmail: billing@keetech.id • Website: https://keetech.id")
-                                            ->helperText('Jika dikosongkan, sistem otomatis merangkum Alamat, WhatsApp, dan Email dari pengaturan toko.'),
+                                                Textarea::make('invoice_header_contact')
+                                                    ->label('Kontak & Alamat Header (Opsional)')
+                                                    ->rows(2)
+                                                    ->placeholder("Jl. IT Technology Hub • WhatsApp: 0812-3456-7890\nEmail: billing@keetech.id • Website: https://keetech.id")
+                                                    ->helperText('Jika dikosongkan, sistem otomatis merangkum Alamat, WhatsApp, dan Email dari pengaturan toko.')
+                                                    ->live(debounce: 300),
+                                            ]),
+
+                                        Section::make('Instruksi Pembayaran & Penandatangan (Invoice Servis)')
+                                            ->description('Informasi rekening dan pihak pengesah pada cetak Invoice Servis.')
+                                            ->schema([
+                                                Textarea::make('invoice_payment_instructions')
+                                                    ->label('Instruksi Pembayaran / Rekening Bank')
+                                                    ->rows(3)
+                                                    ->placeholder("Instruksi Pembayaran Bank Transfer:\nBCA: 123-456-7890 a/n PT Keetech Solusi Indonesia\nMandiri: 137-000-123-4567 a/n PT Keetech Solusi Indonesia")
+                                                    ->helperText('Teks instruksi rekening transfer bank di Invoice Servis. Kosongkan untuk memakai data rekening di tab Operasional.')
+                                                    ->live(debounce: 300),
+
+                                                TextInput::make('invoice_signature_name')
+                                                    ->label('Nama Bagian Penandatangan / Finance')
+                                                    ->placeholder('Keetech Finance Dept.')
+                                                    ->helperText('Nama pihak penandatangan di bawah garis tanda tangan (Default: Keetech Finance Dept.).')
+                                                    ->live(debounce: 300),
+                                            ]),
+
+                                        Section::make('Catatan Kaki (Footer) & Garansi')
+                                            ->description('Teks penutup di bagian bawah halaman cetak.')
+                                            ->schema([
+                                                Textarea::make('service_invoice_footer')
+                                                    ->label('Catatan Kaki (Footer) Khusus Invoice Servis')
+                                                    ->rows(2)
+                                                    ->placeholder('Terima kasih atas kepercayaan Anda kepada Keetech & KeeHub. Hubungi tim kami jika terdapat pertanyaan terkait tagihan ini.')
+                                                    ->helperText('Tercetak di bagian paling bawah pada lembar Invoice Servis.')
+                                                    ->live(debounce: 300),
+
+                                                Textarea::make('invoice_footer_notes')
+                                                    ->label('Catatan Kaki Nota / Invoice Penjualan Umum')
+                                                    ->rows(2)
+                                                    ->placeholder('Terima kasih telah berbelanja di KeeHub! Barang yang sudah dibeli dapat ditukar jika terdapat cacat pabrik dalam 2x24 jam.')
+                                                    ->helperText('Pesan yang tercetak di bagian bawah nota pesanan belanja umum.')
+                                                    ->live(debounce: 300),
+
+                                                Textarea::make('service_warranty_terms')
+                                                    ->label('Syarat & Ketentuan Garansi Servis')
+                                                    ->rows(3)
+                                                    ->placeholder('Garansi servis berlaku selama 14 hari terhitung sejak tanggal unit selesai dikerjakan. Tidak mencakup kerusakan akibat cairan atau kelalaian pengguna.')
+                                                    ->helperText('Ketentuan garansi pengerjaan reparasi / servis keyboard & PC (tercetak di struk thermal).')
+                                                    ->live(debounce: 300),
+                                            ]),
                                     ]),
 
-                                Section::make('Instruksi Pembayaran & Penandatangan (Invoice Servis)')
-                                    ->description('Informasi rekening dan pihak pengesah pada cetak Invoice Servis.')
-                                    ->schema([
-                                        Textarea::make('invoice_payment_instructions')
-                                            ->label('Instruksi Pembayaran / Rekening Bank')
-                                            ->rows(3)
-                                            ->placeholder("Instruksi Pembayaran Bank Transfer:\nBCA: 123-456-7890 a/n PT Keetech Solusi Indonesia\nMandiri: 137-000-123-4567 a/n PT Keetech Solusi Indonesia")
-                                            ->helperText('Teks instruksi rekening transfer bank di Invoice Servis. Kosongkan untuk memakai data rekening di tab Operasional.'),
-
-                                        TextInput::make('invoice_signature_name')
-                                            ->label('Nama Bagian Penandatangan / Finance')
-                                            ->placeholder('Keetech Finance Dept.')
-                                            ->helperText('Nama pihak penandatangan di bawah garis tanda tangan (Default: Keetech Finance Dept.).'),
+                                    // Kolom Kanan: Live Nota / Struk Preview (5 cols di desktop)
+                                    Grid::make(1)->columnSpan(['default' => 12, 'lg' => 5])->schema([
+                                        ViewComponent::make('filament.components.invoice-preview'),
                                     ]),
-
-                                Section::make('Catatan Kaki (Footer) & Garansi')
-                                    ->description('Teks penutup di bagian bawah halaman cetak.')
-                                    ->schema([
-                                        Textarea::make('service_invoice_footer')
-                                            ->label('Catatan Kaki (Footer) Khusus Invoice Servis')
-                                            ->rows(2)
-                                            ->placeholder('Terima kasih atas kepercayaan Anda kepada Keetech & KeeHub. Hubungi tim kami jika terdapat pertanyaan terkait tagihan ini.')
-                                            ->helperText('Tercetak di bagian paling bawah pada lembar Invoice Servis.'),
-
-                                        Textarea::make('invoice_footer_notes')
-                                            ->label('Catatan Kaki Nota / Invoice Penjualan Umum')
-                                            ->rows(2)
-                                            ->placeholder('Terima kasih telah berbelanja di KeeHub! Barang yang sudah dibeli dapat ditukar jika terdapat cacat pabrik dalam 2x24 jam.')
-                                            ->helperText('Pesan yang tercetak di bagian bawah nota pesanan belanja umum.'),
-
-                                        Textarea::make('service_warranty_terms')
-                                            ->label('Syarat & Ketentuan Garansi Servis')
-                                            ->rows(3)
-                                            ->placeholder('Garansi servis berlaku selama 14 hari terhitung sejak tanggal unit selesai dikerjakan. Tidak mencakup kerusakan akibat cairan atau kelalaian pengguna.')
-                                            ->helperText('Ketentuan garansi pengerjaan reparasi / servis keyboard & PC (tercetak di struk thermal).'),
-                                    ]),
+                                ]),
                             ]),
 
                         Tab::make('Printer & Struk Kasir')

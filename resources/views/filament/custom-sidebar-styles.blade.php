@@ -1256,6 +1256,43 @@
         });
     });
 
+    window.keehubInvoicePreview = function(defaults) {
+        return {
+            previewMode: 'invoice',
+            headerBrand: '',
+            headerTagline: '',
+            headerContact: '',
+            paymentInstructions: '',
+            signatureName: '',
+            serviceFooter: '',
+            invoiceFooterNotes: '',
+            warrantyTerms: '',
+            defaults: defaults || {},
+
+            init() {
+                if (this.$wire) {
+                    this.headerBrand = this.$wire.get('data.invoice_header_brand') || '';
+                    this.headerTagline = this.$wire.get('data.invoice_header_tagline') || '';
+                    this.headerContact = this.$wire.get('data.invoice_header_contact') || '';
+                    this.paymentInstructions = this.$wire.get('data.invoice_payment_instructions') || '';
+                    this.signatureName = this.$wire.get('data.invoice_signature_name') || '';
+                    this.serviceFooter = this.$wire.get('data.service_invoice_footer') || '';
+                    this.invoiceFooterNotes = this.$wire.get('data.invoice_footer_notes') || '';
+                    this.warrantyTerms = this.$wire.get('data.service_warranty_terms') || '';
+
+                    this.$watch('$wire.data.invoice_header_brand', val => { this.headerBrand = val || ''; });
+                    this.$watch('$wire.data.invoice_header_tagline', val => { this.headerTagline = val || ''; });
+                    this.$watch('$wire.data.invoice_header_contact', val => { this.headerContact = val || ''; });
+                    this.$watch('$wire.data.invoice_payment_instructions', val => { this.paymentInstructions = val || ''; });
+                    this.$watch('$wire.data.invoice_signature_name', val => { this.signatureName = val || ''; });
+                    this.$watch('$wire.data.service_invoice_footer', val => { this.serviceFooter = val || ''; });
+                    this.$watch('$wire.data.invoice_footer_notes', val => { this.invoiceFooterNotes = val || ''; });
+                    this.$watch('$wire.data.service_warranty_terms', val => { this.warrantyTerms = val || ''; });
+                }
+            }
+        };
+    };
+
     window.keehubPrinterPreview = function() {
         return {
             paperSize: '58mm',
