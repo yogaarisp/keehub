@@ -79,4 +79,27 @@ class ManageSettingsTest extends TestCase
         $this->assertSame(json_encode(['jne', 'sicepat']), Setting::get('courier_available_list'));
         $this->assertSame('Sedang dalam pengujian kurir.', Setting::get('courier_coming_soon_note'));
     }
+
+    public function test_owner_can_update_invoice_header_and_footer_settings(): void
+    {
+        $owner = User::factory()->create(['role' => 'owner']);
+
+        Livewire::actingAs($owner)
+            ->test(ManageSettings::class)
+            ->set('data.invoice_header_brand', 'KEETECH STORE')
+            ->set('data.invoice_header_tagline', 'Solusi Komputer & Service Profesional')
+            ->set('data.invoice_header_contact', "Jl. Malioboro No. 12\nWhatsApp: 08123456789")
+            ->set('data.invoice_payment_instructions', "BCA: 987654321 a/n Yoga AP")
+            ->set('data.invoice_signature_name', 'Keetech Management')
+            ->set('data.service_invoice_footer', 'Terima kasih telah mempercayakan servis komputer kepada kami.')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertSame('KEETECH STORE', Setting::get('invoice_header_brand'));
+        $this->assertSame('Solusi Komputer & Service Profesional', Setting::get('invoice_header_tagline'));
+        $this->assertSame("Jl. Malioboro No. 12\nWhatsApp: 08123456789", Setting::get('invoice_header_contact'));
+        $this->assertSame("BCA: 987654321 a/n Yoga AP", Setting::get('invoice_payment_instructions'));
+        $this->assertSame('Keetech Management', Setting::get('invoice_signature_name'));
+        $this->assertSame('Terima kasih telah mempercayakan servis komputer kepada kami.', Setting::get('service_invoice_footer'));
+    }
 }

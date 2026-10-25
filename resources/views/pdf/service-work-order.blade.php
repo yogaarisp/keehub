@@ -191,11 +191,23 @@
         <table>
             <tr>
                 <td style="width: 55%; vertical-align: top;">
-                    <div class="brand-name">KEETECH <span>• KEEHUB</span></div>
-                    <div class="brand-tagline">IT Solutions & PC Hardware Specialist</div>
+                    <div class="brand-name">
+                        @if ($customBrand = \App\Models\Setting::get('invoice_header_brand'))
+                            {{ $customBrand }}
+                        @else
+                            KEETECH <span>• KEEHUB</span>
+                        @endif
+                    </div>
+                    <div class="brand-tagline">
+                        {{ \App\Models\Setting::get('invoice_header_tagline') ?: (\App\Models\Setting::get('store_tagline') ?: 'IT Solutions & PC Hardware Specialist') }}
+                    </div>
                     <div class="brand-contact">
-                        Jl. IT Technology Hub • WhatsApp: {{ \App\Models\Setting::get('whatsapp_number', '0812-3456-7890') }}<br>
-                        Email: service@keetech.id • Website: {{ config('app.url') }}
+                        @if ($customContact = \App\Models\Setting::get('invoice_header_contact'))
+                            {!! nl2br(e($customContact)) !!}
+                        @else
+                            {{ \App\Models\Setting::get('store_address', 'Jl. IT Technology Hub') }} • WhatsApp: {{ \App\Models\Setting::get('whatsapp_number', '0812-3456-7890') }}<br>
+                            Email: {{ \App\Models\Setting::get('store_email', 'service@keetech.id') }} • Website: {{ config('app.url') }}
+                        @endif
                     </div>
                 </td>
                 <td class="doc-title">
@@ -337,7 +349,7 @@
     </table>
 
     <div class="footer">
-        Work Order ini merupakan catatan resmi pekerjaan perbaikan Keetech & KeeHub. Seluruh data suku cadang terarsip untuk riwayat teknis.
+        {{ \App\Models\Setting::get('service_work_order_footer') ?: (\App\Models\Setting::get('service_invoice_footer') ?: 'Work Order ini merupakan catatan resmi pekerjaan perbaikan Keetech & KeeHub. Seluruh data suku cadang terarsip untuk riwayat teknis.') }}
     </div>
 </body>
 </html>

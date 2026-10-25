@@ -181,11 +181,23 @@
         <table>
             <tr>
                 <td style="width: 55%; vertical-align: top;">
-                    <div class="brand-name">KEETECH <span>• KEEHUB</span></div>
-                    <div class="brand-tagline">IT Solutions & PC Hardware Specialist</div>
+                    <div class="brand-name">
+                        @if ($customBrand = \App\Models\Setting::get('invoice_header_brand'))
+                            {{ $customBrand }}
+                        @else
+                            KEETECH <span>• KEEHUB</span>
+                        @endif
+                    </div>
+                    <div class="brand-tagline">
+                        {{ \App\Models\Setting::get('invoice_header_tagline') ?: (\App\Models\Setting::get('store_tagline') ?: 'IT Solutions & PC Hardware Specialist') }}
+                    </div>
                     <div class="brand-contact">
-                        Jl. IT Technology Hub • WhatsApp: {{ \App\Models\Setting::get('whatsapp_number', '0812-3456-7890') }}<br>
-                        Email: billing@keetech.id • Website: {{ config('app.url') }}
+                        @if ($customContact = \App\Models\Setting::get('invoice_header_contact'))
+                            {!! nl2br(e($customContact)) !!}
+                        @else
+                            {{ \App\Models\Setting::get('store_address', 'Jl. IT Technology Hub') }} • WhatsApp: {{ \App\Models\Setting::get('whatsapp_number', '0812-3456-7890') }}<br>
+                            Email: {{ \App\Models\Setting::get('store_email', 'billing@keetech.id') }} • Website: {{ config('app.url') }}
+                        @endif
                     </div>
                 </td>
                 <td class="doc-title">
@@ -304,19 +316,37 @@
         </tr>
     </table>
 
-    <div class="payment-box">
-        <strong>Instruksi Pembayaran Bank Transfer:</strong><br>
-        BCA: <strong>123-456-7890</strong> a/n PT Keetech Solusi Indonesia<br>
-        Mandiri: <strong>137-000-123-4567</strong> a/n PT Keetech Solusi Indonesia<br>
-        <em>*Mohon cantumkan No. Invoice ({{ $service->invoice_number ?: $service->code }}) pada berita transfer.</em>
-    </div>
+    @php
+        $customPayment = \App\Models\Setting::get('invoice_payment_instructions');
+        $bankName = \App\Models\Setting::get('bank_name');
+        $bankAccNumber = \App\Models\Setting::get('bank_account_number');
+        $bankAccHolder = \App\Models\Setting::get('bank_account_holder');
+    @endphp
+    @if ($customPayment)
+        <div class="payment-box">
+            {!! nl2br(e($customPayment)) !!}
+        </div>
+    @elseif ($bankName && $bankAccNumber)
+        <div class="payment-box">
+            <strong>Instruksi Pembayaran Bank Transfer:</strong><br>
+            {{ $bankName }}: <strong>{{ $bankAccNumber }}</strong> @if($bankAccHolder) a/n {{ $bankAccHolder }} @endif<br>
+            <em>*Mohon cantumkan No. Invoice ({{ $service->invoice_number ?: $service->code }}) pada berita transfer.</em>
+        </div>
+    @else
+        <div class="payment-box">
+            <strong>Instruksi Pembayaran Bank Transfer:</strong><br>
+            BCA: <strong>123-456-7890</strong> a/n PT Keetech Solusi Indonesia<br>
+            Mandiri: <strong>137-000-123-4567</strong> a/n PT Keetech Solusi Indonesia<br>
+            <em>*Mohon cantumkan No. Invoice ({{ $service->invoice_number ?: $service->code }}) pada berita transfer.</em>
+        </div>
+    @endif
 
     <table class="signatures">
         <tr>
             <td>
-                Finance / Billing Keetech,
+                Finance / Billing,
                 <div class="sig-line"></div>
-                <strong>Keetech Finance Dept.</strong>
+                <strong>{{ \App\Models\Setting::get('invoice_signature_name', 'Keetech Finance Dept.') ?: 'Keetech Finance Dept.' }}</strong>
             </td>
             <td>
                 Penerima Tagihan,
@@ -330,7 +360,7 @@
     </table>
 
     <div class="footer">
-        Terima kasih atas kepercayaan Anda kepada Keetech & KeeHub. Hubungi tim kami jika terdapat pertanyaan terkait tagihan ini.
+        {{ \App\Models\Setting::get('service_invoice_footer') ?: (\App\Models\Setting::get('invoice_footer_notes') ?: 'Terima kasih atas kepercayaan Anda kepada Keetech & KeeHub. Hubungi tim kami jika terdapat pertanyaan terkait tagihan ini.') }}
     </div>
 </body>
 </html>
