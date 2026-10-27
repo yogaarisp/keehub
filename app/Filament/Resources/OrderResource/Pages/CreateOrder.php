@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\OrderResource\Pages;
 
 use App\Filament\Resources\OrderResource;
+use App\Models\OrderStatusHistory;
 use App\Services\OrderService;
 use Filament\Resources\Pages\CreateRecord;
 

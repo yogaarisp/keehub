@@ -1005,20 +1005,55 @@
             min-height: 2.5rem !important;
         }
 
-        /* ---- Form footer actions: sticky on mobile ---- */
+        /* ---- Form footer actions: sticky above mobile bottom navigation ---- */
         .fi-footer-actions {
             position: sticky !important;
-            bottom: 0 !important;
+            bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
             background-color: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(8px) !important;
-            -webkit-backdrop-filter: blur(8px) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
             padding: 0.75rem 0.85rem !important;
             margin: 0 -0.85rem !important;
-            z-index: 10 !important;
+            z-index: 25 !important;
+            box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.05) !important;
+            border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
         }
 
         .dark .fi-footer-actions {
             background-color: rgba(11, 15, 25, 0.95) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.35) !important;
+        }
+
+        .fi-footer-actions .fi-ac {
+            width: 100% !important;
+            display: flex !important;
+            gap: 0.5rem !important;
+        }
+
+        .fi-footer-actions .fi-btn {
+            flex: 1 1 auto !important;
+            justify-content: center !important;
+        }
+
+        /* Ensure page body has room for sticky footer actions + bottom nav */
+        .fi-page {
+            padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px)) !important;
+        }
+
+        /* ---- Repeater Item Mobile Styling ---- */
+        .fi-repeater-item {
+            border-radius: 0.75rem !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .dark .fi-repeater-item {
+            border-color: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .fi-repeater-item-header {
+            padding: 0.5rem 0.75rem !important;
         }
 
         /* ---- Tabs (relation managers): horizontal scroll ---- */

@@ -13,6 +13,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\EditAction;
@@ -36,51 +37,153 @@ class OrderResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Section::make('Order')->schema([
-                Select::make('customer_id')->relationship('customer', 'name')->searchable()->preload()
+            Section::make('Informasi Pesanan')->schema([
+                Select::make('customer_id')
+                    ->label('Pelanggan')
+                    ->relationship('customer', 'name')
+                    ->searchable()
+                    ->preload()
                     ->createOptionForm([
-                        TextInput::make('name')->required(),
-                        TextInput::make('whatsapp')->required()->tel(),
-                        TextInput::make('email')->email(),
-                    ]),
-                Select::make('type')->options(array_combine(Order::TYPES, array_map(fn ($t) => ucfirst(str_replace('_', ' ', $t)), Order::TYPES)))->default('product'),
-                Select::make('channel')->options(array_combine(Order::CHANNELS, array_map(ucfirst(...), Order::CHANNELS)))->default('admin'),
-                Select::make('status')->options(array_combine(Order::STATUSES, array_map(ucfirst(...), Order::STATUSES)))->default('pending')->disabled(fn (string $operation) => $operation === 'create'),
-                TextInput::make('discount')->numeric()->prefix('Rp')->default(0),
-                TextInput::make('shipping_cost')->numeric()->prefix('Rp')->default(0),
-                Textarea::make('notes'),
-            ])->columns(['default' => 1, 'sm' => 2]),
+                        TextInput::make('name')->label('Nama Lengkap')->required(),
+                        TextInput::make('whatsapp')->label('No. WhatsApp')->required()->tel(),
+                        TextInput::make('email')->label('Email')->email(),
+                    ])
+                    ->columnSpanFull(),
 
-            Section::make('Items')->schema([
-                Repeater::make('items')->relationship()->schema([
-                    Select::make('product_id')->label('Produk toko')->options(fn () => Product::query()->where('is_active', true)->pluck('name', 'id'))
-                        ->searchable()->live()->dehydrated()
-                        ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
-                            if ($state && ($product = Product::find($state))) {
-                                $set('name', $product->name);
-                                $set('price', $product->price);
-                            }
-                        }),
-                    TextInput::make('name')->required(),
-                    Select::make('item_type')->options(array_combine(OrderItem::TYPES, array_map(fn ($t) => match ($t) {
-                        'customer_owned' => 'CUSTOMER OWNED (tidak mengurangi stok)',
-                        'product' => 'Product toko',
-                        'build' => 'PC Build',
-                        'service' => 'Service',
-                        'labor' => 'Jasa/Labor',
-                    }, OrderItem::TYPES)))->default('product'),
-                    TextInput::make('quantity')->numeric()->minValue(1)->default(1),
-                    TextInput::make('price')->numeric()->prefix('Rp'),
-                ])->columns(['default' => 1, 'sm' => 2, 'lg' => 5])->defaultItems(1)
+                Select::make('type')
+                    ->label('Tipe Pesanan')
+                    ->options([
+                        'product' => 'Produk Fisik',
+                        'pc_build' => 'Perakitan PC',
+                        'service' => 'Layanan Servis',
+                        'product_service' => 'Produk & Servis',
+                    ])
+                    ->default('product')
+                    ->required(),
+
+                Select::make('channel')
+                    ->label('Saluran Transaksi')
+                    ->options([
+                        'admin' => 'Admin POS / Manual',
+                        'website' => 'Website Online',
+                        'whatsapp' => 'WhatsApp Order',
+                        'offline' => 'Walk-in / Toko Fisik',
+                    ])
+                    ->default('admin')
+                    ->required(),
+
+                Select::make('status')
+                    ->label('Status Pesanan')
+                    ->options(array_combine(Order::STATUSES, array_map(fn ($s) => ucfirst($s), Order::STATUSES)))
+                    ->default('pending')
+                    ->disabled(fn (string $operation) => $operation === 'create'),
+
+                TextInput::make('discount')
+                    ->label('Potongan Diskon')
+                    ->numeric()
+                    ->prefix('Rp')
+                    ->default(0)
+                    ->minValue(0),
+
+                TextInput::make('shipping_cost')
+                    ->label('Biaya Kirim / Ongkir')
+                    ->numeric()
+                    ->prefix('Rp')
+                    ->default(0)
+                    ->minValue(0),
+
+                Textarea::make('notes')
+                    ->label('Catatan Pesanan (Opsional)')
+                    ->placeholder('Catatan khusus pelanggan atau instruksi pengerjaan internal...')
+                    ->rows(2)
+                    ->columnSpanFull(),
+            ])
+            ->columns(['default' => 1, 'sm' => 2]),
+
+            Section::make('Daftar Produk & Layanan (Items)')->schema([
+                Repeater::make('items')
+                    ->relationship()
+                    ->schema([
+                        Select::make('product_id')
+                            ->label('Pilih Produk Toko (Opsional)')
+                            ->options(fn () => Product::query()->where('is_active', true)->pluck('name', 'id'))
+                            ->searchable()
+                            ->live()
+                            ->dehydrated()
+                            ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
+                                if ($state && ($product = Product::find($state))) {
+                                    $set('name', $product->name);
+                                    $set('price', $product->price);
+                                }
+                            })
+                            ->columnSpan(['default' => 12, 'md' => 6]),
+
+                        TextInput::make('name')
+                            ->label('Nama Item / Jasa')
+                            ->required()
+                            ->placeholder('Contoh: Keyboard Mechanical RGB')
+                            ->columnSpan(['default' => 12, 'md' => 6]),
+
+                        Select::make('item_type')
+                            ->label('Kategori Item')
+                            ->options([
+                                'product' => 'Produk Toko',
+                                'build' => 'Komponen PC Build',
+                                'service' => 'Layanan Servis',
+                                'labor' => 'Biaya Jasa / Pasang',
+                                'customer_owned' => 'Customer Owned (Milik User)',
+                            ])
+                            ->default('product')
+                            ->required()
+                            ->columnSpan(['default' => 12, 'sm' => 6, 'md' => 4]),
+
+                        TextInput::make('quantity')
+                            ->label('Qty')
+                            ->numeric()
+                            ->minValue(1)
+                            ->default(1)
+                            ->required()
+                            ->columnSpan(['default' => 6, 'sm' => 3, 'md' => 3]),
+
+                        TextInput::make('price')
+                            ->label('Harga Satuan')
+                            ->numeric()
+                            ->prefix('Rp')
+                            ->default(0)
+                            ->required()
+                            ->columnSpan(['default' => 6, 'sm' => 3, 'md' => 5]),
+                    ])
+                    ->columns(['default' => 12, 'sm' => 12])
+                    ->defaultItems(1)
+                    ->addActionLabel('+ Tambah Item Pesanan')
+                    ->itemLabel(fn (array $state): ?string => filled($state['name'] ?? null)
+                        ? ($state['name'] . ' (' . ($state['quantity'] ?? 1) . 'x' . (isset($state['price']) ? ' @ Rp ' . number_format($state['price'], 0, ',', '.') : '') . ')')
+                        : null
+                    )
+                    ->collapsible()
+                    ->collapsed(false)
                     ->deletable()
                     ->reorderable(false),
-            ])->collapsible(),
+            ]),
 
-            Section::make('Pengiriman')->schema([
-                TextInput::make('shipping_name'),
-                TextInput::make('shipping_phone')->tel(),
-                Textarea::make('shipping_address')->rows(2),
-            ])->columns(['default' => 1, 'sm' => 2])->collapsible(),
+            Section::make('Informasi Pengiriman')->schema([
+                TextInput::make('shipping_name')
+                    ->label('Nama Penerima')
+                    ->placeholder('Contoh: Hendra Wijaya'),
+
+                TextInput::make('shipping_phone')
+                    ->label('No. Telepon / WhatsApp')
+                    ->tel()
+                    ->placeholder('0812-xxxx-xxxx'),
+
+                Textarea::make('shipping_address')
+                    ->label('Alamat Lengkap Pengiriman')
+                    ->placeholder('Alamat tujuan pengiriman...')
+                    ->rows(2)
+                    ->columnSpanFull(),
+            ])
+            ->columns(['default' => 1, 'sm' => 2])
+            ->collapsible(),
         ]);
     }
 
