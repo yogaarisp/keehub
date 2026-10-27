@@ -1228,6 +1228,46 @@
     .dark .fi-bottom-nav-center.active span {
         color: #fbbf24 !important;
     }
+
+    /* ========================================================
+       DARK MODE ENHANCEMENTS FOR SETTINGS, FORMS & TABS
+       ======================================================== */
+    .dark .fi-section-header-description {
+        color: #94a3b8 !important;
+    }
+
+    .dark .fi-fo-field-wrp-helper-text,
+    .dark .fi-fo-field-wrp-helper-text * {
+        color: #94a3b8 !important;
+    }
+
+    .dark input::placeholder,
+    .dark textarea::placeholder {
+        color: #64748b !important;
+        opacity: 0.9 !important;
+    }
+
+    /* Tabs active/inactive contrast in dark mode */
+    .dark .fi-tabs-item:not(.fi-active) .fi-tabs-item-label {
+        color: #94a3b8 !important;
+    }
+
+    .dark .fi-tabs-item:not(.fi-active):hover .fi-tabs-item-label {
+        color: #f8fafc !important;
+    }
+
+    .dark .fi-tabs-item.fi-active {
+        background-color: rgba(245, 158, 11, 0.12) !important;
+    }
+
+    .dark .fi-tabs-item.fi-active .fi-tabs-item-label {
+        color: #fbbf24 !important;
+        font-weight: 600 !important;
+    }
+
+    .dark .fi-tabs-item.fi-active .fi-tabs-item-icon {
+        color: #fbbf24 !important;
+    }
 </style>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
