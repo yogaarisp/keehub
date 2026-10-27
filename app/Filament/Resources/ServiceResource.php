@@ -50,7 +50,8 @@ class ServiceResource extends Resource
                         TextInput::make('name')->label('Nama Lengkap')->required(),
                         TextInput::make('whatsapp')->label('No. WhatsApp')->required()->tel(),
                         TextInput::make('email')->email(),
-                    ]),
+                    ])
+                    ->columnSpanFull(),
                 TextInput::make('company_name')
                     ->label('Nama Perusahaan / Klien B2B')
                     ->placeholder('Contoh: PT Teknologi Maju / Studio Animasi'),
@@ -64,7 +65,8 @@ class ServiceResource extends Resource
                     ->label('Teknisi Penanggung Jawab')
                     ->options(fn () => User::query()->whereIn('role', ['owner', 'staff'])->pluck('name', 'id'))
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->columnSpanFull(),
             ])->columns(['default' => 1, 'sm' => 2]),
 
             Section::make('Detail Unit PC / Perangkat')->schema([
@@ -121,11 +123,13 @@ class ServiceResource extends Resource
                             ])
                             ->default('product')
                             ->required()
-                            ->live(),
+                            ->live()
+                            ->columnSpan(['default' => 12, 'sm' => 4]),
 
                         TextInput::make('name')
                             ->label('Nama Item / Jasa')
-                            ->required(),
+                            ->required()
+                            ->columnSpan(['default' => 12, 'sm' => 8]),
 
                         Select::make('part_source')
                             ->label('Sumber Part')
@@ -136,7 +140,8 @@ class ServiceResource extends Resource
                             ->default('keehub')
                             ->required()
                             ->live()
-                            ->helperText(fn (Get $get) => $get('part_source') === 'vendor' ? 'Harga asli dicatat untuk Work Order, otomatis Rp 0 pada Invoice tagihan klien.' : null),
+                            ->helperText(fn (Get $get) => $get('part_source') === 'vendor' ? 'Harga dicatat untuk Work Order, Rp 0 pada Invoice klien.' : null)
+                            ->columnSpan(['default' => 12, 'sm' => 4]),
 
                         TextInput::make('quantity')
                             ->label('Qty')
@@ -144,7 +149,8 @@ class ServiceResource extends Resource
                             ->default(1)
                             ->minValue(1)
                             ->required()
-                            ->live(),
+                            ->live()
+                            ->columnSpan(['default' => 6, 'sm' => 4]),
 
                         TextInput::make('price')
                             ->label('Harga Satuan')
@@ -152,20 +158,28 @@ class ServiceResource extends Resource
                             ->prefix('Rp')
                             ->default(0)
                             ->required()
-                            ->live(),
+                            ->live()
+                            ->columnSpan(['default' => 6, 'sm' => 4]),
 
                         TextInput::make('warranty_info')
                             ->label('Garansi')
-                            ->placeholder('Contoh: 1 Tahun'),
+                            ->placeholder('Contoh: 1 Tahun')
+                            ->columnSpan(['default' => 12, 'sm' => 6]),
 
                         TextInput::make('description')
                             ->label('Keterangan / Serial Part')
-                            ->placeholder('SN / Catatan teknis'),
+                            ->placeholder('SN / Catatan teknis')
+                            ->columnSpan(['default' => 12, 'sm' => 6]),
                     ])
-                    ->columns(['default' => 1, 'sm' => 2, 'lg' => 3])
+                    ->columns(['default' => 12, 'sm' => 12])
                     ->defaultItems(0)
                     ->addActionLabel('+ Tambah Item / Jasa')
+                    ->itemLabel(fn (array $state): ?string => filled($state['name'] ?? null)
+                        ? ($state['name'] . ' (' . ($state['quantity'] ?? 1) . 'x' . (isset($state['price']) ? ' @ Rp ' . number_format($state['price'], 0, ',', '.') : '') . ')')
+                        : null
+                    )
                     ->collapsible()
+                    ->collapsed(false)
                     ->reorderable(false),
             ]),
         ]);
@@ -175,27 +189,114 @@ class ServiceResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('code')->label('No. Servis')->searchable()->sortable(),
-                TextColumn::make('invoice_number')->label('No. Invoice')->searchable()->placeholder('—'),
-                TextColumn::make('customer.name')->label('Pelanggan')->default('—')->searchable(),
-                TextColumn::make('company_name')->label('Perusahaan')->placeholder('—')->searchable(),
-                TextColumn::make('device_name')->label('Unit PC')->placeholder('—')->limit(24)->searchable(),
-                TextColumn::make('service_type')->label('Layanan')->badge()->formatStateUsing(fn ($state) => Service::TYPES[$state] ?? $state),
-                TextColumn::make('technician.name')->label('Teknisi')->placeholder('—'),
-                TextColumn::make('status')->badge()->color(fn (string $state) => match ($state) {
-                    'received' => 'gray',
-                    'checking' => 'warning',
-                    'waiting_approval' => 'info',
-                    'processing', 'testing' => 'primary',
-                    'ready', 'completed' => 'success',
-                    'cancelled' => 'danger',
-                    default => 'gray',
-                }),
-                TextColumn::make('total_cost')->label('Total Tagihan')->money('IDR')->sortable(),
-                TextColumn::make('created_at')->label('Tgl Masuk')->dateTime('d M Y H:i')->sortable(),
+                TextColumn::make('code')
+                    ->label('No. Servis')
+                    ->searchable()
+                    ->sortable()
+                    ->copyable()
+                    ->weight('bold')
+                    ->description(fn (Service $record): string => $record->created_at ? $record->created_at->format('d M Y') : '—'),
+
+                TextColumn::make('customer.name')
+                    ->label('Pelanggan / Klien')
+                    ->default('—')
+                    ->searchable()
+                    ->weight('medium')
+                    ->description(fn (Service $record): ?string => $record->company_name 
+                        ? ($record->company_name . ($record->device_name ? ' • ' . $record->device_name : '')) 
+                        : ($record->device_name ?: null)
+                    )
+                    ->wrap(),
+
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state) => match ($state) {
+                        'received' => 'gray',
+                        'checking' => 'warning',
+                        'waiting_approval' => 'info',
+                        'processing', 'testing' => 'primary',
+                        'ready', 'completed' => 'success',
+                        'cancelled' => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state) => match ($state) {
+                        'received' => 'Masuk',
+                        'checking' => 'Pengecekan',
+                        'waiting_approval' => 'Approval',
+                        'processing' => 'Dikerjakan',
+                        'testing' => 'Quality Check',
+                        'ready' => 'Siap Ambil',
+                        'completed' => 'Selesai',
+                        'cancelled' => 'Dibatalkan',
+                        default => ucfirst(str_replace('_', ' ', $state)),
+                    }),
+
+                TextColumn::make('total_cost')
+                    ->label('Tagihan')
+                    ->money('IDR')
+                    ->sortable()
+                    ->weight('semibold')
+                    ->alignEnd(),
+
+                TextColumn::make('service_type')
+                    ->label('Layanan')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => Service::TYPES[$state] ?? $state)
+                    ->visibleFrom('md'),
+
+                TextColumn::make('invoice_number')
+                    ->label('No. Invoice')
+                    ->searchable()
+                    ->placeholder('—')
+                    ->visibleFrom('lg')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('device_name')
+                    ->label('Unit PC')
+                    ->placeholder('—')
+                    ->limit(24)
+                    ->searchable()
+                    ->visibleFrom('lg')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('company_name')
+                    ->label('Perusahaan B2B')
+                    ->placeholder('—')
+                    ->searchable()
+                    ->visibleFrom('lg')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('technician.name')
+                    ->label('Teknisi')
+                    ->placeholder('—')
+                    ->visibleFrom('lg')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('created_at')
+                    ->label('Tgl Masuk')
+                    ->dateTime('d M Y H:i')
+                    ->sortable()
+                    ->visibleFrom('lg')
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')->options(array_combine(Service::STATUSES, array_map(fn ($s) => str_replace('_', ' ', ucfirst($s)), Service::STATUSES))),
+                SelectFilter::make('status')
+                    ->label('Filter Status')
+                    ->options(collect(Service::STATUSES)->mapWithKeys(fn ($s) => [$s => match ($s) {
+                        'received' => 'Masuk',
+                        'checking' => 'Pengecekan',
+                        'waiting_approval' => 'Approval',
+                        'processing' => 'Dikerjakan',
+                        'testing' => 'Quality Check',
+                        'ready' => 'Siap Ambil',
+                        'completed' => 'Selesai',
+                        'cancelled' => 'Dibatalkan',
+                        default => ucfirst(str_replace('_', ' ', $s)),
+                    }])),
+                SelectFilter::make('service_type')
+                    ->label('Jenis Layanan')
+                    ->options(Service::TYPES),
             ])
             ->actions([
                 ActionGroup::make([
