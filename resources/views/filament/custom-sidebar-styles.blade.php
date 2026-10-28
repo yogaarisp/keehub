@@ -1290,15 +1290,17 @@
             grid-template-rows: none !important;
         }
 
-        /* Slide-over modal transforms to bottom sheet on mobile */
-        .fi-modal-open .fi-modal-slide-over-window {
+        /* Large/Form modals & slide-overs transform to bottom sheet on mobile */
+        .fi-modal-open .fi-modal-slide-over-window,
+        .fi-modal-open .fi-modal-window:has(form),
+        .fi-modal-open .fi-modal-window:has(.fi-fo-component-ctn) {
             margin: 0 !important;
             margin-top: auto !important;
             width: 100% !important;
             max-width: 100% !important;
             height: auto !important;
             min-height: 50vh !important;
-            max-height: 88dvh !important;
+            max-height: 90dvh !important;
             border-top-left-radius: 1.5rem !important;
             border-top-right-radius: 1.5rem !important;
             border-bottom-left-radius: 0 !important;
@@ -1314,32 +1316,44 @@
             transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
         }
 
-        .dark .fi-modal-open .fi-modal-slide-over-window {
+        .dark .fi-modal-open .fi-modal-slide-over-window,
+        .dark .fi-modal-open .fi-modal-window:has(form),
+        .dark .fi-modal-open .fi-modal-window:has(.fi-fo-component-ctn) {
             background-color: #0b0f19 !important;
             border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
             box-shadow: 0 -16px 50px rgba(0, 0, 0, 0.7) !important;
         }
 
-        /* Standard centered modals retain clean rounded card appearance on mobile */
-        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) {
+        /* Standard simple confirmation modals retain clean rounded card appearance on mobile */
+        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window):not(:has(form)):not(:has(.fi-fo-component-ctn)) {
             margin: auto 1rem !important;
             max-width: calc(100vw - 2rem) !important;
             border-radius: 1.25rem !important;
         }
 
-        /* Alpine transition mapping: translate-x transforms to translateY for mobile bottom sheet */
+        /* Alpine transition mapping for mobile bottom sheet */
         .fi-modal-open .fi-modal-slide-over-window.translate-x-full,
-        .fi-modal-open .fi-modal-slide-over-window[class*="translate-x-full"] {
+        .fi-modal-open .fi-modal-slide-over-window[class*="translate-x-full"],
+        .fi-modal-open .fi-modal-window:has(form).opacity-0,
+        .fi-modal-open .fi-modal-window:has(form)[class*="scale-95"],
+        .fi-modal-open .fi-modal-window:has(.fi-fo-component-ctn).opacity-0,
+        .fi-modal-open .fi-modal-window:has(.fi-fo-component-ctn)[class*="scale-95"] {
             transform: translateY(100%) !important;
         }
 
         .fi-modal-open .fi-modal-slide-over-window.translate-x-0,
-        .fi-modal-open .fi-modal-slide-over-window[class*="translate-x-0"] {
+        .fi-modal-open .fi-modal-slide-over-window[class*="translate-x-0"],
+        .fi-modal-open .fi-modal-window:has(form).opacity-100,
+        .fi-modal-open .fi-modal-window:has(form)[class*="scale-100"],
+        .fi-modal-open .fi-modal-window:has(.fi-fo-component-ctn).opacity-100,
+        .fi-modal-open .fi-modal-window:has(.fi-fo-component-ctn)[class*="scale-100"] {
             transform: translateY(0) !important;
         }
 
         /* Bottom Sheet Drag Handle Indicator */
-        .fi-modal-slide-over-window::before {
+        .fi-modal-slide-over-window::before,
+        .fi-modal-window:has(form)::before,
+        .fi-modal-window:has(.fi-fo-component-ctn)::before {
             content: '' !important;
             display: block !important;
             width: 44px !important;
@@ -1350,12 +1364,14 @@
             flex-shrink: 0 !important;
         }
 
-        .dark .fi-modal-slide-over-window::before {
+        .dark .fi-modal-slide-over-window::before,
+        .dark .fi-modal-window:has(form)::before,
+        .dark .fi-modal-window:has(.fi-fo-component-ctn)::before {
             background-color: #475569 !important;
         }
 
         /* Modal Header */
-        .fi-modal-slide-over-window .fi-modal-header {
+        .fi-modal-open .fi-modal-header {
             position: relative !important;
             display: flex !important;
             align-items: center !important;
@@ -1366,11 +1382,11 @@
             min-height: 3.25rem !important;
         }
 
-        .dark .fi-modal-slide-over-window .fi-modal-header {
+        .dark .fi-modal-open .fi-modal-header {
             border-bottom-color: rgba(255, 255, 255, 0.08) !important;
         }
 
-        .fi-modal-slide-over-window .fi-modal-heading {
+        .fi-modal-open .fi-modal-heading {
             font-size: 1.05rem !important;
             font-weight: 700 !important;
             letter-spacing: -0.01em !important;
@@ -1380,13 +1396,13 @@
             color: #0f172a !important;
         }
 
-        .dark .fi-modal-slide-over-window .fi-modal-heading {
+        .dark .fi-modal-open .fi-modal-heading {
             color: #f8fafc !important;
         }
 
         /* Modal Close Button (X): Centered and neatly aligned */
-        .fi-modal-slide-over-window .fi-modal-header > div:has(.fi-modal-close-btn),
-        .fi-modal-slide-over-window .fi-modal-header > .absolute {
+        .fi-modal-open .fi-modal-header > div:has(.fi-modal-close-btn),
+        .fi-modal-open .fi-modal-header > .absolute {
             position: absolute !important;
             top: 50% !important;
             right: 1rem !important;
@@ -1400,7 +1416,7 @@
             z-index: 10 !important;
         }
 
-        .fi-modal-slide-over-window .fi-modal-header .fi-modal-close-btn {
+        .fi-modal-open .fi-modal-header .fi-modal-close-btn {
             width: 2.15rem !important;
             height: 2.15rem !important;
             min-width: 2.15rem !important;
@@ -1417,30 +1433,30 @@
             border: 1px solid rgba(226, 232, 240, 0.8) !important;
         }
 
-        .fi-modal-slide-over-window .fi-modal-header .fi-modal-close-btn:hover {
+        .fi-modal-open .fi-modal-header .fi-modal-close-btn:hover {
             background-color: #e2e8f0 !important;
             color: #0f172a !important;
         }
 
-        .dark .fi-modal-slide-over-window .fi-modal-header .fi-modal-close-btn {
+        .dark .fi-modal-open .fi-modal-header .fi-modal-close-btn {
             background-color: rgba(255, 255, 255, 0.08) !important;
             border-color: rgba(255, 255, 255, 0.1) !important;
             color: #94a3b8 !important;
         }
 
-        .dark .fi-modal-slide-over-window .fi-modal-header .fi-modal-close-btn:hover {
+        .dark .fi-modal-open .fi-modal-header .fi-modal-close-btn:hover {
             background-color: rgba(255, 255, 255, 0.16) !important;
             color: #f8fafc !important;
         }
 
-        .fi-modal-slide-over-window .fi-modal-header .fi-modal-close-btn svg {
+        .fi-modal-open .fi-modal-header .fi-modal-close-btn svg {
             width: 1.15rem !important;
             height: 1.15rem !important;
             display: block !important;
         }
 
         /* Modal Scrollable Content */
-        .fi-modal-slide-over-window .fi-modal-content {
+        .fi-modal-open .fi-modal-content {
             padding: 0.75rem 0.85rem 1.25rem 0.85rem !important;
             overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
@@ -1449,7 +1465,7 @@
         }
 
         /* Form Sections inside Mobile Bottom Sheet */
-        .fi-modal-slide-over-window .fi-section {
+        .fi-modal-open .fi-section {
             border-radius: 0.85rem !important;
             margin-bottom: 0.75rem !important;
             border: 1px solid rgba(226, 232, 240, 0.95) !important;
@@ -1458,59 +1474,59 @@
             overflow: hidden !important;
         }
 
-        .dark .fi-modal-slide-over-window .fi-section {
+        .dark .fi-modal-open .fi-section {
             background-color: rgba(17, 24, 39, 0.85) !important;
             border-color: rgba(255, 255, 255, 0.08) !important;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
         }
 
-        .fi-modal-slide-over-window .fi-section-header {
+        .fi-modal-open .fi-section-header {
             padding: 0.6rem 0.85rem !important;
             border-bottom: 1px solid rgba(241, 245, 249, 1) !important;
         }
 
-        .dark .fi-modal-slide-over-window .fi-section-header {
+        .dark .fi-modal-open .fi-section-header {
             border-bottom-color: rgba(255, 255, 255, 0.06) !important;
         }
 
-        .fi-modal-slide-over-window .fi-section-header-heading {
+        .fi-modal-open .fi-section-header-heading {
             font-size: 0.875rem !important;
             font-weight: 700 !important;
             letter-spacing: -0.01em !important;
         }
 
-        .fi-modal-slide-over-window .fi-section-content {
+        .fi-modal-open .fi-section-content {
             padding: 0.75rem 0.85rem !important;
         }
 
         /* Form Fields spacing in Bottom Sheet */
-        .fi-modal-slide-over-window .fi-fo-component-ctn {
+        .fi-modal-open .fi-fo-component-ctn {
             gap: 0.65rem !important;
         }
 
-        .fi-modal-slide-over-window .fi-fo-field-wrp {
+        .fi-modal-open .fi-fo-field-wrp {
             margin-bottom: 0.2rem !important;
         }
 
-        .fi-modal-slide-over-window .fi-fo-field-wrp-label label {
+        .fi-modal-open .fi-fo-field-wrp-label label {
             font-size: 0.78rem !important;
             font-weight: 600 !important;
             color: #334155 !important;
             margin-bottom: 0.2rem !important;
         }
 
-        .dark .fi-modal-slide-over-window .fi-fo-field-wrp-label label {
+        .dark .fi-modal-open .fi-fo-field-wrp-label label {
             color: #cbd5e1 !important;
         }
 
         /* Inputs & Selects inside Bottom Sheet */
-        .fi-modal-slide-over-window .fi-input-wrp {
+        .fi-modal-open .fi-input-wrp {
             border-radius: 0.55rem !important;
             min-height: 2.5rem !important;
         }
 
         /* Repeater inside Bottom Sheet: ultra-clean card */
-        .fi-modal-slide-over-window .fi-fo-repeater-item {
+        .fi-modal-open .fi-fo-repeater-item {
             border-radius: 0.75rem !important;
             border: 1px solid rgba(226, 232, 240, 0.95) !important;
             background-color: #f8fafc !important;
@@ -1519,29 +1535,29 @@
             overflow: hidden !important;
         }
 
-        .dark .fi-modal-slide-over-window .fi-fo-repeater-item {
+        .dark .fi-modal-open .fi-fo-repeater-item {
             background-color: rgba(15, 23, 42, 0.5) !important;
             border-color: rgba(255, 255, 255, 0.08) !important;
         }
 
-        .fi-modal-slide-over-window .fi-fo-repeater-item-header {
+        .fi-modal-open .fi-fo-repeater-item-header {
             padding: 0.45rem 0.75rem !important;
             background-color: rgba(241, 245, 249, 0.85) !important;
             border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
         }
 
-        .dark .fi-modal-slide-over-window .fi-fo-repeater-item-header {
+        .dark .fi-modal-open .fi-fo-repeater-item-header {
             background-color: rgba(30, 41, 59, 0.5) !important;
             border-bottom-color: rgba(255, 255, 255, 0.06) !important;
         }
 
-        .fi-modal-slide-over-window .fi-fo-repeater-item-content {
+        .fi-modal-open .fi-fo-repeater-item-content {
             padding: 0.65rem 0.75rem !important;
             width: 100% !important;
             overflow: hidden !important;
         }
 
-        .fi-modal-slide-over-window .fi-fo-repeater-item-content .grid {
+        .fi-modal-open .fi-fo-repeater-item-content .grid {
             width: 100% !important;
             max-width: 100% !important;
             min-width: 0 !important;
@@ -1550,18 +1566,18 @@
             column-gap: 0.5rem !important;
         }
 
-        .fi-modal-slide-over-window .fi-fo-repeater-item-content .grid > div {
+        .fi-modal-open .fi-fo-repeater-item-content .grid > div {
             min-width: 0 !important;
             max-width: 100% !important;
         }
 
         /* Repeater Add Button */
-        .fi-modal-slide-over-window .fi-fo-repeater-add-action {
+        .fi-modal-open .fi-fo-repeater-add-action {
             width: 100% !important;
             margin-top: 0.25rem !important;
         }
 
-        .fi-modal-slide-over-window .fi-fo-repeater-add-action button {
+        .fi-modal-open .fi-fo-repeater-add-action button {
             width: 100% !important;
             justify-content: center !important;
             min-height: 2.45rem !important;
@@ -1573,14 +1589,14 @@
             color: #2563eb !important;
         }
 
-        .dark .fi-modal-slide-over-window .fi-fo-repeater-add-action button {
+        .dark .fi-modal-open .fi-fo-repeater-add-action button {
             background-color: rgba(30, 41, 59, 0.4) !important;
             border-color: rgba(255, 255, 255, 0.15) !important;
             color: #60a5fa !important;
         }
 
         /* Modal Sticky Footer */
-        .fi-modal-slide-over-window .fi-modal-footer {
+        .fi-modal-open .fi-modal-footer {
             position: sticky !important;
             bottom: 0 !important;
             z-index: 30 !important;
@@ -1594,20 +1610,20 @@
             margin-top: auto !important;
         }
 
-        .dark .fi-modal-slide-over-window .fi-modal-footer {
+        .dark .fi-modal-open .fi-modal-footer {
             background-color: rgba(11, 15, 25, 0.96) !important;
             border-top-color: rgba(255, 255, 255, 0.08) !important;
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4) !important;
         }
 
-        .fi-modal-slide-over-window .fi-modal-footer-actions {
+        .fi-modal-open .fi-modal-footer-actions {
             width: 100% !important;
             display: flex !important;
             flex-direction: row-reverse !important;
             gap: 0.65rem !important;
         }
 
-        .fi-modal-slide-over-window .fi-modal-footer-actions .fi-btn {
+        .fi-modal-open .fi-modal-footer-actions .fi-btn {
             flex: 1 1 auto !important;
             justify-content: center !important;
             min-height: 2.65rem !important;
@@ -1664,9 +1680,128 @@
         display: none !important;
     }
 
+    /* ========================================================
+       DESKTOP CENTERED MODAL POPUP (>= 1024px)
+       ======================================================== */
     @media (min-width: 1024px) {
         .fi-mobile-bottom-nav {
             display: none !important;
+        }
+
+        /* Centered popup modal container: perfectly centered in viewport */
+        .fi-modal-open .fixed.inset-0.z-40:not(.fi-modal-close-overlay) > div[x-ref="modalContainer"] {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-height: 100vh !important;
+            padding: 2rem 1.5rem !important;
+            grid-template-rows: none !important;
+        }
+
+        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) {
+            position: relative !important;
+            margin: auto !important;
+            max-height: calc(100vh - 4rem) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            border-radius: 1.25rem !important;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35) !important;
+            border: 1px solid rgba(226, 232, 240, 0.85) !important;
+            overflow: hidden !important;
+        }
+
+        .dark .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) {
+            background-color: #0d121f !important;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Desktop Modal Header */
+        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-header {
+            position: relative !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 1.25rem 1.75rem !important;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.85) !important;
+            flex-shrink: 0 !important;
+        }
+
+        .dark .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-header {
+            border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-heading {
+            font-size: 1.25rem !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.01em !important;
+            color: #0f172a !important;
+        }
+
+        .dark .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-heading {
+            color: #f8fafc !important;
+        }
+
+        /* Desktop Modal Close Button (X) */
+        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-header > div:has(.fi-modal-close-btn),
+        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-header > .absolute {
+            position: absolute !important;
+            top: 50% !important;
+            right: 1.5rem !important;
+            transform: translateY(-50%) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-header .fi-modal-close-btn {
+            width: 2.25rem !important;
+            height: 2.25rem !important;
+            border-radius: 9999px !important;
+            background-color: rgba(241, 245, 249, 0.8) !important;
+            color: #64748b !important;
+            transition: all 0.15s ease !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+        }
+
+        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-header .fi-modal-close-btn:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+
+        .dark .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-header .fi-modal-close-btn {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+            color: #94a3b8 !important;
+        }
+
+        .dark .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-header .fi-modal-close-btn:hover {
+            background-color: rgba(255, 255, 255, 0.16) !important;
+            color: #f8fafc !important;
+        }
+
+        /* Desktop Modal Scrollable Content */
+        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-content {
+            padding: 1.5rem 1.75rem !important;
+            overflow-y: auto !important;
+            flex: 1 1 auto !important;
+            max-height: calc(100vh - 12rem) !important;
+        }
+
+        /* Desktop Modal Sticky Footer */
+        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-footer {
+            padding: 1rem 1.75rem !important;
+            border-top: 1px solid rgba(226, 232, 240, 0.85) !important;
+            background-color: #f8fafc !important;
+            flex-shrink: 0 !important;
+        }
+
+        .dark .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-footer {
+            background-color: rgba(15, 23, 42, 0.6) !important;
+            border-top-color: rgba(255, 255, 255, 0.08) !important;
         }
     }
 
