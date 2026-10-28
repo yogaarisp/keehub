@@ -20,6 +20,8 @@ class ListOrders extends ListRecords
             Actions\CreateAction::make()
                 ->label('+ Buat Order')
                 ->modalHeading('Buat Pesanan Baru')
+                ->modalSubmitActionLabel('Simpan Pesanan')
+                ->modalCancelActionLabel('Batal')
                 ->modalWidth(MaxWidth::FourExtraLarge)
                 ->slideOver()
                 ->url(null)

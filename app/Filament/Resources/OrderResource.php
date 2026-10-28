@@ -60,7 +60,8 @@ class OrderResource extends Resource
                         'product_service' => 'Produk & Servis',
                     ])
                     ->default('product')
-                    ->required(),
+                    ->required()
+                    ->columnSpan(['default' => 12, 'sm' => 6]),
 
                 Select::make('channel')
                     ->label('Saluran Transaksi')
@@ -71,27 +72,31 @@ class OrderResource extends Resource
                         'offline' => 'Walk-in / Toko Fisik',
                     ])
                     ->default('admin')
-                    ->required(),
+                    ->required()
+                    ->columnSpan(['default' => 12, 'sm' => 6]),
 
                 Select::make('status')
                     ->label('Status Pesanan')
                     ->options(array_combine(Order::STATUSES, array_map(fn ($s) => ucfirst($s), Order::STATUSES)))
                     ->default('pending')
-                    ->disabled(fn (string $operation) => $operation === 'create'),
+                    ->hidden(fn (string $operation) => $operation === 'create')
+                    ->columnSpan(['default' => 12, 'sm' => 6]),
 
                 TextInput::make('discount')
                     ->label('Potongan Diskon')
                     ->numeric()
                     ->prefix('Rp')
                     ->default(0)
-                    ->minValue(0),
+                    ->minValue(0)
+                    ->columnSpan(['default' => 12, 'sm' => 6]),
 
                 TextInput::make('shipping_cost')
                     ->label('Biaya Kirim / Ongkir')
                     ->numeric()
                     ->prefix('Rp')
                     ->default(0)
-                    ->minValue(0),
+                    ->minValue(0)
+                    ->columnSpan(['default' => 12, 'sm' => 6]),
 
                 Textarea::make('notes')
                     ->label('Catatan Pesanan (Opsional)')
@@ -99,7 +104,7 @@ class OrderResource extends Resource
                     ->rows(2)
                     ->columnSpanFull(),
             ])
-            ->columns(['default' => 1, 'sm' => 2]),
+            ->columns(['default' => 12, 'sm' => 12]),
 
             Section::make('Daftar Produk & Layanan (Items)')->schema([
                 Repeater::make('items')
@@ -144,7 +149,7 @@ class OrderResource extends Resource
                             ->minValue(1)
                             ->default(1)
                             ->required()
-                            ->columnSpan(['default' => 6, 'sm' => 3, 'md' => 3]),
+                            ->columnSpan(['default' => 4, 'sm' => 3, 'md' => 3]),
 
                         TextInput::make('price')
                             ->label('Harga Satuan')
@@ -152,7 +157,7 @@ class OrderResource extends Resource
                             ->prefix('Rp')
                             ->default(0)
                             ->required()
-                            ->columnSpan(['default' => 6, 'sm' => 3, 'md' => 5]),
+                            ->columnSpan(['default' => 8, 'sm' => 3, 'md' => 5]),
                     ])
                     ->columns(['default' => 12, 'sm' => 12])
                     ->defaultItems(1)
@@ -162,6 +167,7 @@ class OrderResource extends Resource
                         : null
                     )
                     ->collapsible()
+                    ->cloneable()
                     ->collapsed(false)
                     ->deletable()
                     ->reorderable(false),
@@ -170,12 +176,14 @@ class OrderResource extends Resource
             Section::make('Informasi Pengiriman')->schema([
                 TextInput::make('shipping_name')
                     ->label('Nama Penerima')
-                    ->placeholder('Contoh: Hendra Wijaya'),
+                    ->placeholder('Contoh: Hendra Wijaya')
+                    ->columnSpan(['default' => 12, 'sm' => 6]),
 
                 TextInput::make('shipping_phone')
                     ->label('No. Telepon / WhatsApp')
                     ->tel()
-                    ->placeholder('0812-xxxx-xxxx'),
+                    ->placeholder('0812-xxxx-xxxx')
+                    ->columnSpan(['default' => 12, 'sm' => 6]),
 
                 Textarea::make('shipping_address')
                     ->label('Alamat Lengkap Pengiriman')
@@ -183,8 +191,9 @@ class OrderResource extends Resource
                     ->rows(2)
                     ->columnSpanFull(),
             ])
-            ->columns(['default' => 1, 'sm' => 2])
-            ->collapsible(),
+            ->columns(['default' => 12, 'sm' => 12])
+            ->collapsible()
+            ->collapsed(),
         ]);
     }
 

@@ -1219,11 +1219,126 @@
 
         /* Modal Scrollable Content */
         .fi-modal-slide-over-window .fi-modal-content {
-            padding: 1rem 1.15rem 1.5rem 1.15rem !important;
+            padding: 0.75rem 0.85rem 1.25rem 0.85rem !important;
             overflow-y: auto !important;
             -webkit-overflow-scrolling: touch !important;
             flex: 1 1 auto !important;
             overscroll-behavior: contain !important;
+        }
+
+        /* Form Sections inside Mobile Bottom Sheet */
+        .fi-modal-slide-over-window .fi-section {
+            border-radius: 0.85rem !important;
+            margin-bottom: 0.75rem !important;
+            border: 1px solid rgba(226, 232, 240, 0.95) !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+            background-color: #ffffff !important;
+            overflow: hidden !important;
+        }
+
+        .dark .fi-modal-slide-over-window .fi-section {
+            background-color: rgba(17, 24, 39, 0.85) !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .fi-modal-slide-over-window .fi-section-header {
+            padding: 0.6rem 0.85rem !important;
+            border-bottom: 1px solid rgba(241, 245, 249, 1) !important;
+        }
+
+        .dark .fi-modal-slide-over-window .fi-section-header {
+            border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+        }
+
+        .fi-modal-slide-over-window .fi-section-header-heading {
+            font-size: 0.875rem !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.01em !important;
+        }
+
+        .fi-modal-slide-over-window .fi-section-content {
+            padding: 0.75rem 0.85rem !important;
+        }
+
+        /* Form Fields spacing in Bottom Sheet */
+        .fi-modal-slide-over-window .fi-fo-component-ctn {
+            gap: 0.65rem !important;
+        }
+
+        .fi-modal-slide-over-window .fi-fo-field-wrp {
+            margin-bottom: 0.2rem !important;
+        }
+
+        .fi-modal-slide-over-window .fi-fo-field-wrp-label label {
+            font-size: 0.78rem !important;
+            font-weight: 600 !important;
+            color: #334155 !important;
+            margin-bottom: 0.2rem !important;
+        }
+
+        .dark .fi-modal-slide-over-window .fi-fo-field-wrp-label label {
+            color: #cbd5e1 !important;
+        }
+
+        /* Inputs & Selects inside Bottom Sheet */
+        .fi-modal-slide-over-window .fi-input-wrp {
+            border-radius: 0.55rem !important;
+            min-height: 2.5rem !important;
+        }
+
+        /* Repeater inside Bottom Sheet: ultra-clean card */
+        .fi-modal-slide-over-window .fi-fo-repeater-item {
+            border-radius: 0.75rem !important;
+            border: 1px solid rgba(226, 232, 240, 0.95) !important;
+            background-color: #f8fafc !important;
+            margin-bottom: 0.65rem !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+            overflow: hidden !important;
+        }
+
+        .dark .fi-modal-slide-over-window .fi-fo-repeater-item {
+            background-color: rgba(15, 23, 42, 0.5) !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .fi-modal-slide-over-window .fi-fo-repeater-item-header {
+            padding: 0.45rem 0.75rem !important;
+            background-color: rgba(241, 245, 249, 0.85) !important;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+        }
+
+        .dark .fi-modal-slide-over-window .fi-fo-repeater-item-header {
+            background-color: rgba(30, 41, 59, 0.5) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+        }
+
+        .fi-modal-slide-over-window .fi-fo-repeater-item-content {
+            padding: 0.65rem 0.75rem !important;
+        }
+
+        /* Repeater Add Button */
+        .fi-modal-slide-over-window .fi-fo-repeater-add-action {
+            width: 100% !important;
+            margin-top: 0.25rem !important;
+        }
+
+        .fi-modal-slide-over-window .fi-fo-repeater-add-action button {
+            width: 100% !important;
+            justify-content: center !important;
+            min-height: 2.45rem !important;
+            font-size: 0.825rem !important;
+            font-weight: 600 !important;
+            border-radius: 0.65rem !important;
+            background-color: rgba(241, 245, 249, 0.9) !important;
+            border: 1px dashed #cbd5e1 !important;
+            color: #2563eb !important;
+        }
+
+        .dark .fi-modal-slide-over-window .fi-fo-repeater-add-action button {
+            background-color: rgba(30, 41, 59, 0.4) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            color: #60a5fa !important;
         }
 
         /* Modal Sticky Footer */
