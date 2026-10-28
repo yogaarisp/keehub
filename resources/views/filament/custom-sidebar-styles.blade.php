@@ -998,6 +998,32 @@
         .fi-ta-actions .fi-icon-btn {
             width: 2rem !important;
             height: 2rem !important;
+            border-radius: 0.5rem !important;
+        }
+
+        /* Table cells: compact and vertical align */
+        .fi-ta-table td {
+            vertical-align: middle !important;
+        }
+
+        /* Table column description text (customer, date, subtitle) */
+        .fi-ta-text-item-description {
+            font-size: 0.72rem !important;
+            line-height: 1.25 !important;
+            margin-top: 2px !important;
+            color: #64748b !important;
+        }
+
+        .dark .fi-ta-text-item-description {
+            color: #94a3b8 !important;
+        }
+
+        /* Badges inside table: neat and compact */
+        .fi-ta-table .fi-badge {
+            padding: 0.2rem 0.5rem !important;
+            font-size: 0.7rem !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.02em !important;
         }
 
         /* ---- Action buttons: min touch target (44px) ---- */

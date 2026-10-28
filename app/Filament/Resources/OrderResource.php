@@ -16,6 +16,7 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -191,31 +192,108 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('code')->searchable()->sortable(),
-                TextColumn::make('customer.name')->default('—'),
-                TextColumn::make('type')->badge(),
-                TextColumn::make('total')->money('IDR')->sortable(),
-                TextColumn::make('status')->badge()->color(fn (string $state) => match ($state) {
-                    'pending' => 'warning',
-                    'confirmed', 'processing' => 'info',
-                    'ready', 'shipped' => 'primary',
-                    'completed' => 'success',
-                    'cancelled' => 'danger',
-                }),
-                TextColumn::make('created_at')->dateTime('d M Y H:i')->sortable(),
+                TextColumn::make('code')
+                    ->label('No. Pesanan')
+                    ->searchable()
+                    ->sortable()
+                    ->copyable()
+                    ->weight('bold')
+                    ->description(fn (Order $record): string => ($record->customer?->name ?? 'Pelanggan Umum') . ($record->created_at ? ' • ' . $record->created_at->format('d M Y') : '')),
+
+                TextColumn::make('customer.name')
+                    ->label('Pelanggan')
+                    ->default('Pelanggan Umum')
+                    ->searchable()
+                    ->weight('medium')
+                    ->description(fn (Order $record): ?string => $record->customer?->whatsapp)
+                    ->visibleFrom('md'),
+
+                TextColumn::make('total')
+                    ->label('Total')
+                    ->money('IDR')
+                    ->sortable()
+                    ->weight('bold')
+                    ->alignEnd()
+                    ->description(fn (Order $record): ?string => match ($record->type) {
+                        'product' => 'Produk',
+                        'pc_build' => 'PC Build',
+                        'service' => 'Servis',
+                        'product_service' => 'Produk & Servis',
+                        default => ucfirst(str_replace('_', ' ', $record->type)),
+                    }),
+
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state) => match ($state) {
+                        'pending' => 'warning',
+                        'confirmed', 'processing' => 'info',
+                        'ready', 'shipped' => 'primary',
+                        'completed' => 'success',
+                        'cancelled' => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state) => match ($state) {
+                        'pending' => 'Menunggu',
+                        'confirmed' => 'Dikonfirmasi',
+                        'processing' => 'Diproses',
+                        'ready' => 'Siap Ambil',
+                        'shipped' => 'Dikirim',
+                        'completed' => 'Selesai',
+                        'cancelled' => 'Dibatalkan',
+                        default => ucfirst($state),
+                    }),
+
+                TextColumn::make('type')
+                    ->label('Tipe')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => match ($state) {
+                        'product' => 'Produk',
+                        'pc_build' => 'PC Build',
+                        'service' => 'Servis',
+                        'product_service' => 'Produk & Servis',
+                        default => ucfirst(str_replace('_', ' ', $state)),
+                    })
+                    ->color(fn ($state) => match ($state) {
+                        'product' => 'info',
+                        'pc_build' => 'primary',
+                        'service' => 'warning',
+                        'product_service' => 'success',
+                        default => 'gray',
+                    })
+                    ->visibleFrom('lg'),
+
+                TextColumn::make('created_at')
+                    ->label('Tanggal')
+                    ->dateTime('d M Y H:i')
+                    ->sortable()
+                    ->visibleFrom('lg')
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')->options(array_combine(Order::STATUSES, array_map(ucfirst(...), Order::STATUSES))),
+                SelectFilter::make('status')
+                    ->label('Filter Status')
+                    ->options([
+                        'pending' => 'Menunggu',
+                        'confirmed' => 'Dikonfirmasi',
+                        'processing' => 'Diproses',
+                        'ready' => 'Siap Ambil',
+                        'shipped' => 'Dikirim',
+                        'completed' => 'Selesai',
+                        'cancelled' => 'Dibatalkan',
+                    ]),
             ])
             ->actions([
-                ViewAction::make(),
-                EditAction::make(),
-                Action::make('thermal_receipt')
-                    ->label('Struk')
-                    ->icon('heroicon-o-printer')
-                    ->color('success')
-                    ->url(fn (Order $record) => route('admin.order.receipt', $record))
-                    ->openUrlInNewTab(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    Action::make('thermal_receipt')
+                        ->label('Cetak Struk Thermal')
+                        ->icon('heroicon-o-printer')
+                        ->color('success')
+                        ->url(fn (Order $record) => route('admin.order.receipt', $record))
+                        ->openUrlInNewTab(),
+                ]),
             ])
             ->defaultSort('created_at', 'desc')
             ->poll('60s');
