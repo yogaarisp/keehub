@@ -855,6 +855,9 @@
         [style*="--cols-default"]:not([style*="--cols-sm"]) {
             --cols-default: repeat(1, minmax(0, 1fr)) !important;
         }
+        [style*="--cols-default"]:not([style*="--cols-sm"]) > div[style*="--col-span-default"] {
+            grid-column: 1 / -1 !important;
+        }
     }
 
     /* At sm (640px+), cap at 2 columns for sections that had 3+ */
@@ -998,15 +1001,38 @@
             border-radius: 0.375rem !important;
         }
 
+        /* Repeater mobile containers: prevent grid overflow */
+        .fi-fo-repeater,
+        .fi-fo-repeater-item,
+        .fi-fo-repeater-item-content,
+        .fi-fo-field-wrp,
+        .fi-fo-field-wrp-label,
+        .fi-input-wrp,
+        .fi-input {
+            min-width: 0 !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
         .fi-fo-repeater-item-content {
             padding: 0.75rem 0.85rem !important;
+            width: 100% !important;
+            overflow: hidden !important;
         }
 
         /* Tighten grid gap inside repeater items on mobile */
         .fi-fo-repeater-item-content .grid {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
             gap: 0.55rem 0.5rem !important;
             row-gap: 0.55rem !important;
             column-gap: 0.5rem !important;
+        }
+
+        .fi-fo-repeater-item-content .grid > div {
+            min-width: 0 !important;
+            max-width: 100% !important;
         }
 
         .fi-fo-repeater-item-content .fi-fo-field-wrp {
@@ -1021,6 +1047,9 @@
             font-size: 0.75rem !important;
             font-weight: 600 !important;
             color: #475569 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
         }
 
         .dark .fi-fo-repeater-item-content .fi-fo-field-wrp-label label {
@@ -1030,6 +1059,34 @@
         .fi-fo-repeater-item-content .fi-input-wrp {
             min-height: 2.35rem !important;
             border-radius: 0.5rem !important;
+            width: 100% !important;
+        }
+
+        .fi-fo-repeater-item-content input,
+        .fi-fo-repeater-item-content select {
+            min-width: 0 !important;
+            font-size: 0.85rem !important;
+            padding-top: 0.35rem !important;
+            padding-bottom: 0.35rem !important;
+        }
+
+        /* Currency prefix inside repeater */
+        .fi-fo-repeater-item-content .fi-input-wrp-prefix {
+            padding-left: 0.45rem !important;
+            padding-right: 0.25rem !important;
+            font-size: 0.78rem !important;
+            font-weight: 600 !important;
+            flex-shrink: 0 !important;
+        }
+
+        /* Remove browser number spinner in Qty */
+        .fi-fo-repeater-item-content input[type="number"]::-webkit-inner-spin-button,
+        .fi-fo-repeater-item-content input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0 !important;
+        }
+        .fi-fo-repeater-item-content input[type="number"] {
+            -moz-appearance: textfield !important;
         }
 
         /* Repeater add button: full width */
@@ -1412,6 +1469,22 @@
 
         .fi-modal-slide-over-window .fi-fo-repeater-item-content {
             padding: 0.65rem 0.75rem !important;
+            width: 100% !important;
+            overflow: hidden !important;
+        }
+
+        .fi-modal-slide-over-window .fi-fo-repeater-item-content .grid {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            gap: 0.55rem 0.5rem !important;
+            row-gap: 0.55rem !important;
+            column-gap: 0.5rem !important;
+        }
+
+        .fi-modal-slide-over-window .fi-fo-repeater-item-content .grid > div {
+            min-width: 0 !important;
+            max-width: 100% !important;
         }
 
         /* Repeater Add Button */
