@@ -124,13 +124,13 @@ class OrderResource extends Resource
                                     $set('price', $product->price);
                                 }
                             })
-                            ->columnSpan(['default' => 12, 'sm' => 12, 'md' => 6]),
+                            ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 6]),
 
                         TextInput::make('name')
                             ->label('Nama Item / Jasa')
                             ->required()
                             ->placeholder('Contoh: Keyboard Mechanical RGB')
-                            ->columnSpan(['default' => 12, 'sm' => 12, 'md' => 6]),
+                            ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 6]),
 
                         Select::make('item_type')
                             ->label('Kategori Item')
@@ -143,7 +143,7 @@ class OrderResource extends Resource
                             ])
                             ->default('product')
                             ->required()
-                            ->columnSpan(['default' => 12, 'sm' => 12, 'md' => 4]),
+                            ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 4]),
 
                         TextInput::make('quantity')
                             ->label('Qty')
@@ -151,7 +151,7 @@ class OrderResource extends Resource
                             ->minValue(1)
                             ->default(1)
                             ->required()
-                            ->columnSpan(['default' => 4, 'sm' => 4, 'md' => 3]),
+                            ->columnSpan(['default' => 1, 'sm' => 1, 'md' => 3]),
 
                         TextInput::make('price')
                             ->label('Harga Satuan')
@@ -159,14 +159,14 @@ class OrderResource extends Resource
                             ->prefix('Rp')
                             ->default(0)
                             ->required()
-                            ->columnSpan(['default' => 8, 'sm' => 8, 'md' => 5]),
+                            ->columnSpan(['default' => 1, 'sm' => 1, 'md' => 5]),
                     ])
-                    ->columns(['default' => 12, 'sm' => 12, 'md' => 12])
+                    ->columns(['default' => 2, 'sm' => 2, 'md' => 12])
                     ->defaultItems(1)
                     ->addActionLabel('+ Tambah Item Pesanan')
-                    ->itemLabel(fn (array $state): ?string => filled($state['name'] ?? null)
+                    ->itemLabel(fn (array $state): string => filled($state['name'] ?? null)
                         ? ($state['name'] . ' (' . ($state['quantity'] ?? 1) . 'x' . (isset($state['price']) ? ' @ Rp ' . number_format($state['price'], 0, ',', '.') : '') . ')')
-                        : null
+                        : 'Item Pesanan Baru'
                     )
                     ->collapsible()
                     ->cloneable()
