@@ -935,19 +935,129 @@
             font-size: 0.75rem !important;
         }
 
-        /* ---- Repeater items: compact ---- */
+        /* ---- Repeater items: compact mobile card ---- */
+        .fi-fo-repeater-item,
         .fi-repeater-item {
-            padding: 0.75rem !important;
-            gap: 0.625rem !important;
+            border-radius: 0.85rem !important;
+            border: 1px solid rgba(226, 232, 240, 0.95) !important;
+            background-color: #ffffff !important;
+            margin-bottom: 0.75rem !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+            overflow: hidden !important;
+        }
+
+        .dark .fi-fo-repeater-item,
+        .dark .fi-repeater-item {
+            background-color: rgba(15, 23, 42, 0.6) !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .fi-fo-repeater-item-header,
+        .fi-repeater-item-header {
+            padding: 0.45rem 0.75rem !important;
+            background-color: #f8fafc !important;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            min-height: 2.5rem !important;
+        }
+
+        .dark .fi-fo-repeater-item-header,
+        .dark .fi-repeater-item-header {
+            background-color: rgba(30, 41, 59, 0.6) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+        }
+
+        .fi-fo-repeater-item-header h4,
+        .fi-repeater-item-header h4 {
+            font-size: 0.825rem !important;
+            font-weight: 600 !important;
+            color: #1e293b !important;
+            max-width: calc(100vw - 11rem) !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+        }
+
+        .dark .fi-fo-repeater-item-header h4,
+        .dark .fi-repeater-item-header h4 {
+            color: #f1f5f9 !important;
+        }
+
+        .fi-fo-repeater-item-header ul,
+        .fi-repeater-item-header ul {
+            gap: 0.25rem !important;
+        }
+
+        .fi-fo-repeater-item-header .fi-icon-btn,
+        .fi-repeater-item-header .fi-icon-btn {
+            width: 1.85rem !important;
+            height: 1.85rem !important;
+            border-radius: 0.375rem !important;
+        }
+
+        .fi-fo-repeater-item-content {
+            padding: 0.75rem 0.85rem !important;
+        }
+
+        /* Tighten grid gap inside repeater items on mobile */
+        .fi-fo-repeater-item-content .grid {
+            gap: 0.55rem 0.5rem !important;
+            row-gap: 0.55rem !important;
+            column-gap: 0.5rem !important;
+        }
+
+        .fi-fo-repeater-item-content .fi-fo-field-wrp {
+            margin-bottom: 0 !important;
+        }
+
+        .fi-fo-repeater-item-content .fi-fo-field-wrp-label {
+            margin-bottom: 0.2rem !important;
+        }
+
+        .fi-fo-repeater-item-content .fi-fo-field-wrp-label label {
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            color: #475569 !important;
+        }
+
+        .dark .fi-fo-repeater-item-content .fi-fo-field-wrp-label label {
+            color: #94a3b8 !important;
+        }
+
+        .fi-fo-repeater-item-content .fi-input-wrp {
+            min-height: 2.35rem !important;
+            border-radius: 0.5rem !important;
         }
 
         /* Repeater add button: full width */
+        .fi-fo-repeater-add-action,
         .fi-repeater-add-action {
             width: 100% !important;
+            margin-top: 0.35rem !important;
         }
+
+        .fi-fo-repeater-add-action button,
         .fi-repeater-add-action button {
             width: 100% !important;
             justify-content: center !important;
+            min-height: 2.5rem !important;
+            font-size: 0.825rem !important;
+            font-weight: 600 !important;
+            border-radius: 0.65rem !important;
+            background-color: #f1f5f9 !important;
+            border: 1px dashed #cbd5e1 !important;
+            color: #2563eb !important;
+            transition: all 0.15s ease !important;
+        }
+
+        .dark .fi-fo-repeater-add-action button,
+        .dark .fi-repeater-add-action button {
+            background-color: rgba(30, 41, 59, 0.4) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            color: #60a5fa !important;
         }
 
         /* ---- Table: compact & scrollable ---- */
@@ -1067,20 +1177,7 @@
             padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px)) !important;
         }
 
-        /* ---- Repeater Item Mobile Styling ---- */
-        .fi-repeater-item {
-            border-radius: 0.75rem !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-        }
 
-        .dark .fi-repeater-item {
-            border-color: rgba(255, 255, 255, 0.08) !important;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
-        }
-
-        .fi-repeater-item-header {
-            padding: 0.5rem 0.75rem !important;
-        }
 
         /* ---- Tabs (relation managers): horizontal scroll ---- */
         .fi-tabs {

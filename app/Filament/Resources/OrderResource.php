@@ -109,13 +109,15 @@ class OrderResource extends Resource
             Section::make('Daftar Produk & Layanan (Items)')->schema([
                 Repeater::make('items')
                     ->relationship()
+                    ->hiddenLabel()
                     ->schema([
                         Select::make('product_id')
-                            ->label('Pilih Produk Toko (Opsional)')
+                            ->label('Pilih Produk (Katalog)')
                             ->options(fn () => Product::query()->where('is_active', true)->pluck('name', 'id'))
                             ->searchable()
                             ->live()
                             ->dehydrated()
+                            ->placeholder('Pilih dari katalog produk toko (opsional)...')
                             ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
                                 if ($state && ($product = Product::find($state))) {
                                     $set('name', $product->name);
@@ -141,7 +143,7 @@ class OrderResource extends Resource
                             ])
                             ->default('product')
                             ->required()
-                            ->columnSpan(['default' => 12, 'sm' => 6, 'md' => 4]),
+                            ->columnSpan(['default' => 12, 'md' => 4]),
 
                         TextInput::make('quantity')
                             ->label('Qty')
@@ -149,7 +151,7 @@ class OrderResource extends Resource
                             ->minValue(1)
                             ->default(1)
                             ->required()
-                            ->columnSpan(['default' => 4, 'sm' => 3, 'md' => 3]),
+                            ->columnSpan(['default' => 4, 'md' => 3]),
 
                         TextInput::make('price')
                             ->label('Harga Satuan')
@@ -157,9 +159,9 @@ class OrderResource extends Resource
                             ->prefix('Rp')
                             ->default(0)
                             ->required()
-                            ->columnSpan(['default' => 8, 'sm' => 3, 'md' => 5]),
+                            ->columnSpan(['default' => 8, 'md' => 5]),
                     ])
-                    ->columns(['default' => 12, 'sm' => 12])
+                    ->columns(['default' => 12, 'md' => 12])
                     ->defaultItems(1)
                     ->addActionLabel('+ Tambah Item Pesanan')
                     ->itemLabel(fn (array $state): ?string => filled($state['name'] ?? null)
