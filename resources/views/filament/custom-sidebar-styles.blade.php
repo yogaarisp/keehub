@@ -1094,6 +1094,148 @@
         .fi-page form .flex-wrap {
             gap: 0.75rem !important;
         }
+
+        /* ========================================================
+           MOBILE BOTTOM SHEET MODAL (Muncul dari bawah / Bottom Sheet)
+           ======================================================== */
+        .fi-modal-open .fixed.inset-0.z-40:not(.fi-modal-close-overlay) > div[x-ref="modalContainer"] {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-end !important;
+            align-items: stretch !important;
+            min-height: 100% !important;
+            height: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            grid-template-rows: none !important;
+        }
+
+        /* Slide-over modal transforms to bottom sheet on mobile */
+        .fi-modal-open .fi-modal-slide-over-window {
+            margin: 0 !important;
+            margin-top: auto !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            min-height: 50vh !important;
+            max-height: 88dvh !important;
+            border-top-left-radius: 1.5rem !important;
+            border-top-right-radius: 1.5rem !important;
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+            box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.32) !important;
+            border-top: 1px solid rgba(226, 232, 240, 0.9) !important;
+            border-left: none !important;
+            border-right: none !important;
+            border-bottom: none !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
+        }
+
+        .dark .fi-modal-open .fi-modal-slide-over-window {
+            background-color: #0b0f19 !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 -16px 50px rgba(0, 0, 0, 0.7) !important;
+        }
+
+        /* Standard centered modals retain clean rounded card appearance on mobile */
+        .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) {
+            margin: auto 1rem !important;
+            max-width: calc(100vw - 2rem) !important;
+            border-radius: 1.25rem !important;
+        }
+
+        /* Alpine transition mapping: translate-x transforms to translateY for mobile bottom sheet */
+        .fi-modal-open .fi-modal-slide-over-window.translate-x-full,
+        .fi-modal-open .fi-modal-slide-over-window[class*="translate-x-full"] {
+            transform: translateY(100%) !important;
+        }
+
+        .fi-modal-open .fi-modal-slide-over-window.translate-x-0,
+        .fi-modal-open .fi-modal-slide-over-window[class*="translate-x-0"] {
+            transform: translateY(0) !important;
+        }
+
+        /* Bottom Sheet Drag Handle Indicator */
+        .fi-modal-slide-over-window::before {
+            content: '' !important;
+            display: block !important;
+            width: 44px !important;
+            height: 4px !important;
+            background-color: #cbd5e1 !important;
+            border-radius: 9999px !important;
+            margin: 0.65rem auto 0.25rem auto !important;
+            flex-shrink: 0 !important;
+        }
+
+        .dark .fi-modal-slide-over-window::before {
+            background-color: #475569 !important;
+        }
+
+        /* Modal Header */
+        .fi-modal-slide-over-window .fi-modal-header {
+            padding: 0.35rem 1.25rem 0.65rem 1.25rem !important;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+            flex-shrink: 0 !important;
+        }
+
+        .dark .fi-modal-slide-over-window .fi-modal-header {
+            border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .fi-modal-slide-over-window .fi-modal-heading {
+            font-size: 1.1rem !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.01em !important;
+        }
+
+        /* Modal Scrollable Content */
+        .fi-modal-slide-over-window .fi-modal-content {
+            padding: 1rem 1.15rem 1.5rem 1.15rem !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            flex: 1 1 auto !important;
+            overscroll-behavior: contain !important;
+        }
+
+        /* Modal Sticky Footer */
+        .fi-modal-slide-over-window .fi-modal-footer {
+            position: sticky !important;
+            bottom: 0 !important;
+            z-index: 30 !important;
+            padding: 0.75rem 1.15rem calc(0.75rem + env(safe-area-inset-bottom, 0px)) 1.15rem !important;
+            background-color: rgba(255, 255, 255, 0.96) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border-top: 1px solid rgba(226, 232, 240, 0.9) !important;
+            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06) !important;
+            flex-shrink: 0 !important;
+            margin-top: auto !important;
+        }
+
+        .dark .fi-modal-slide-over-window .fi-modal-footer {
+            background-color: rgba(11, 15, 25, 0.96) !important;
+            border-top-color: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .fi-modal-slide-over-window .fi-modal-footer-actions {
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: row-reverse !important;
+            gap: 0.65rem !important;
+        }
+
+        .fi-modal-slide-over-window .fi-modal-footer-actions .fi-btn {
+            flex: 1 1 auto !important;
+            justify-content: center !important;
+            min-height: 2.65rem !important;
+            font-weight: 600 !important;
+            font-size: 0.875rem !important;
+            border-radius: 0.75rem !important;
+        }
     }
 
     /* ---- Very narrow screens (< 380px): stats 1-column ---- */
@@ -1136,6 +1278,11 @@
         background-color: rgba(11, 15, 25, 0.95) !important;
         border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
         box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* Hide bottom nav bar when a modal / bottom sheet is open */
+    body:has(.fi-modal-open) .fi-mobile-bottom-nav {
+        display: none !important;
     }
 
     @media (min-width: 1024px) {
