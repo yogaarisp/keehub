@@ -1356,9 +1356,14 @@
 
         /* Modal Header */
         .fi-modal-slide-over-window .fi-modal-header {
-            padding: 0.35rem 1.25rem 0.65rem 1.25rem !important;
+            position: relative !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0.65rem 1.25rem 0.75rem 1.25rem !important;
             border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
             flex-shrink: 0 !important;
+            min-height: 3.25rem !important;
         }
 
         .dark .fi-modal-slide-over-window .fi-modal-header {
@@ -1366,9 +1371,72 @@
         }
 
         .fi-modal-slide-over-window .fi-modal-heading {
-            font-size: 1.1rem !important;
+            font-size: 1.05rem !important;
             font-weight: 700 !important;
             letter-spacing: -0.01em !important;
+            line-height: 1.4 !important;
+            margin: 0 !important;
+            padding-right: 3rem !important;
+            color: #0f172a !important;
+        }
+
+        .dark .fi-modal-slide-over-window .fi-modal-heading {
+            color: #f8fafc !important;
+        }
+
+        /* Modal Close Button (X): Centered and neatly aligned */
+        .fi-modal-slide-over-window .fi-modal-header > div:has(.fi-modal-close-btn),
+        .fi-modal-slide-over-window .fi-modal-header > .absolute {
+            position: absolute !important;
+            top: 50% !important;
+            right: 1rem !important;
+            left: auto !important;
+            bottom: auto !important;
+            transform: translateY(-50%) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin: 0 !important;
+            z-index: 10 !important;
+        }
+
+        .fi-modal-slide-over-window .fi-modal-header .fi-modal-close-btn {
+            width: 2.15rem !important;
+            height: 2.15rem !important;
+            min-width: 2.15rem !important;
+            min-height: 2.15rem !important;
+            border-radius: 9999px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background-color: rgba(241, 245, 249, 0.9) !important;
+            color: #64748b !important;
+            transition: all 0.15s ease !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+        }
+
+        .fi-modal-slide-over-window .fi-modal-header .fi-modal-close-btn:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+
+        .dark .fi-modal-slide-over-window .fi-modal-header .fi-modal-close-btn {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+            color: #94a3b8 !important;
+        }
+
+        .dark .fi-modal-slide-over-window .fi-modal-header .fi-modal-close-btn:hover {
+            background-color: rgba(255, 255, 255, 0.16) !important;
+            color: #f8fafc !important;
+        }
+
+        .fi-modal-slide-over-window .fi-modal-header .fi-modal-close-btn svg {
+            width: 1.15rem !important;
+            height: 1.15rem !important;
+            display: block !important;
         }
 
         /* Modal Scrollable Content */
