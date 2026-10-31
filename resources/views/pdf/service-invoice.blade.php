@@ -296,14 +296,18 @@
     </table>
 
     <table class="totals-table">
+        @if($service->keehubPartsTotal() > 0)
         <tr>
             <td>Subtotal Part (KeeHub):</td>
             <td class="num">Rp {{ number_format($service->keehubPartsTotal(), 0, ',', '.') }}</td>
         </tr>
+        @endif
+        @if($service->laborTotal() > 0)
         <tr>
             <td>Biaya Jasa / Pengerjaan:</td>
             <td class="num">Rp {{ number_format($service->laborTotal(), 0, ',', '.') }}</td>
         </tr>
+        @endif
         @if($service->vendorPartsTotal() > 0)
             <tr>
                 <td style="color: #64748b; font-style: italic;">Part Disediakan Vendor:</td>

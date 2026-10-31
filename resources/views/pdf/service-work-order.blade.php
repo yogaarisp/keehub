@@ -312,18 +312,24 @@
     </table>
 
     <table class="totals-table">
+        @if($service->keehubPartsTotal() > 0)
         <tr>
             <td>Part dari KeeHub:</td>
             <td class="num">Rp {{ number_format($service->keehubPartsTotal(), 0, ',', '.') }}</td>
         </tr>
+        @endif
+        @if($service->vendorPartsTotal() > 0)
         <tr>
             <td>Part dari Vendor:</td>
             <td class="num">Rp {{ number_format($service->vendorPartsTotal(), 0, ',', '.') }}</td>
         </tr>
+        @endif
+        @if($service->laborTotal() > 0)
         <tr>
             <td>Biaya Jasa / Labor:</td>
             <td class="num">Rp {{ number_format($service->laborTotal(), 0, ',', '.') }}</td>
         </tr>
+        @endif
         <tr class="grand-total">
             <td>TOTAL PEKERJAAN:</td>
             <td class="num">Rp {{ number_format($service->workOrderTotal(), 0, ',', '.') }}</td>
