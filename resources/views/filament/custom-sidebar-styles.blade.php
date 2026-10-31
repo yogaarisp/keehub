@@ -24,15 +24,15 @@
         background-color: #0b0f19 !important;
     }
 
-    /* Sidebar Header (Clean & Minimalist) */
+    /* Sidebar Header (Clean, Compact & Minimalist) */
     .fi-sidebar-header {
-        height: 4.25rem !important;
+        height: 3.75rem !important;
         padding-left: 1rem !important;
-        padding-right: 0.85rem !important;
+        padding-right: 0.75rem !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
-        border-bottom: 1px solid rgba(226, 232, 240, 0.7) !important;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.6) !important;
         background-color: #ffffff !important;
         box-shadow: none !important;
     }
@@ -107,9 +107,9 @@
         height: 1.05rem !important;
     }
 
-    /* Sidebar Nav Container */
+    /* Sidebar Nav Container (Clean & Compact Spacing) */
     .fi-sidebar-nav {
-        padding: 1rem 0.85rem !important;
+        padding: 0.5rem 0.65rem !important;
         scrollbar-width: thin;
         scrollbar-color: rgba(148, 163, 184, 0.2) transparent;
     }
@@ -131,26 +131,28 @@
         background: rgba(148, 163, 184, 0.4);
     }
 
-    /* Navigation Groups */
+    /* Navigation Groups (Tight, Clean Spacing) */
     .fi-sidebar-nav-groups {
-        row-gap: 1.25rem !important;
+        row-gap: 0.625rem !important;
     }
 
     .fi-sidebar-group {
-        row-gap: 0.25rem !important;
+        row-gap: 0.125rem !important;
+        margin-bottom: 0 !important;
     }
 
-    /* Group Label (Minimalist Micro-Header) */
+    /* Group Label (Minimalist Clean Micro-Header) */
     .fi-sidebar-group-button {
-        padding: 0.35rem 0.5rem 0.25rem 0.65rem !important;
-        border-radius: 0.5rem !important;
-        transition: background-color 0.15s ease !important;
+        padding: 0.25rem 0.5rem 0.125rem 0.5rem !important;
+        border-radius: 0.375rem !important;
+        min-height: unset !important;
+        transition: background-color 0.12s ease !important;
     }
 
     .fi-sidebar-group-label {
-        font-size: 0.6875rem !important;
+        font-size: 0.65rem !important;
         font-weight: 700 !important;
-        letter-spacing: 0.08em !important;
+        letter-spacing: 0.05em !important;
         text-transform: uppercase !important;
         color: #94a3b8 !important;
     }
@@ -161,29 +163,33 @@
 
     /* Group Collapse Icon */
     .fi-sidebar-group-button button {
-        opacity: 0.5;
+        opacity: 0.45;
         transition: opacity 0.15s ease, transform 0.15s ease !important;
     }
 
     .fi-sidebar-group-button:hover button {
-        opacity: 1;
+        opacity: 0.85;
     }
 
-    /* Navigation Items */
+    /* Navigation Items (Rapi, Simple, Bersih) */
     .fi-sidebar-item {
         position: relative !important;
-        margin-bottom: 2px !important;
+        margin-bottom: 1px !important;
     }
 
     .fi-sidebar-item-button {
         position: relative !important;
-        border-radius: 0.65rem !important;
-        padding: 0.55rem 0.75rem !important;
-        font-size: 0.84rem !important;
+        border-radius: 0.5rem !important;
+        padding: 0.375rem 0.625rem !important;
+        font-size: 0.8125rem !important;
+        line-height: 1.25rem !important;
         font-weight: 500 !important;
         color: #475569 !important;
         background: transparent !important;
-        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        gap: 0.625rem !important;
+        border: none !important;
+        box-shadow: none !important;
+        transition: background-color 0.12s ease, color 0.12s ease !important;
         overflow: hidden;
     }
 
@@ -192,60 +198,53 @@
         background: transparent !important;
     }
 
-    /* Inactive Hover */
+    /* Inactive Hover - Clean subtle tint, no jumping/sliding */
     .fi-sidebar-item-button:hover {
         color: #0f172a !important;
-        background: rgba(241, 245, 249, 0.85) !important;
-        transform: translateX(3px) !important;
+        background: #f1f5f9 !important;
+        transform: none !important;
     }
 
     .dark .fi-sidebar-item-button:hover {
         color: #f8fafc !important;
         background: rgba(255, 255, 255, 0.05) !important;
-        transform: translateX(3px) !important;
+        transform: none !important;
     }
 
-    /* Active State (Sleek Minimal Accent Pill) */
+    /* Active State (Clean, Simple, Flat Accent Pill - Tanpa Garis Samping Tebal) */
     .fi-sidebar-item.fi-active > .fi-sidebar-item-button,
     .fi-sidebar-item-active > .fi-sidebar-item-button {
-        background: linear-gradient(135deg, rgba(254, 243, 199, 0.65) 0%, rgba(254, 243, 199, 0.3) 100%) !important;
-        color: #b45309 !important;
+        background-color: rgba(245, 158, 11, 0.1) !important;
+        color: #d97706 !important;
         font-weight: 600 !important;
-        border: 1px solid rgba(245, 158, 11, 0.22) !important;
-        box-shadow: 0 1px 3px rgba(245, 158, 11, 0.08) !important;
+        border: none !important;
+        box-shadow: none !important;
         transform: none !important;
     }
 
     .dark .fi-sidebar-item.fi-active > .fi-sidebar-item-button,
     .dark .fi-sidebar-item-active > .fi-sidebar-item-button {
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%) !important;
+        background-color: rgba(245, 158, 11, 0.15) !important;
         color: #fbbf24 !important;
         font-weight: 600 !important;
-        border: 1px solid rgba(245, 158, 11, 0.25) !important;
-        box-shadow: 0 0 16px rgba(245, 158, 11, 0.08) !important;
+        border: none !important;
+        box-shadow: none !important;
         transform: none !important;
     }
 
-    /* Left Indicator Bar for Active Item */
+    /* Hilangkan indikator garis tebal di samping active item */
     .fi-sidebar-item.fi-active > .fi-sidebar-item-button::before,
     .fi-sidebar-item-active > .fi-sidebar-item-button::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 22%;
-        bottom: 22%;
-        width: 3.5px;
-        border-radius: 0 4px 4px 0;
-        background: #f59e0b;
-        box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+        display: none !important;
     }
 
     /* Item Icons */
     .fi-sidebar-item-icon {
-        width: 1.25rem !important;
-        height: 1.25rem !important;
-        color: #94a3b8 !important;
-        transition: transform 0.15s ease, color 0.15s ease !important;
+        width: 1.15rem !important;
+        height: 1.15rem !important;
+        color: #64748b !important;
+        transition: color 0.12s ease !important;
+        flex-shrink: 0 !important;
     }
 
     .dark .fi-sidebar-item-icon {
@@ -253,13 +252,13 @@
     }
 
     .fi-sidebar-item-button:hover .fi-sidebar-item-icon {
-        color: #d97706 !important;
-        transform: scale(1.1) !important;
+        color: #0f172a !important;
+        transform: none !important;
     }
 
     .dark .fi-sidebar-item-button:hover .fi-sidebar-item-icon {
-        color: #fbbf24 !important;
-        transform: scale(1.1) !important;
+        color: #f8fafc !important;
+        transform: none !important;
     }
 
     .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
@@ -277,7 +276,7 @@
         border-radius: 9999px !important;
         font-size: 0.6875rem !important;
         font-weight: 600 !important;
-        padding: 0.1rem 0.5rem !important;
+        padding: 0.1rem 0.45rem !important;
         box-shadow: none !important;
     }
 
@@ -401,22 +400,23 @@
             color: #f8fafc !important;
         }
 
-        /* Collapsed Active Item (Centered Glowing Tile) */
+        /* Collapsed Active Item (Clean Subtle Glow Tile) */
         aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-button,
         aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-active > .fi-sidebar-item-button {
-            background: linear-gradient(135deg, rgba(254, 243, 199, 0.75) 0%, rgba(254, 243, 199, 0.4) 100%) !important;
-            border: 1px solid rgba(245, 158, 11, 0.35) !important;
-            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15) !important;
-            color: #b45309 !important;
+            background-color: rgba(245, 158, 11, 0.12) !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: #d97706 !important;
             transform: none !important;
         }
 
         .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-button,
         .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-active > .fi-sidebar-item-button {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(245, 158, 11, 0.08) 100%) !important;
-            border: 1px solid rgba(245, 158, 11, 0.35) !important;
-            box-shadow: 0 0 14px rgba(245, 158, 11, 0.15) !important;
+            background-color: rgba(245, 158, 11, 0.18) !important;
+            border: none !important;
+            box-shadow: none !important;
             color: #fbbf24 !important;
+            transform: none !important;
         }
 
         /* Disable side indicator bar when collapsed */
@@ -501,8 +501,9 @@
 
         /* Ensure header shows logo, brand name, and mobile close button */
         aside.fi-sidebar .fi-sidebar-header {
-            padding-left: 1.25rem !important;
-            padding-right: 1rem !important;
+            height: 3.75rem !important;
+            padding-left: 1rem !important;
+            padding-right: 0.75rem !important;
             display: flex !important;
             align-items: center !important;
             justify-content: space-between !important;
@@ -535,9 +536,13 @@
             display: none !important;
         }
 
-        /* Navigation in Mobile Drawer */
+        /* Navigation in Mobile Drawer (Compact & Clean) */
         aside.fi-sidebar .fi-sidebar-nav {
-            padding: 1rem 0.85rem !important;
+            padding: 0.5rem 0.65rem !important;
+        }
+
+        aside.fi-sidebar .fi-sidebar-nav-groups {
+            row-gap: 0.625rem !important;
         }
 
         aside.fi-sidebar .fi-sidebar-group-button {
@@ -552,17 +557,17 @@
         aside.fi-sidebar .fi-sidebar-item-button {
             width: 100% !important;
             height: auto !important;
-            padding: 0.625rem 0.85rem !important;
+            padding: 0.375rem 0.625rem !important;
             display: flex !important;
             align-items: center !important;
             justify-content: flex-start !important;
-            gap: 0.75rem !important;
-            border-radius: 0.65rem !important;
+            gap: 0.625rem !important;
+            border-radius: 0.5rem !important;
         }
 
         aside.fi-sidebar .fi-sidebar-item-label {
             display: inline-block !important;
-            font-size: 0.85rem !important;
+            font-size: 0.8125rem !important;
             font-weight: 500 !important;
         }
 
@@ -772,7 +777,7 @@
     }
 
     .fi-topbar > nav {
-        height: 4.25rem !important;
+        height: 3.75rem !important;
         background-color: rgba(255, 255, 255, 0.9) !important;
         border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
         box-shadow: none !important;
