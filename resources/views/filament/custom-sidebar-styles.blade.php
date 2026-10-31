@@ -1397,7 +1397,8 @@
             letter-spacing: -0.01em !important;
             line-height: 1.4 !important;
             margin: 0 !important;
-            padding-right: 3rem !important;
+            padding-left: 2.85rem !important;
+            padding-right: 0.5rem !important;
             color: #0f172a !important;
         }
 
@@ -1405,13 +1406,13 @@
             color: #f8fafc !important;
         }
 
-        /* Modal Close Button (X): Centered and neatly aligned */
+        /* Modal Close Button: Positioned on the LEFT (Panah Back) */
         .fi-modal-open .fi-modal-header > div:has(.fi-modal-close-btn),
         .fi-modal-open .fi-modal-header > .absolute {
             position: absolute !important;
             top: 50% !important;
-            right: 1rem !important;
-            left: auto !important;
+            left: 1rem !important;
+            right: auto !important;
             bottom: auto !important;
             transform: translateY(-50%) !important;
             display: flex !important;
@@ -1741,18 +1742,21 @@
             font-weight: 700 !important;
             letter-spacing: -0.01em !important;
             color: #0f172a !important;
+            padding-left: 3.25rem !important;
+            padding-right: 0.5rem !important;
         }
 
         .dark .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-heading {
             color: #f8fafc !important;
         }
 
-        /* Desktop Modal Close Button (X) */
+        /* Desktop Modal Close Button (Panah Back on Left) */
         .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-header > div:has(.fi-modal-close-btn),
         .fi-modal-open .fi-modal-window:not(.fi-modal-slide-over-window) .fi-modal-header > .absolute {
             position: absolute !important;
             top: 50% !important;
-            right: 1.5rem !important;
+            left: 1.5rem !important;
+            right: auto !important;
             transform: translateY(-50%) !important;
             display: flex !important;
             align-items: center !important;

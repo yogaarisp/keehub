@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -24,5 +25,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage-settings', fn ($user) => $user->role === 'owner');
 
         Gate::define('manage-users', fn ($user) => $user->role === 'owner');
+
+        FilamentIcon::register([
+            'modal.close-button' => 'heroicon-o-arrow-left',
+        ]);
     }
 }

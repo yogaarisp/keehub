@@ -21,7 +21,7 @@ class ListOrders extends ListRecords
                 ->label('+ Buat Order')
                 ->modalHeading('Buat Pesanan Baru')
                 ->modalSubmitActionLabel('Simpan Pesanan')
-                ->modalCancelActionLabel('Batal')
+                ->modalCancelAction(false)
                 ->modalWidth(MaxWidth::FiveExtraLarge)
                 ->url(null)
                 ->mutateFormDataUsing(function (array $data): array {

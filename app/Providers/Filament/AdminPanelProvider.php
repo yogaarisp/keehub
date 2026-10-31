@@ -36,6 +36,9 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->icons([
+                'modal.close-button' => 'heroicon-o-arrow-left',
+            ])
             ->font('Plus Jakarta Sans')
             ->brandName(fn () => Setting::get('store_name', 'KeeHub').' Admin')
             ->brandLogo(fn () => view('filament.brand-logo'))
