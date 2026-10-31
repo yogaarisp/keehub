@@ -3,12 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ServiceResource\Pages;
+use App\Models\Product;
 use App\Models\Service;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Set;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -52,15 +54,20 @@ class ServiceResource extends Resource
                         TextInput::make('email')->email(),
                     ])
                     ->columnSpanFull(),
+
                 TextInput::make('company_name')
                     ->label('Nama Perusahaan / Klien B2B')
-                    ->placeholder('Contoh: PT Teknologi Maju / Studio Animasi'),
+                    ->placeholder('Contoh: PT Teknologi Maju / Studio Animasi')
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
                 Select::make('source')->label('Sumber Masuk')->options([
                     'walk_in' => 'Walk-in (Datang Langsung)',
                     'whatsapp' => 'WhatsApp',
                     'admin' => 'Admin B2B / Kontrak',
                     'website' => 'Website Tracker',
-                ])->default('admin')->required(),
+                ])->default('admin')->required()
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
                 Select::make('technician_id')
                     ->label('Teknisi Penanggung Jawab')
                     ->options(fn () => User::query()->whereIn('role', ['owner', 'staff'])->pluck('name', 'id'))
@@ -73,17 +80,25 @@ class ServiceResource extends Resource
                 TextInput::make('device_name')
                     ->label('Nama / Model Unit PC')
                     ->placeholder('Contoh: PC Workstation Render / PC Kantor Dell')
-                    ->required(),
+                    ->required()
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
                 TextInput::make('serial_number')
                     ->label('No. Serial / No. Asset')
-                    ->placeholder('Contoh: SN-88293 / ASSET-B2B-04'),
+                    ->placeholder('Contoh: SN-88293 / ASSET-B2B-04')
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
                 Select::make('service_type')
                     ->label('Jenis Layanan')
                     ->options(Service::TYPES)
-                    ->required(),
+                    ->required()
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
                 TextInput::make('completeness')
                     ->label('Kelengkapan Unit')
-                    ->placeholder('Contoh: Unit PC, Kabel Power, Dongle Wi-Fi'),
+                    ->placeholder('Contoh: Unit PC, Kabel Power, Dongle Wi-Fi')
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
                 TextInput::make('device_specs')
                     ->label('Spesifikasi Singkat PC')
                     ->placeholder('Contoh: Ryzen 9 7900X, RAM 64GB, RTX 4080, PSU 850W')
@@ -94,17 +109,23 @@ class ServiceResource extends Resource
                 Select::make('status')
                     ->options(collect(Service::STATUSES)->mapWithKeys(fn ($s) => [$s => str_replace('_', ' ', ucfirst($s))]))
                     ->default('received')
-                    ->required(),
+                    ->required()
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
                 DatePicker::make('due_date')
-                    ->label('Target Selesai / Estimasi'),
+                    ->label('Target Selesai / Estimasi')
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
                 Textarea::make('problem_description')
                     ->label('Keluhan Klien / Problem Description')
                     ->rows(3)
                     ->columnSpanFull(),
+
                 Textarea::make('diagnosis')
                     ->label('Hasil Diagnosa & Solusi Teknis')
                     ->rows(3)
                     ->columnSpanFull(),
+
                 Textarea::make('notes')
                     ->label('Catatan Tambahan / Internal')
                     ->rows(2)
@@ -115,8 +136,31 @@ class ServiceResource extends Resource
                 Repeater::make('items')
                     ->relationship('items')
                     ->schema([
+                        Select::make('product_id')
+                            ->label('Pilih Part dari Katalog Toko (Opsional)')
+                            ->options(fn () => Product::query()->where('is_active', true)->pluck('name', 'id'))
+                            ->searchable()
+                            ->preload()
+                            ->placeholder('Pilih dari katalog toko untuk auto-fill...')
+                            ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
+                                if ($state && ($product = Product::find($state))) {
+                                    $set('name', $product->name);
+                                    $set('price', $product->price);
+                                    $set('item_type', 'product');
+                                    $set('part_source', 'keehub');
+                                }
+                            })
+                            ->live()
+                            ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 12]),
+
+                        TextInput::make('name')
+                            ->label('Nama Item / Jasa')
+                            ->required()
+                            ->placeholder('Contoh: Thermal Paste Arctic MX-6 / Jasa Deep Cleaning')
+                            ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 6]),
+
                         Select::make('item_type')
-                            ->label('Jenis')
+                            ->label('Jenis Item')
                             ->options([
                                 'product' => 'Sparepart / Barang',
                                 'labor' => 'Jasa / Labor',
@@ -124,12 +168,7 @@ class ServiceResource extends Resource
                             ->default('product')
                             ->required()
                             ->live()
-                            ->columnSpan(['default' => 12, 'sm' => 4]),
-
-                        TextInput::make('name')
-                            ->label('Nama Item / Jasa')
-                            ->required()
-                            ->columnSpan(['default' => 12, 'sm' => 8]),
+                            ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 3]),
 
                         Select::make('part_source')
                             ->label('Sumber Part')
@@ -141,7 +180,7 @@ class ServiceResource extends Resource
                             ->required()
                             ->live()
                             ->helperText(fn (Get $get) => $get('part_source') === 'vendor' ? 'Harga dicatat untuk Work Order, Rp 0 pada Invoice klien.' : null)
-                            ->columnSpan(['default' => 12, 'sm' => 4]),
+                            ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 3]),
 
                         TextInput::make('quantity')
                             ->label('Qty')
@@ -150,7 +189,7 @@ class ServiceResource extends Resource
                             ->minValue(1)
                             ->required()
                             ->live()
-                            ->columnSpan(['default' => 6, 'sm' => 4]),
+                            ->columnSpan(['default' => 1, 'sm' => 1, 'md' => 3]),
 
                         TextInput::make('price')
                             ->label('Harga Satuan')
@@ -159,23 +198,23 @@ class ServiceResource extends Resource
                             ->default(0)
                             ->required()
                             ->live()
-                            ->columnSpan(['default' => 6, 'sm' => 4]),
+                            ->columnSpan(['default' => 1, 'sm' => 1, 'md' => 3]),
 
                         TextInput::make('warranty_info')
                             ->label('Garansi')
-                            ->placeholder('Contoh: 1 Tahun')
-                            ->columnSpan(['default' => 12, 'sm' => 6]),
+                            ->placeholder('Contoh: 1 Bulan / 1 Tahun')
+                            ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 3]),
 
                         TextInput::make('description')
                             ->label('Keterangan / Serial Part')
                             ->placeholder('SN / Catatan teknis')
-                            ->columnSpan(['default' => 12, 'sm' => 6]),
+                            ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 3]),
                     ])
-                    ->columns(['default' => 12, 'sm' => 12])
+                    ->columns(['default' => 2, 'sm' => 2, 'md' => 12])
                     ->defaultItems(0)
                     ->addActionLabel('+ Tambah Item / Jasa')
                     ->itemLabel(fn (array $state): ?string => filled($state['name'] ?? null)
-                        ? ($state['name'] . ' (' . ($state['quantity'] ?? 1) . 'x' . (isset($state['price']) ? ' @ Rp ' . number_format($state['price'], 0, ',', '.') : '') . ')')
+                        ? ($state['name'] . ' (' . ($state['quantity'] ?? 1) . 'x' . (isset($state['price']) ? ' @ Rp ' . number_format($state['price'], 0, ',', '.') : '') . ' • ' . (($state['part_source'] ?? '') === 'vendor' ? 'Vendor' : 'KeeHub') . ')')
                         : null
                     )
                     ->collapsible()
@@ -195,18 +234,27 @@ class ServiceResource extends Resource
                     ->sortable()
                     ->copyable()
                     ->weight('bold')
-                    ->description(fn (Service $record): string => $record->created_at ? $record->created_at->format('d M Y') : '—'),
+                    ->description(fn (Service $record): string => ($record->customer?->name ?? 'Klien Umum') . ($record->device_name ? ' • ' . $record->device_name : '') . ($record->created_at ? ' • ' . $record->created_at->format('d/m/Y') : '')),
 
                 TextColumn::make('customer.name')
                     ->label('Pelanggan / Klien')
                     ->default('—')
                     ->searchable()
                     ->weight('medium')
-                    ->description(fn (Service $record): ?string => $record->company_name 
-                        ? ($record->company_name . ($record->device_name ? ' • ' . $record->device_name : '')) 
-                        : ($record->device_name ?: null)
+                    ->description(fn (Service $record): ?string => $record->company_name
+                        ? ($record->company_name . ($record->customer?->whatsapp ? ' • ' . $record->customer->whatsapp : ''))
+                        : ($record->customer?->whatsapp ?: null)
                     )
+                    ->visibleFrom('md')
                     ->wrap(),
+
+                TextColumn::make('device_name')
+                    ->label('Unit PC')
+                    ->placeholder('—')
+                    ->limit(24)
+                    ->searchable()
+                    ->description(fn (Service $record): ?string => $record->service_type ? (Service::TYPES[$record->service_type] ?? $record->service_type) : null)
+                    ->visibleFrom('lg'),
 
                 TextColumn::make('status')
                     ->label('Status')
@@ -236,48 +284,42 @@ class ServiceResource extends Resource
                     ->label('Tagihan')
                     ->money('IDR')
                     ->sortable()
-                    ->weight('semibold')
-                    ->alignEnd(),
+                    ->weight('bold')
+                    ->alignEnd()
+                    ->description(fn (Service $record): ?string => Service::TYPES[$record->service_type] ?? null),
 
                 TextColumn::make('service_type')
                     ->label('Layanan')
                     ->badge()
                     ->formatStateUsing(fn ($state) => Service::TYPES[$state] ?? $state)
-                    ->visibleFrom('md'),
+                    ->visibleFrom('xl')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('invoice_number')
                     ->label('No. Invoice')
                     ->searchable()
                     ->placeholder('—')
-                    ->visibleFrom('lg')
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('device_name')
-                    ->label('Unit PC')
-                    ->placeholder('—')
-                    ->limit(24)
-                    ->searchable()
-                    ->visibleFrom('lg')
+                    ->visibleFrom('xl')
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('company_name')
                     ->label('Perusahaan B2B')
                     ->placeholder('—')
                     ->searchable()
-                    ->visibleFrom('lg')
+                    ->visibleFrom('xl')
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('technician.name')
                     ->label('Teknisi')
                     ->placeholder('—')
-                    ->visibleFrom('lg')
+                    ->visibleFrom('xl')
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->label('Tgl Masuk')
                     ->dateTime('d M Y H:i')
                     ->sortable()
-                    ->visibleFrom('lg')
+                    ->visibleFrom('xl')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

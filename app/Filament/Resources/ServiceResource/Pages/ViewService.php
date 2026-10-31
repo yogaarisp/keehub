@@ -6,6 +6,7 @@ use App\Filament\Resources\ServiceResource;
 use App\Models\Service;
 use App\Services\ServiceService;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -48,26 +49,51 @@ class ViewService extends ViewRecord
                 TextEntry::make('serial_number')->label('Serial Number / Asset')->placeholder('—'),
                 TextEntry::make('service_type')->label('Layanan')->formatStateUsing(fn ($state) => Service::TYPES[$state] ?? $state)->badge(),
                 TextEntry::make('completeness')->label('Kelengkapan Unit')->placeholder('—'),
-                TextEntry::make('device_specs')->label('Spesifikasi Unit')->placeholder('—')->columnSpan(2),
+                TextEntry::make('device_specs')->label('Spesifikasi Unit')->placeholder('—')->columnSpanFull(),
                 TextEntry::make('problem_description')->label('Keluhan Klien')->columnSpanFull(),
                 TextEntry::make('diagnosis')->label('Diagnosa & Tindakan Teknisi')->columnSpanFull(),
             ])->columns(['default' => 1, 'sm' => 2, 'lg' => 3]),
 
             InfoSection::make('Rincian Suku Cadang & Jasa')->schema([
                 RepeatableEntry::make('items')->schema([
-                    TextEntry::make('name')->label('Nama Item / Jasa'),
-                    TextEntry::make('item_type')->label('Tipe')
+                    TextEntry::make('name')
+                        ->label('Nama Item / Jasa')
+                        ->weight('bold')
+                        ->columnSpan(['default' => 2, 'sm' => 2, 'lg' => 2]),
+
+                    TextEntry::make('item_type')
+                        ->label('Tipe')
                         ->badge()
-                        ->color(fn (string $state) => $state === 'labor' ? 'gray' : 'primary'),
-                    TextEntry::make('part_source')->label('Sumber Part')
+                        ->color(fn (string $state) => $state === 'labor' ? 'gray' : 'primary')
+                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
+
+                    TextEntry::make('part_source')
+                        ->label('Sumber')
                         ->badge()
                         ->formatStateUsing(fn ($state) => $state === 'vendor' ? 'Dari Vendor' : 'Dari KeeHub')
-                        ->color(fn ($state) => $state === 'vendor' ? 'warning' : 'info'),
-                    TextEntry::make('quantity')->label('Qty'),
-                    TextEntry::make('price')->label('Harga Asli')->money('IDR'),
-                    TextEntry::make('total')->label('Subtotal Riil')->money('IDR'),
-                    TextEntry::make('warranty_info')->label('Garansi')->placeholder('—'),
-                ])->columns(['default' => 1, 'sm' => 2, 'lg' => 4])->contained(false),
+                        ->color(fn ($state) => $state === 'vendor' ? 'warning' : 'info')
+                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
+
+                    TextEntry::make('quantity')
+                        ->label('Qty')
+                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
+
+                    TextEntry::make('price')
+                        ->label('Harga')
+                        ->money('IDR')
+                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
+
+                    TextEntry::make('total')
+                        ->label('Subtotal Riil')
+                        ->money('IDR')
+                        ->weight('bold')
+                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
+
+                    TextEntry::make('warranty_info')
+                        ->label('Garansi')
+                        ->placeholder('—')
+                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
+                ])->columns(['default' => 2, 'sm' => 2, 'lg' => 8])->contained(true),
             ]),
 
             InfoSection::make('Ringkasan Biaya')->schema([
@@ -102,32 +128,10 @@ class ViewService extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make(),
-
-            Action::make('thermal_receipt')
-                ->label('Cetak Struk Thermal')
-                ->icon('heroicon-o-printer')
-                ->color('success')
-                ->url(fn () => route('admin.service.receipt', $this->getRecord()))
-                ->openUrlInNewTab(),
-
-            Action::make('work_order_pdf')
-                ->label('Cetak Work Order (PDF)')
-                ->icon('heroicon-o-document-text')
-                ->color('info')
-                ->url(fn () => route('admin.service.work-order.pdf', $this->getRecord()))
-                ->openUrlInNewTab(),
-
-            Action::make('invoice_pdf')
-                ->label('Cetak Invoice (PDF)')
-                ->icon('heroicon-o-banknotes')
-                ->color('warning')
-                ->url(fn () => route('admin.service.invoice.pdf', $this->getRecord()))
-                ->openUrlInNewTab(),
-
             Action::make('advance_status')
                 ->label('Ubah Status')
                 ->icon('heroicon-m-arrow-path')
+                ->color('primary')
                 ->form([
                     Select::make('to_status')->label('Status baru')
                         ->options(collect(ServiceService::statusFlow()[$this->getRecord()->status] ?? [])
@@ -144,6 +148,31 @@ class ViewService extends ViewRecord
                     }
                 })
                 ->visible(fn () => ! empty(ServiceService::statusFlow()[$this->getRecord()->status])),
+
+            ActionGroup::make([
+                Action::make('thermal_receipt')
+                    ->label('Cetak Struk Thermal')
+                    ->icon('heroicon-o-printer')
+                    ->url(fn () => route('admin.service.receipt', $this->getRecord()))
+                    ->openUrlInNewTab(),
+
+                Action::make('work_order_pdf')
+                    ->label('Cetak Work Order (PDF)')
+                    ->icon('heroicon-o-document-text')
+                    ->url(fn () => route('admin.service.work-order.pdf', $this->getRecord()))
+                    ->openUrlInNewTab(),
+
+                Action::make('invoice_pdf')
+                    ->label('Cetak Invoice (PDF)')
+                    ->icon('heroicon-o-banknotes')
+                    ->url(fn () => route('admin.service.invoice.pdf', $this->getRecord()))
+                    ->openUrlInNewTab(),
+            ])
+                ->label('Cetak Dokumen')
+                ->icon('heroicon-o-printer')
+                ->color('gray'),
+
+            EditAction::make(),
         ];
     }
 }

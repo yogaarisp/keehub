@@ -1,13 +1,23 @@
+@php
+    $storeName = \App\Models\Setting::get('store_name', 'KeeHub');
+@endphp
+
 <div class="fi-topbar-start-wrapper flex items-center gap-2 sm:gap-3 min-w-0">
     {{-- Mobile Brand Logo & Name --}}
     <div class="flex items-center gap-2 lg:hidden min-w-0">
-        <img
-            src="{{ \App\Models\Setting::logoUrl() }}"
-            alt="{{ \App\Models\Setting::get('store_name', 'KeeHub') }}"
-            class="w-6 h-6 rounded-md object-contain flex-shrink-0"
-        >
+        <div class="w-6 h-6 rounded-md bg-white p-0.5 flex items-center justify-center border border-slate-200/80 dark:border-white/10 shadow-xs flex-shrink-0">
+            <img
+                src="{{ \App\Models\Setting::logoUrl() }}"
+                alt="{{ $storeName }}"
+                class="w-full h-full object-contain"
+            >
+        </div>
         <span class="text-sm font-bold text-slate-900 dark:text-white tracking-tight leading-none truncate max-w-[110px] sm:max-w-none">
-            {{ \App\Models\Setting::get('store_name', 'KeeHub') }}
+            @if ($storeName === 'KeeHub')
+                Kee<span class="text-amber-500 font-extrabold">Hub</span>
+            @else
+                {{ $storeName }}
+            @endif
         </span>
     </div>
 

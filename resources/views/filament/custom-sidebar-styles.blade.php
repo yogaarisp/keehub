@@ -26,9 +26,9 @@
 
     /* Sidebar Header (Clean, Compact & Minimalist) */
     .fi-sidebar-header {
-        height: 3.75rem !important;
+        height: 3.875rem !important;
         padding-left: 1rem !important;
-        padding-right: 0.75rem !important;
+        padding-right: 0.85rem !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
@@ -41,9 +41,11 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
         background-color: #0b0f19 !important;
     }
+
     .fi-sidebar-header > div:first-child {
         min-width: 0 !important;
         flex: 1 1 auto !important;
+        display: flex !important;
         align-items: center !important;
     }
 
@@ -62,7 +64,132 @@
         display: flex !important;
         align-items: center !important;
         min-width: 0 !important;
+        width: 100% !important;
         text-decoration: none !important;
+    }
+
+    /* KeeHub Custom Brand Header Styles */
+    .keehub-brand-header-root {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        min-width: 0 !important;
+    }
+
+    .keehub-brand-link {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.625rem !important;
+        min-width: 0 !important;
+        text-decoration: none !important;
+    }
+
+    .keehub-brand-tile {
+        width: 2.125rem !important;
+        height: 2.125rem !important;
+        border-radius: 0.55rem !important;
+        background-color: #ffffff !important;
+        border: 1px solid rgba(226, 232, 240, 0.9) !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+        padding: 0.25rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+        transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    }
+
+    .dark .keehub-brand-tile {
+        background-color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.15) !important;
+    }
+
+    .keehub-brand-link:hover .keehub-brand-tile {
+        transform: scale(1.05) !important;
+    }
+
+    .keehub-brand-img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+        display: block !important;
+    }
+
+    .keehub-brand-title {
+        font-size: 0.95rem !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.025em !important;
+        line-height: 1 !important;
+        color: #0f172a !important;
+        white-space: nowrap !important;
+    }
+
+    .dark .keehub-brand-title {
+        color: #ffffff !important;
+    }
+
+    .keehub-brand-accent {
+        color: #f59e0b !important;
+        font-weight: 800 !important;
+    }
+
+    .keehub-admin-pill {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.3rem !important;
+        padding: 0.175rem 0.45rem !important;
+        border-radius: 0.375rem !important;
+        font-size: 0.625rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+        line-height: 1 !important;
+        flex-shrink: 0 !important;
+        background-color: rgba(245, 158, 11, 0.12) !important;
+        color: #d97706 !important;
+        border: 1px solid rgba(245, 158, 11, 0.28) !important;
+    }
+
+    .dark .keehub-admin-pill {
+        background-color: rgba(245, 158, 11, 0.14) !important;
+        color: #fbbf24 !important;
+        border: 1px solid rgba(245, 158, 11, 0.32) !important;
+    }
+
+    .keehub-admin-dot {
+        width: 0.28rem !important;
+        height: 0.28rem !important;
+        border-radius: 9999px !important;
+        background-color: #f59e0b !important;
+        display: inline-block !important;
+        box-shadow: 0 0 6px rgba(245, 158, 11, 0.6) !important;
+    }
+
+    .keehub-mobile-close {
+        width: 1.85rem !important;
+        height: 1.85rem !important;
+        border-radius: 0.5rem !important;
+        background-color: #f8fafc !important;
+        border: 1px solid rgba(226, 232, 240, 0.9) !important;
+        color: #64748b !important;
+    }
+
+    .dark .keehub-mobile-close {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #94a3b8 !important;
+    }
+
+    .keehub-mobile-close:hover {
+        background-color: #f1f5f9 !important;
+        color: #0f172a !important;
+    }
+
+    .dark .keehub-mobile-close:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #ffffff !important;
     }
 
     /* Alpine Cloak - Prevent pre-render flash of hidden elements */
@@ -70,41 +197,50 @@
         display: none !important;
     }
 
-    /* Minimalist Collapse / Expand Toggle Button */
+    /* Refined Collapse / Expand Toggle Button */
     .fi-sidebar-header button.fi-icon-btn,
     .fi-sidebar-header .fi-icon-btn {
         flex-shrink: 0 !important;
-        width: 1.75rem !important;
-        height: 1.75rem !important;
-        border-radius: 0.375rem !important;
-        border: none !important;
-        background-color: transparent !important;
-        color: #94a3b8 !important;
+        width: 1.85rem !important;
+        height: 1.85rem !important;
+        border-radius: 0.5rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: #f8fafc !important;
+        border: 1px solid rgba(226, 232, 240, 0.9) !important;
+        color: #64748b !important;
         transition: all 0.15s ease !important;
         box-shadow: none !important;
+        margin-left: auto !important;
     }
 
     .fi-sidebar-header button.fi-icon-btn:hover,
     .fi-sidebar-header .fi-icon-btn:hover {
-        background-color: rgba(241, 245, 249, 0.9) !important;
+        background-color: #f1f5f9 !important;
         color: #0f172a !important;
+        border-color: rgba(203, 213, 225, 1) !important;
+        transform: scale(1.05) !important;
     }
 
     .dark .fi-sidebar-header button.fi-icon-btn,
     .dark .fi-sidebar-header .fi-icon-btn {
-        color: #64748b !important;
-        background-color: transparent !important;
+        color: #94a3b8 !important;
+        background-color: rgba(255, 255, 255, 0.04) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
     }
 
     .dark .fi-sidebar-header button.fi-icon-btn:hover,
     .dark .fi-sidebar-header .fi-icon-btn:hover {
         background-color: rgba(255, 255, 255, 0.08) !important;
-        color: #f8fafc !important;
+        color: #ffffff !important;
+        border-color: rgba(255, 255, 255, 0.16) !important;
+        transform: scale(1.05) !important;
     }
 
     .fi-sidebar-header .fi-icon-btn svg {
-        width: 1.05rem !important;
-        height: 1.05rem !important;
+        width: 1rem !important;
+        height: 1rem !important;
     }
 
     /* Sidebar Nav Container (Clean & Compact Spacing) */
@@ -501,9 +637,9 @@
 
         /* Ensure header shows logo, brand name, and mobile close button */
         aside.fi-sidebar .fi-sidebar-header {
-            height: 3.75rem !important;
+            height: 3.875rem !important;
             padding-left: 1rem !important;
-            padding-right: 0.75rem !important;
+            padding-right: 0.85rem !important;
             display: flex !important;
             align-items: center !important;
             justify-content: space-between !important;

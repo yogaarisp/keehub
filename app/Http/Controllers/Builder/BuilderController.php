@@ -15,9 +15,10 @@ use Illuminate\View\View;
 
 class BuilderController extends Controller
 {
-    public function index(?string $token = null): View
+    public function index(Request $request, ?string $token = null): View
     {
         $build = null;
+        $token = $token ?? $request->query('build') ?? $request->query('token');
 
         if ($token) {
             $build = PcBuild::query()->where('share_token', $token)->orWhereKey($token)->with('items.product')->first();
