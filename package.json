@@ -3,8 +3,10 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "dev": "concurrently -k -p \"[{name}]\" -n \"APP,VITE\" -c \"blue.bold,cyan.bold\" \"php artisan serve\" \"vite\"",
         "build": "vite build",
-        "dev": "vite"
+        "serve": "php artisan serve",
+        "vite": "vite"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
