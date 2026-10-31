@@ -227,6 +227,7 @@ class ServiceResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn (Service $record): string => ServiceResource::getUrl('view', ['record' => $record]))
             ->columns([
                 TextColumn::make('code')
                     ->label('No. Servis')
@@ -234,7 +235,8 @@ class ServiceResource extends Resource
                     ->sortable()
                     ->copyable()
                     ->weight('bold')
-                    ->description(fn (Service $record): string => ($record->customer?->name ?? 'Klien Umum') . ($record->device_name ? ' • ' . $record->device_name : '') . ($record->created_at ? ' • ' . $record->created_at->format('d/m/Y') : '')),
+                    ->description(fn (Service $record): string => ($record->customer?->name ?? 'Klien Umum') . ($record->device_name ? ' • ' . $record->device_name : '') . ($record->created_at ? ' • ' . $record->created_at->format('d/m/Y') : ''))
+                    ->wrap(),
 
                 TextColumn::make('customer.name')
                     ->label('Pelanggan / Klien')
@@ -273,12 +275,13 @@ class ServiceResource extends Resource
                         'checking' => 'Pengecekan',
                         'waiting_approval' => 'Approval',
                         'processing' => 'Dikerjakan',
-                        'testing' => 'Quality Check',
+                        'testing' => 'QC',
                         'ready' => 'Siap Ambil',
                         'completed' => 'Selesai',
-                        'cancelled' => 'Dibatalkan',
+                        'cancelled' => 'Batal',
                         default => ucfirst(str_replace('_', ' ', $state)),
-                    }),
+                    })
+                    ->description(fn (Service $record): ?string => 'Rp ' . number_format($record->total_cost, 0, ',', '.')),
 
                 TextColumn::make('total_cost')
                     ->label('Tagihan')
@@ -286,7 +289,8 @@ class ServiceResource extends Resource
                     ->sortable()
                     ->weight('bold')
                     ->alignEnd()
-                    ->description(fn (Service $record): ?string => Service::TYPES[$record->service_type] ?? null),
+                    ->description(fn (Service $record): ?string => Service::TYPES[$record->service_type] ?? null)
+                    ->visibleFrom('md'),
 
                 TextColumn::make('service_type')
                     ->label('Layanan')

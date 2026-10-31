@@ -104,8 +104,7 @@ class ViewService extends ViewRecord
                 TextEntry::make('vendor_parts_total')
                     ->label('Nilai Part Dari Vendor')
                     ->state(fn (Service $record) => 'Rp '.number_format($record->vendorPartsTotal(), 0, ',', '.'))
-                    ->helperText('Rp 0 pada invoice tagihan klien')
-                    ->visible(fn (Service $record) => $record->vendorPartsTotal() > 0),
+                    ->helperText('Rp 0 pada invoice tagihan klien'),
                 TextEntry::make('invoice_total')
                     ->label('Grand Total Tagihan (Invoice Klien)')
                     ->state(fn (Service $record) => 'Rp '.number_format($record->invoiceTotal(), 0, ',', '.'))

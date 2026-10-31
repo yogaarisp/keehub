@@ -1034,20 +1034,46 @@
             font-size: 0.875rem !important;
         }
 
-        /* ---- Page header: compact ---- */
+        /* ---- Page header: compact and aligned in single row on mobile ---- */
+        .fi-header {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            flex-wrap: nowrap !important;
+            gap: 0.75rem !important;
+            margin-bottom: 0.75rem !important;
+        }
+
         .fi-header-heading {
-            font-size: 1.25rem !important;
-            line-height: 1.3 !important;
+            font-size: 1.35rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.025em !important;
+            line-height: 1.2 !important;
+            margin: 0 !important;
         }
 
         .fi-header-subheading {
-            font-size: 0.85rem !important;
-            margin-top: 0.35rem !important;
+            font-size: 0.825rem !important;
+            margin-top: 0.25rem !important;
         }
 
-        /* Page header actions: wrap on mobile */
+        /* Page header actions on mobile: compact and aligned */
         .fi-header > div:last-child {
-            flex-wrap: wrap !important;
+            margin: 0 !important;
+            flex-shrink: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .fi-header > div:last-child .fi-btn {
+            min-height: 2.25rem !important;
+            height: 2.25rem !important;
+            padding-left: 0.85rem !important;
+            padding-right: 0.85rem !important;
+            font-size: 0.775rem !important;
+            font-weight: 700 !important;
+            border-radius: 0.625rem !important;
         }
 
         /* ---- Page section: compact spacing ---- */
@@ -1274,14 +1300,75 @@
             width: 100% !important;
         }
 
-        /* Table cells: compact */
+        /* Prevent table container horizontal scrollbar on mobile */
+        .fi-ta-content {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Fixed table layout: perfect 100% fit with NO horizontal overflow */
+        .fi-ta-table {
+            table-layout: fixed !important;
+            width: 100% !important;
+            min-width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Table cells: compact and balanced */
         .fi-ta-table td,
         .fi-ta-table th {
-            padding-left: 0.65rem !important;
-            padding-right: 0.65rem !important;
-            padding-top: 0.45rem !important;
-            padding-bottom: 0.45rem !important;
+            padding-left: 0.55rem !important;
+            padding-right: 0.55rem !important;
+            padding-top: 0.6rem !important;
+            padding-bottom: 0.6rem !important;
             font-size: 0.78rem !important;
+        }
+
+        /* Column 1: No. Servis (52%) */
+        .fi-ta-table th:first-child,
+        .fi-ta-table td:first-child {
+            width: 52% !important;
+            max-width: 52% !important;
+            overflow: hidden !important;
+        }
+
+        /* Column 2: Status & Biaya (34%) */
+        .fi-ta-table th.fi-ta-col-status,
+        .fi-ta-table td.fi-ta-col-status {
+            width: 34% !important;
+            max-width: 34% !important;
+            text-align: right !important;
+        }
+
+        .fi-ta-col-status .fi-ta-text-item {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-end !important;
+            gap: 0.25rem !important;
+        }
+
+        .fi-ta-col-status .fi-ta-text-item-description {
+            display: block !important;
+            font-weight: 800 !important;
+            font-size: 0.775rem !important;
+            color: #d97706 !important;
+            white-space: nowrap !important;
+            line-height: 1.1 !important;
+            margin-top: 0.25rem !important;
+        }
+
+        .dark .fi-ta-col-status .fi-ta-text-item-description {
+            color: #fbbf24 !important;
+        }
+
+        /* Actions Column (14%) */
+        .fi-ta-table th:last-child,
+        .fi-ta-table td:last-child {
+            width: 14% !important;
+            max-width: 14% !important;
+            text-align: right !important;
+            padding-right: 0.35rem !important;
         }
 
         /* Table header cells: prevent wrapping */
@@ -1317,9 +1404,12 @@
         /* Table column description text (customer, date, subtitle) */
         .fi-ta-text-item-description {
             font-size: 0.72rem !important;
-            line-height: 1.25 !important;
+            line-height: 1.3 !important;
             margin-top: 2px !important;
             color: #64748b !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
         }
 
         .dark .fi-ta-text-item-description {
@@ -1332,6 +1422,26 @@
             font-size: 0.7rem !important;
             font-weight: 600 !important;
             letter-spacing: 0.02em !important;
+        }
+
+        /* Row touch interaction */
+        .fi-ta-row {
+            cursor: pointer !important;
+            transition: background-color 0.15s ease !important;
+        }
+
+        .fi-ta-row:active {
+            background-color: rgba(245, 158, 11, 0.08) !important;
+        }
+
+        /* Tabs list scroll on mobile */
+        .fi-tabs {
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+
+        .fi-tabs::-webkit-scrollbar {
+            display: none !important;
         }
 
         /* ---- Action buttons: min touch target (44px) ---- */
@@ -1787,6 +1897,13 @@
         /* Cap non-responsive grids at 2 columns on tablet portrait */
         [style*="--cols-default"]:not([style*="--cols-sm"]):not([style*="--cols-md"]):not([style*="--cols-lg"]) {
             --cols-default: repeat(2, minmax(0, 1fr)) !important;
+        }
+    }
+
+    /* Desktop / Tablet: hide mobile price description under status column */
+    @media (min-width: 768px) {
+        .fi-ta-col-status .fi-ta-text-item-description {
+            display: none !important;
         }
     }
 
