@@ -1034,28 +1034,40 @@
             font-size: 0.875rem !important;
         }
 
-        /* ---- Page header: compact and aligned in single row on mobile ---- */
+        /* ---- Page header: compact and aligned on mobile ---- */
         .fi-header {
             display: flex !important;
             flex-direction: row !important;
-            align-items: center !important;
+            align-items: flex-start !important;
             justify-content: space-between !important;
-            flex-wrap: nowrap !important;
+            flex-wrap: wrap !important;
             gap: 0.75rem !important;
             margin-bottom: 0.75rem !important;
         }
 
+        .fi-header > div:first-child {
+            flex: 1 1 auto !important;
+            min-width: 0 !important;
+        }
+
         .fi-header-heading {
-            font-size: 1.35rem !important;
+            font-size: 1.25rem !important;
             font-weight: 800 !important;
             letter-spacing: -0.025em !important;
-            line-height: 1.2 !important;
+            line-height: 1.25 !important;
             margin: 0 !important;
+            word-break: break-word !important;
         }
 
         .fi-header-subheading {
-            font-size: 0.825rem !important;
+            font-size: 0.8rem !important;
             margin-top: 0.25rem !important;
+            color: #64748b !important;
+            line-height: 1.35 !important;
+        }
+
+        .dark .fi-header-subheading {
+            color: #94a3b8 !important;
         }
 
         /* Page header actions on mobile: compact and aligned */
@@ -1064,16 +1076,19 @@
             flex-shrink: 0 !important;
             display: flex !important;
             align-items: center !important;
+            flex-wrap: wrap !important;
+            gap: 0.45rem !important;
         }
 
         .fi-header > div:last-child .fi-btn {
-            min-height: 2.25rem !important;
-            height: 2.25rem !important;
-            padding-left: 0.85rem !important;
-            padding-right: 0.85rem !important;
+            min-height: 2.15rem !important;
+            height: auto !important;
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
             font-size: 0.775rem !important;
             font-weight: 700 !important;
             border-radius: 0.625rem !important;
+            white-space: nowrap !important;
         }
 
         /* ---- Page section: compact spacing ---- */
@@ -1450,6 +1465,7 @@
         }
 
         /* ---- Form footer actions: sticky above mobile bottom navigation ---- */
+        .fi-form-actions,
         .fi-footer-actions {
             position: sticky !important;
             bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
@@ -1457,24 +1473,29 @@
             backdrop-filter: blur(12px) !important;
             -webkit-backdrop-filter: blur(12px) !important;
             padding: 0.75rem 0.85rem !important;
-            margin: 0 -0.85rem !important;
+            margin: 1.5rem -0.85rem 0 -0.85rem !important;
             z-index: 25 !important;
             box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.05) !important;
             border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
+            border-radius: 0.75rem 0.75rem 0 0 !important;
         }
 
+        .dark .fi-form-actions,
         .dark .fi-footer-actions {
             background-color: rgba(11, 15, 25, 0.95) !important;
             border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
             box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.35) !important;
         }
 
+        .fi-form-actions .fi-actions,
+        .fi-form-actions .fi-ac,
         .fi-footer-actions .fi-ac {
             width: 100% !important;
             display: flex !important;
             gap: 0.5rem !important;
         }
 
+        .fi-form-actions .fi-btn,
         .fi-footer-actions .fi-btn {
             flex: 1 1 auto !important;
             justify-content: center !important;
