@@ -139,7 +139,7 @@ $slotMeta = [
                 @foreach ($purposes as $p)
                     <button type="button" x-on:click="purpose = '{{ $p }}'; refresh()"
                             x-bind:class="purpose === '{{ $p }}'
-                                ? 'bg-kee-500 text-gray-950 font-bold shadow-sm shadow-kee-500/20'
+                                ? 'bg-kee-500 text-gray-800 font-semibold shadow-sm shadow-kee-500/20'
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'"
                             class="rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition">
                         {{ $p }}
@@ -162,7 +162,7 @@ $slotMeta = [
                 @foreach ([5000000, 7000000, 10000000, 15000000, 20000000] as $b)
                     <button type="button" x-on:click="budget = {{ $b }}; refresh()"
                             x-bind:class="budget === {{ $b }}
-                                ? 'bg-kee-500 text-gray-950 font-bold shadow-sm shadow-kee-500/20'
+                                ? 'bg-kee-500 text-gray-800 font-semibold shadow-sm shadow-kee-500/20'
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'"
                             class="rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-medium transition">
                         Rp{{ number_format($b / 1000000, 0) }}jt
@@ -240,8 +240,8 @@ $slotMeta = [
                             {{-- When NOT selected --}}
                             <button type="button" x-show="!items['{{ $slot }}']"
                                     x-on:click="openPicker('{{ $slot }}', '{{ $meta['name'] }}')"
-                                    class="inline-flex items-center gap-1.5 rounded-xl bg-kee-500 px-3.5 py-2 text-xs font-bold text-gray-950 transition hover:bg-kee-400 active:scale-95 shadow-sm shadow-kee-500/20">
-                                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                                    class="inline-flex items-center gap-1.5 rounded-xl bg-kee-500 px-3 py-1.5 text-xs font-semibold text-gray-800 transition hover:bg-kee-400 hover:text-gray-900 active:scale-95 shadow-sm shadow-kee-500/20">
+                                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                                 <span>Pilih</span>
                             </button>
 
@@ -394,7 +394,7 @@ $slotMeta = [
                 </button>
 
                 <button type="button" x-on:click="addToCart()" x-show="isLoggedIn" x-bind:disabled="selectedCount === 0"
-                        class="inline-flex items-center gap-1 rounded-xl bg-kee-500 px-3.5 py-2 text-xs font-bold text-gray-950 hover:bg-kee-400 disabled:opacity-40">
+                        class="inline-flex items-center gap-1 rounded-xl bg-kee-500 px-3.5 py-2 text-xs font-semibold text-gray-800 hover:bg-kee-400 hover:text-gray-900 disabled:opacity-40">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                     <span>+ Cart</span>
                 </button>
@@ -499,7 +499,7 @@ $slotMeta = [
                                     <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0 border-t border-gray-100 pt-2.5 sm:border-0 sm:pt-0 dark:border-gray-800">
                                         <span class="text-base font-extrabold text-kee-600 dark:text-kee-400" x-text="'Rp ' + product.price.toLocaleString('id-ID')"></span>
                                         <button type="button" x-on:click="choose(picker.slot, product)"
-                                                class="x-btn-primary !py-1.5 !px-4 text-xs font-bold active:scale-95 transition">
+                                                class="inline-flex items-center justify-center rounded-xl bg-kee-500 px-4 py-1.5 text-xs font-semibold text-gray-800 transition hover:bg-kee-400 hover:text-gray-900 active:scale-95 shadow-sm shadow-kee-500/20">
                                             Pilih Ini
                                         </button>
                                     </div>

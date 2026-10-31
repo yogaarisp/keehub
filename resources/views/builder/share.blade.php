@@ -77,7 +77,7 @@
                     </div>
                 @endif
 
-                <a href="{{ route('builder.index', ['build' => $build->id]) }}" class="x-btn-primary mt-4 w-full !py-2.5 text-xs font-bold">
+                <a href="{{ route('builder.index', ['build' => $build->id]) }}" class="x-btn-primary mt-4 w-full !py-2.5 text-xs font-semibold">
                     Kustomisasi Build Ini →
                 </a>
             </div>

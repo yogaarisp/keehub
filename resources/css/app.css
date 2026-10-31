@@ -26,7 +26,7 @@
     }
 
     .x-btn-primary {
-        @apply x-btn bg-kee-500 text-gray-950 hover:bg-kee-400;
+        @apply x-btn bg-kee-500 text-gray-800 hover:bg-kee-400 hover:text-gray-900;
     }
 
     .x-btn-dark {
