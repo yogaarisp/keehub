@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\ServicePdfController;
 use App\Http\Controllers\Builder\BuilderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -27,6 +28,7 @@ Route::get('/pc-rakitan', [RakitanController::class, 'index'])->name('rakitan.in
 // Service Tracker & Request
 Route::get('/service', [ServiceRequestController::class, 'index'])->name('service.index');
 Route::get('/service/request', [ServiceRequestController::class, 'create'])->name('service.create');
+Route::get('/service/{service:code}/invoice', [ServicePdfController::class, 'publicInvoice'])->name('service.public.invoice.pdf');
 Route::post('/service', [ServiceRequestController::class, 'store'])->name('service.store')->middleware('throttle:10,1');
 
 // PC Builder (share view public)

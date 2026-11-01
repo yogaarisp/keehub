@@ -160,6 +160,14 @@
                                 <div class="mt-1 text-[11px] text-gray-400">
                                     Masuk: {{ $selectedService->created_at->format('d M Y, H:i') }}
                                 </div>
+                                @if ($selectedService->invoice_number || $selectedService->total_cost > 0)
+                                    <div class="mt-2">
+                                        <a href="{{ route('service.public.invoice.pdf', $selectedService) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+                                            <svg class="h-3.5 w-3.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                                            <span>Unduh Invoice (PDF)</span>
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 

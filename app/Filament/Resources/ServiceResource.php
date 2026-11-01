@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ServiceResource\Pages;
 use App\Models\Product;
 use App\Models\Service;
+use App\Models\Setting;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
@@ -364,8 +365,19 @@ class ServiceResource extends Resource
                     ->options(Service::TYPES),
             ])
             ->actions([
+                Action::make('send_invoice_wa')
+                    ->label('Kirim WA')
+                    ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                    ->color('success')
+                    ->tooltip('Kirim invoice via WhatsApp ke pelanggan')
+                    ->url(fn (Service $record): string => static::buildInvoiceWaUrl($record), shouldOpenInNewTab: true),
                 ActionGroup::make([
                     ViewAction::make(),
+                    Action::make('send_invoice_wa_menu')
+                        ->label('Kirim Invoice ke WA')
+                        ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                        ->color('success')
+                        ->url(fn (Service $record): string => static::buildInvoiceWaUrl($record), shouldOpenInNewTab: true),
                     Action::make('thermal_receipt')
                         ->label('Cetak Struk Thermal')
                         ->icon('heroicon-o-printer')
@@ -388,6 +400,102 @@ class ServiceResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->poll('60s');
+    }
+
+    public static function buildInvoiceWaMessage(Service $service): string
+    {
+        $service->loadMissing(['customer', 'technician', 'items']);
+
+        $storeName = Setting::get('store_name', 'KeeHub');
+        $customerName = $service->customer?->name ?? 'Pelanggan';
+        $invoiceNo = $service->invoice_number ?: $service->code;
+        $serviceCode = $service->code;
+        $deviceName = $service->device_name ?: 'Unit PC';
+        $serviceType = Service::TYPES[$service->service_type] ?? $service->service_type;
+
+        $statusLabels = [
+            'received' => 'Masuk / Diterima',
+            'checking' => 'Pengecekan Teknis',
+            'waiting_approval' => 'Menunggu Persetujuan',
+            'processing' => 'Sedang Dikerjakan',
+            'testing' => 'QC Test / Pengujian',
+            'ready' => 'Siap Diambil',
+            'completed' => 'Selesai',
+            'cancelled' => 'Dibatalkan',
+        ];
+        $statusText = $statusLabels[$service->status] ?? ucfirst(str_replace('_', ' ', (string) $service->status));
+
+        $msg = '🧾 *INVOICE SERVIS PC — '.strtoupper($storeName)."*\n";
+        $msg .= "----------------------------------------\n";
+        $msg .= "Halo Kak *{$customerName}*,\n";
+        $msg .= "Berikut adalah rincian invoice untuk servis unit perangkat Anda:\n\n";
+
+        $msg .= "📄 *No. Invoice:* {$invoiceNo}\n";
+        $msg .= "🔖 *No. Servis:* {$serviceCode}\n";
+        $msg .= "🖥️ *Perangkat:* {$deviceName}\n";
+        $msg .= "🛠️ *Layanan:* {$serviceType}\n";
+        $msg .= "📊 *Status:* {$statusText}\n";
+
+        if ($service->items->isNotEmpty()) {
+            $msg .= "\n*Rincian Suku Cadang & Jasa:*\n";
+            $idx = 1;
+            foreach ($service->items as $item) {
+                if ($item->part_source === 'vendor') {
+                    $priceText = 'Part Vendor (Garansi)';
+                } else {
+                    $priceText = 'Rp '.number_format($item->total, 0, ',', '.');
+                }
+                $msg .= "{$idx}. {$item->name} ({$item->quantity}x) : {$priceText}\n";
+                $idx++;
+            }
+        }
+
+        $totalTagihan = number_format($service->invoiceTotal(), 0, ',', '.');
+        $msg .= "\n💰 *TOTAL TAGIHAN: Rp {$totalTagihan}*\n";
+        $msg .= "----------------------------------------\n";
+
+        $bankName = Setting::get('bank_name');
+        $bankNumber = Setting::get('bank_account_number');
+        $bankHolder = Setting::get('bank_account_holder');
+
+        if ($bankName && $bankNumber) {
+            $msg .= "💳 *Informasi Pembayaran Transfer:*\n";
+            $msg .= "Bank: {$bankName}\n";
+            $msg .= "No. Rekening: *{$bankNumber}*\n";
+            if ($bankHolder) {
+                $msg .= "Atas Nama: {$bankHolder}\n";
+            }
+            $msg .= "\n";
+        }
+
+        $publicPdfUrl = route('service.public.invoice.pdf', $service);
+        $trackUrl = url('/service?q='.$service->code);
+
+        $msg .= "📥 *Download Invoice Resmi (PDF):*\n{$publicPdfUrl}\n\n";
+        $msg .= "🔍 *Pantau Progres Servis Online:*\n{$trackUrl}\n\n";
+        $msg .= "Terima kasih telah mempercayakan servis perangkat Anda kepada *{$storeName}*.\n";
+        $msg .= 'Jika ada pertanyaan, silakan langsung balas pesan ini.';
+
+        return $msg;
+    }
+
+    public static function buildInvoiceWaUrl(Service $record): string
+    {
+        $phone = $record->customer?->whatsapp ?? '';
+        $cleaned = preg_replace('/[^0-9]/', '', $phone) ?? '';
+
+        if (str_starts_with($cleaned, '0')) {
+            $cleaned = '62'.substr($cleaned, 1);
+        }
+
+        $message = static::buildInvoiceWaMessage($record);
+        $encoded = rawurlencode($message);
+
+        if ($cleaned) {
+            return "https://wa.me/{$cleaned}?text={$encoded}";
+        }
+
+        return "https://wa.me/?text={$encoded}";
     }
 
     public static function getPages(): array

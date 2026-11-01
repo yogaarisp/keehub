@@ -33,4 +33,9 @@ class ServicePdfController extends Controller
 
         return $pdf->stream('INV-'.($service->invoice_number ?: $service->code).'.pdf');
     }
+
+    public function publicInvoice(Service $service): Response
+    {
+        return $this->invoice($service);
+    }
 }

@@ -290,6 +290,12 @@ class ViewService extends ViewRecord
                 })
                 ->visible(fn () => ! empty(ServiceService::statusFlow()[$this->getRecord()->status])),
 
+            Action::make('send_invoice_wa')
+                ->label('Kirim Invoice ke WA')
+                ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                ->color('success')
+                ->url(fn (): string => ServiceResource::buildInvoiceWaUrl($this->getRecord()), shouldOpenInNewTab: true),
+
             ActionGroup::make([
                 Action::make('thermal_receipt')
                     ->label('Cetak Struk Thermal')

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Resources\ServiceResource;
 use App\Models\Customer;
 use App\Models\Service;
 use App\Models\ServiceItem;
@@ -138,5 +139,29 @@ class ServiceFeatureTest extends TestCase
 
         $this->get(route('admin.service.invoice.pdf', $service))
             ->assertRedirect(route('login'));
+    }
+
+    public function test_can_generate_whatsapp_invoice_message_and_url(): void
+    {
+        $service = $this->createServiceWithItems();
+
+        $message = ServiceResource::buildInvoiceWaMessage($service);
+        $this->assertStringContainsString('INVOICE SERVIS PC', $message);
+        $this->assertStringContainsString($service->code, $message);
+        $this->assertStringContainsString('Budi Santoso', $message);
+        $this->assertStringContainsString('PSU Corsair 850W Gold', $message);
+        $this->assertStringContainsString('Rp 2.250.000', $message);
+
+        $waUrl = ServiceResource::buildInvoiceWaUrl($service);
+        $this->assertStringStartsWith('https://wa.me/6281234567890?text=', $waUrl);
+    }
+
+    public function test_customer_can_download_public_service_invoice_pdf(): void
+    {
+        $service = $this->createServiceWithItems();
+
+        $response = $this->get(route('service.public.invoice.pdf', $service));
+        $response->assertStatus(200);
+        $response->assertHeader('content-type', 'application/pdf');
     }
 }
