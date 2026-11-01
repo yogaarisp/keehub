@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Product;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
@@ -104,7 +103,7 @@ class OrderResource extends Resource
                     ->rows(2)
                     ->columnSpanFull(),
             ])
-            ->columns(['default' => 12, 'sm' => 12]),
+                ->columns(['default' => 12, 'sm' => 12]),
 
             Section::make('Daftar Produk & Layanan (Items)')->schema([
                 Repeater::make('items')
@@ -165,7 +164,7 @@ class OrderResource extends Resource
                     ->defaultItems(1)
                     ->addActionLabel('+ Tambah Item Pesanan')
                     ->itemLabel(fn (array $state): string => filled($state['name'] ?? null)
-                        ? ($state['name'] . ' (' . ($state['quantity'] ?? 1) . 'x' . (isset($state['price']) ? ' @ Rp ' . number_format($state['price'], 0, ',', '.') : '') . ')')
+                        ? ($state['name'].' ('.($state['quantity'] ?? 1).'x'.(isset($state['price']) ? ' @ Rp '.number_format($state['price'], 0, ',', '.') : '').')')
                         : 'Item Pesanan Baru'
                     )
                     ->collapsible()
@@ -193,9 +192,9 @@ class OrderResource extends Resource
                     ->rows(2)
                     ->columnSpanFull(),
             ])
-            ->columns(['default' => 12, 'sm' => 12])
-            ->collapsible()
-            ->collapsed(),
+                ->columns(['default' => 12, 'sm' => 12])
+                ->collapsible()
+                ->collapsed(),
         ]);
     }
 
@@ -209,7 +208,7 @@ class OrderResource extends Resource
                     ->sortable()
                     ->copyable()
                     ->weight('bold')
-                    ->description(fn (Order $record): string => ($record->customer?->name ?? 'Pelanggan Umum') . ($record->created_at ? ' • ' . $record->created_at->format('d M Y') : '')),
+                    ->description(fn (Order $record): string => ($record->customer?->name ?? 'Pelanggan Umum').($record->created_at ? ' • '.$record->created_at->format('d M Y') : '')),
 
                 TextColumn::make('customer.name')
                     ->label('Pelanggan')

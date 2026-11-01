@@ -89,7 +89,7 @@ class ManageSettingsTest extends TestCase
             ->set('data.invoice_header_brand', 'KEETECH STORE')
             ->set('data.invoice_header_tagline', 'Solusi Komputer & Service Profesional')
             ->set('data.invoice_header_contact', "Jl. Malioboro No. 12\nWhatsApp: 08123456789")
-            ->set('data.invoice_payment_instructions', "BCA: 987654321 a/n Yoga AP")
+            ->set('data.invoice_payment_instructions', 'BCA: 987654321 a/n Yoga AP')
             ->set('data.invoice_signature_name', 'Keetech Management')
             ->set('data.service_invoice_footer', 'Terima kasih telah mempercayakan servis komputer kepada kami.')
             ->call('save')
@@ -98,7 +98,7 @@ class ManageSettingsTest extends TestCase
         $this->assertSame('KEETECH STORE', Setting::get('invoice_header_brand'));
         $this->assertSame('Solusi Komputer & Service Profesional', Setting::get('invoice_header_tagline'));
         $this->assertSame("Jl. Malioboro No. 12\nWhatsApp: 08123456789", Setting::get('invoice_header_contact'));
-        $this->assertSame("BCA: 987654321 a/n Yoga AP", Setting::get('invoice_payment_instructions'));
+        $this->assertSame('BCA: 987654321 a/n Yoga AP', Setting::get('invoice_payment_instructions'));
         $this->assertSame('Keetech Management', Setting::get('invoice_signature_name'));
         $this->assertSame('Terima kasih telah mempercayakan servis komputer kepada kami.', Setting::get('service_invoice_footer'));
     }
