@@ -3,45 +3,45 @@
     $logoUrl = \App\Models\Setting::logoUrl();
 @endphp
 
-<div class="keehub-brand-header-root flex items-center justify-between w-full min-w-0 pr-0.5">
-    <a href="{{ url('/admin') }}" class="keehub-brand-link flex items-center gap-2.5 min-w-0 text-decoration-none group">
-        {{-- Logo Tile with High-Contrast Background --}}
-        <div class="keehub-brand-tile flex-shrink-0 flex items-center justify-center">
-            <img
-                src="{{ $logoUrl }}"
-                alt="{{ $storeName }}"
-                class="keehub-brand-img object-contain"
-            >
+<div class="keehub-brand-header-root">
+    <div class="keehub-brand-info">
+        {{-- Logo Tile with Online Indicator --}}
+        <div style="position: relative; flex-shrink: 0;">
+            <div class="keehub-brand-tile">
+                <img
+                    src="{{ $logoUrl }}"
+                    alt="{{ $storeName }}"
+                    class="keehub-brand-img"
+                >
+            </div>
+            <span class="fi-online-badge" title="Online"></span>
         </div>
 
-        {{-- Brand Name + Refined Admin Badge --}}
-        <div class="flex items-center gap-2 min-w-0">
-            @if ($storeName === 'KeeHub')
-                <span class="keehub-brand-title">
+        {{-- Brand & Meta Details (Matching Footer Structure) --}}
+        <div class="fi-footer-meta">
+            <span class="keehub-brand-title">
+                @if ($storeName === 'KeeHub')
                     Kee<span class="keehub-brand-accent">Hub</span>
-                </span>
-            @else
-                <span class="keehub-brand-title truncate">
+                @else
                     {{ $storeName }}
-                </span>
-            @endif
-
-            <span class="keehub-admin-pill">
-                <span class="keehub-admin-dot"></span>
-                Admin
+                @endif
             </span>
+            <div class="fi-footer-sub">
+                <span class="fi-user-role-badge">Admin</span>
+                <span class="fi-footer-status">Panel</span>
+            </div>
         </div>
-    </a>
+    </div>
 
     {{-- Dedicated Mobile Close (X) Button --}}
     <button
         type="button"
         x-on:click.stop.prevent="$store.sidebar.close()"
-        class="keehub-mobile-close lg:hidden inline-flex items-center justify-center transition-all flex-shrink-0 ms-1.5"
+        class="keehub-mobile-close lg:hidden"
         title="Tutup Menu"
         aria-label="Tutup Menu"
     >
-        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.25">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
     </button>

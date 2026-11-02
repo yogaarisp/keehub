@@ -24,22 +24,21 @@
         background-color: #0b0f19 !important;
     }
 
-    /* Sidebar Header (Clean, Compact & Minimalist) */
+    /* Sidebar Header (Clean, Compact & Minimalist - Matches Footer) */
     .fi-sidebar-header {
         height: 3.875rem !important;
-        padding-left: 1rem !important;
-        padding-right: 0.85rem !important;
+        padding: 0.75rem 0.85rem !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
-        border-bottom: 1px solid rgba(226, 232, 240, 0.6) !important;
-        background-color: #ffffff !important;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+        background-color: #fafbfc !important;
         box-shadow: none !important;
     }
 
     .dark .fi-sidebar-header {
         border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
-        background-color: #0b0f19 !important;
+        background-color: #0d121f !important;
     }
 
     .fi-sidebar-header > div:first-child {
@@ -68,30 +67,32 @@
         text-decoration: none !important;
     }
 
-    /* KeeHub Custom Brand Header Styles */
+    /* KeeHub Custom Brand Header Styles (Harmonized with Sidebar Footer) */
     .keehub-brand-header-root {
         width: 100% !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
+        gap: 0.65rem !important;
         min-width: 0 !important;
     }
 
-    .keehub-brand-link {
+    .keehub-brand-info {
         display: flex !important;
         align-items: center !important;
-        gap: 0.625rem !important;
+        gap: 0.65rem !important;
         min-width: 0 !important;
+        flex: 1 !important;
         text-decoration: none !important;
     }
 
     .keehub-brand-tile {
-        width: 2.125rem !important;
-        height: 2.125rem !important;
+        width: 2.15rem !important;
+        height: 2.15rem !important;
         border-radius: 0.55rem !important;
         background-color: #ffffff !important;
-        border: 1px solid rgba(226, 232, 240, 0.9) !important;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+        border: 1px solid rgba(226, 232, 240, 0.8) !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
         padding: 0.25rem !important;
         display: flex !important;
         align-items: center !important;
@@ -106,7 +107,7 @@
         box-shadow: 0 0 10px rgba(245, 158, 11, 0.15) !important;
     }
 
-    .keehub-brand-link:hover .keehub-brand-tile {
+    .keehub-brand-info:hover .keehub-brand-tile {
         transform: scale(1.05) !important;
     }
 
@@ -118,78 +119,54 @@
     }
 
     .keehub-brand-title {
-        font-size: 0.95rem !important;
-        font-weight: 800 !important;
-        letter-spacing: -0.025em !important;
-        line-height: 1 !important;
+        font-size: 0.85rem !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.015em !important;
+        line-height: 1.2 !important;
         color: #0f172a !important;
         white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
 
     .dark .keehub-brand-title {
-        color: #ffffff !important;
+        color: #f8fafc !important;
     }
 
     .keehub-brand-accent {
         color: #f59e0b !important;
-        font-weight: 800 !important;
-    }
-
-    .keehub-admin-pill {
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 0.3rem !important;
-        padding: 0.175rem 0.45rem !important;
-        border-radius: 0.375rem !important;
-        font-size: 0.625rem !important;
         font-weight: 700 !important;
-        letter-spacing: 0.05em !important;
-        text-transform: uppercase !important;
-        line-height: 1 !important;
-        flex-shrink: 0 !important;
-        background-color: rgba(245, 158, 11, 0.12) !important;
-        color: #d97706 !important;
-        border: 1px solid rgba(245, 158, 11, 0.28) !important;
-    }
-
-    .dark .keehub-admin-pill {
-        background-color: rgba(245, 158, 11, 0.14) !important;
-        color: #fbbf24 !important;
-        border: 1px solid rgba(245, 158, 11, 0.32) !important;
-    }
-
-    .keehub-admin-dot {
-        width: 0.28rem !important;
-        height: 0.28rem !important;
-        border-radius: 9999px !important;
-        background-color: #f59e0b !important;
-        display: inline-block !important;
-        box-shadow: 0 0 6px rgba(245, 158, 11, 0.6) !important;
     }
 
     .keehub-mobile-close {
         width: 1.85rem !important;
         height: 1.85rem !important;
-        border-radius: 0.5rem !important;
-        background-color: #f8fafc !important;
-        border: 1px solid rgba(226, 232, 240, 0.9) !important;
-        color: #64748b !important;
-    }
-
-    .dark .keehub-mobile-close {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 0.45rem !important;
+        background-color: transparent !important;
+        border: none !important;
         color: #94a3b8 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.15s ease !important;
+        flex-shrink: 0 !important;
     }
 
     .keehub-mobile-close:hover {
-        background-color: #f1f5f9 !important;
-        color: #0f172a !important;
+        background-color: rgba(245, 158, 11, 0.1) !important;
+        color: #d97706 !important;
+        transform: scale(1.05) !important;
+    }
+
+    .dark .keehub-mobile-close {
+        background-color: transparent !important;
+        border: none !important;
+        color: #94a3b8 !important;
     }
 
     .dark .keehub-mobile-close:hover {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        color: #ffffff !important;
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        color: #fbbf24 !important;
     }
 
     /* Alpine Cloak - Prevent pre-render flash of hidden elements */
@@ -197,19 +174,19 @@
         display: none !important;
     }
 
-    /* Refined Collapse / Expand Toggle Button */
+    /* Refined Collapse / Expand Toggle Button (Matches Footer Action Button) */
     .fi-sidebar-header button.fi-icon-btn,
     .fi-sidebar-header .fi-icon-btn {
         flex-shrink: 0 !important;
         width: 1.85rem !important;
         height: 1.85rem !important;
-        border-radius: 0.5rem !important;
+        border-radius: 0.45rem !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        background-color: #f8fafc !important;
-        border: 1px solid rgba(226, 232, 240, 0.9) !important;
-        color: #64748b !important;
+        background-color: transparent !important;
+        border: none !important;
+        color: #94a3b8 !important;
         transition: all 0.15s ease !important;
         box-shadow: none !important;
         margin-left: auto !important;
@@ -217,24 +194,24 @@
 
     .fi-sidebar-header button.fi-icon-btn:hover,
     .fi-sidebar-header .fi-icon-btn:hover {
-        background-color: #f1f5f9 !important;
-        color: #0f172a !important;
-        border-color: rgba(203, 213, 225, 1) !important;
+        background-color: rgba(245, 158, 11, 0.1) !important;
+        color: #d97706 !important;
+        border: none !important;
         transform: scale(1.05) !important;
     }
 
     .dark .fi-sidebar-header button.fi-icon-btn,
     .dark .fi-sidebar-header .fi-icon-btn {
         color: #94a3b8 !important;
-        background-color: rgba(255, 255, 255, 0.04) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        background-color: transparent !important;
+        border: none !important;
     }
 
     .dark .fi-sidebar-header button.fi-icon-btn:hover,
     .dark .fi-sidebar-header .fi-icon-btn:hover {
         background-color: rgba(255, 255, 255, 0.08) !important;
-        color: #ffffff !important;
-        border-color: rgba(255, 255, 255, 0.16) !important;
+        color: #fbbf24 !important;
+        border: none !important;
         transform: scale(1.05) !important;
     }
 
@@ -449,34 +426,34 @@
             margin: 0 auto !important;
             width: 2.15rem !important;
             height: 2.15rem !important;
-            border-radius: 0.5rem !important;
+            border-radius: 0.45rem !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            background-color: #f8fafc !important;
-            border: 1px solid rgba(226, 232, 240, 0.8) !important;
-            color: #64748b !important;
+            background-color: transparent !important;
+            border: none !important;
+            color: #94a3b8 !important;
             transition: all 0.15s ease !important;
         }
 
         .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto,
         .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-            border-color: rgba(255, 255, 255, 0.08) !important;
+            background-color: transparent !important;
+            border: none !important;
             color: #94a3b8 !important;
         }
 
         aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto:hover,
         aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto:hover {
-            background-color: #f1f5f9 !important;
-            color: #0f172a !important;
+            background-color: rgba(245, 158, 11, 0.1) !important;
+            color: #d97706 !important;
             transform: scale(1.08) !important;
         }
 
         .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header button.mx-auto:hover,
         .dark aside.fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header .fi-icon-btn.mx-auto:hover {
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            color: #ffffff !important;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            color: #fbbf24 !important;
         }
 
         /* Collapsed Nav Container */
@@ -638,12 +615,18 @@
         /* Ensure header shows logo, brand name, and mobile close button */
         aside.fi-sidebar .fi-sidebar-header {
             height: 3.875rem !important;
-            padding-left: 1rem !important;
-            padding-right: 0.85rem !important;
+            padding: 0.75rem 0.85rem !important;
             display: flex !important;
             align-items: center !important;
             justify-content: space-between !important;
             width: 100% !important;
+            background-color: #fafbfc !important;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+        }
+
+        .dark aside.fi-sidebar .fi-sidebar-header {
+            background-color: #0d121f !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
         }
 
         aside.fi-sidebar .fi-sidebar-header > div:first-child {
