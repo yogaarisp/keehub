@@ -16,16 +16,19 @@ use Filament\Infolists\Components\Section as InfoSection;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class CustomerResource extends Resource
 {
@@ -52,7 +55,7 @@ class CustomerResource extends Resource
                     ->placeholder('Contoh: Budi Santoso')
                     ->required()
                     ->maxLength(255)
-                    ->columnSpan(['default' => 1, 'sm' => 1]),
+                    ->columnSpan(['default' => 12, 'sm' => 6]),
 
                 TextInput::make('whatsapp')
                     ->label('No. WhatsApp')
@@ -61,14 +64,14 @@ class CustomerResource extends Resource
                     ->tel()
                     ->maxLength(25)
                     ->helperText('Gunakan format 08xx atau 62xx untuk integrasi chat')
-                    ->columnSpan(['default' => 1, 'sm' => 1]),
+                    ->columnSpan(['default' => 12, 'sm' => 6]),
 
                 TextInput::make('email')
                     ->label('Alamat Email')
                     ->placeholder('Contoh: budi@gmail.com')
                     ->email()
                     ->maxLength(255)
-                    ->columnSpan(['default' => 1, 'sm' => 1]),
+                    ->columnSpan(['default' => 12, 'sm' => 6]),
 
                 Select::make('user_id')
                     ->label('Tautkan ke Akun User Web')
@@ -76,53 +79,54 @@ class CustomerResource extends Resource
                     ->searchable()
                     ->preload()
                     ->placeholder('Opsional (akun login customer)')
-                    ->columnSpan(['default' => 1, 'sm' => 1]),
+                    ->columnSpan(['default' => 12, 'sm' => 6]),
 
                 Textarea::make('notes')
                     ->label('Catatan Pelanggan / Internal')
-                    ->placeholder('Catatan preferensi rakitan, info perusahaan B2B, atau riwayat khusus')
-                    ->rows(3)
+                    ->placeholder('Catatan preferensi rakitan, info perusahaan B2B, atau riwayat khusus...')
+                    ->rows(2)
                     ->columnSpanFull(),
-            ])->columns(['default' => 1, 'sm' => 2]),
+            ])->columns(['default' => 12, 'sm' => 12]),
 
             Section::make('Daftar Alamat Pengiriman')->schema([
                 Repeater::make('addresses')
                     ->relationship('addresses')
+                    ->hiddenLabel()
                     ->schema([
                         TextInput::make('label')
                             ->label('Label Alamat')
                             ->placeholder('Contoh: Rumah / Kantor / Gudang')
-                            ->columnSpan(['default' => 1, 'sm' => 1]),
+                            ->columnSpan(['default' => 12, 'sm' => 4]),
 
                         TextInput::make('recipient_name')
                             ->label('Nama Penerima')
                             ->required()
                             ->placeholder('Nama penerima paket')
-                            ->columnSpan(['default' => 1, 'sm' => 1]),
+                            ->columnSpan(['default' => 12, 'sm' => 4]),
 
                         TextInput::make('phone')
                             ->label('No. Telepon / HP')
                             ->required()
                             ->tel()
                             ->placeholder('08xxxxxxxxxx')
-                            ->columnSpan(['default' => 1, 'sm' => 1]),
+                            ->columnSpan(['default' => 12, 'sm' => 4]),
 
                         TextInput::make('city')
                             ->label('Kota / Kabupaten')
                             ->required()
                             ->placeholder('Contoh: Surabaya')
-                            ->columnSpan(['default' => 1, 'sm' => 1]),
+                            ->columnSpan(['default' => 12, 'sm' => 4]),
 
                         TextInput::make('province')
                             ->label('Provinsi')
                             ->required()
                             ->placeholder('Contoh: Jawa Timur')
-                            ->columnSpan(['default' => 1, 'sm' => 1]),
+                            ->columnSpan(['default' => 12, 'sm' => 4]),
 
                         TextInput::make('postal_code')
                             ->label('Kode Pos')
                             ->placeholder('Contoh: 60111')
-                            ->columnSpan(['default' => 1, 'sm' => 1]),
+                            ->columnSpan(['default' => 12, 'sm' => 4]),
 
                         Textarea::make('address')
                             ->label('Alamat Lengkap (Jalan, RT/RW, No. Rumah)')
@@ -135,88 +139,126 @@ class CustomerResource extends Resource
                             ->default(false)
                             ->columnSpanFull(),
                     ])
-                    ->columns(['default' => 1, 'sm' => 2])
+                    ->columns(['default' => 12, 'sm' => 12])
                     ->defaultItems(0)
                     ->addActionLabel('+ Tambah Alamat Pengiriman')
                     ->itemLabel(fn (array $state): ?string => filled($state['recipient_name'] ?? null)
                         ? (($state['label'] ? '['.$state['label'].'] ' : '').$state['recipient_name'].' ('.($state['city'] ?? '').')')
-                        : null
+                        : 'Alamat Pengiriman Baru'
                     )
                     ->collapsible()
-                    ->collapsed(false),
-            ]),
+                    ->cloneable()
+                    ->collapsed(false)
+                    ->deletable()
+                    ->reorderable(false),
+            ])
+                ->collapsible()
+                ->collapsed(),
         ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->withCount(['orders', 'services'])->withSum('orders', 'total'))
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama Pelanggan')
                     ->searchable()
                     ->sortable()
                     ->weight('bold')
-                    ->description(fn (Customer $record): ?string => $record->email ?: null),
+                    ->description(fn (Customer $record): ?string => $record->email ?: ($record->notes ? Str::limit($record->notes, 30) : 'Pelanggan Toko')),
 
                 TextColumn::make('whatsapp')
-                    ->label('WhatsApp')
+                    ->label('No. WhatsApp')
                     ->searchable()
                     ->copyable()
                     ->icon('heroicon-m-phone')
                     ->color('success')
+                    ->weight('medium')
+                    ->description(fn (Customer $record): ?string => $record->addresses->first()?->city ? 'Alamat: '.$record->addresses->first()->city : null)
                     ->url(
                         fn (Customer $record): string => 'https://wa.me/'.static::formatWaNumber($record->whatsapp),
                         shouldOpenInNewTab: true
                     ),
 
+                TextColumn::make('orders_sum_total')
+                    ->label('Total Transaksi')
+                    ->state(fn (Customer $record): int => (int) ($record->orders_sum_total ?? 0))
+                    ->money('IDR')
+                    ->sortable()
+                    ->weight('bold')
+                    ->alignEnd()
+                    ->description(fn (Customer $record): string => ($record->orders_count ?? 0).' pesanan'),
+
                 TextColumn::make('orders_count')
-                    ->counts('orders')
                     ->label('Pesanan')
+                    ->counts('orders')
                     ->badge()
                     ->color('info')
-                    ->sortable(),
+                    ->sortable()
+                    ->alignCenter()
+                    ->visibleFrom('md'),
 
                 TextColumn::make('services_count')
-                    ->counts('services')
                     ->label('Servis')
+                    ->counts('services')
                     ->badge()
                     ->color('warning')
-                    ->sortable(),
+                    ->sortable()
+                    ->alignCenter()
+                    ->visibleFrom('md'),
 
                 TextColumn::make('created_at')
                     ->label('Terdaftar')
                     ->dateTime('d M Y')
                     ->sortable()
+                    ->visibleFrom('lg')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Filter::make('has_orders')
-                    ->label('Pernah Order')
-                    ->query(fn (Builder $query): Builder => $query->has('orders')),
-
-                Filter::make('has_services')
-                    ->label('Pernah Servis')
-                    ->query(fn (Builder $query): Builder => $query->has('services')),
+                SelectFilter::make('activity')
+                    ->label('Filter Aktivitas')
+                    ->options([
+                        'has_orders' => 'Pernah Order Produk',
+                        'has_services' => 'Pernah Servis Keyboard',
+                        'no_transactions' => 'Belum Ada Transaksi',
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return match ($data['value'] ?? null) {
+                            'has_orders' => $query->has('orders'),
+                            'has_services' => $query->has('services'),
+                            'no_transactions' => $query->doesntHave('orders')->doesntHave('services'),
+                            default => $query,
+                        };
+                    }),
             ])
             ->actions([
-                Action::make('chat_wa')
-                    ->label('Chat WA')
-                    ->icon('heroicon-o-chat-bubble-left-ellipsis')
-                    ->color('success')
-                    ->url(
-                        fn (Customer $record): string => 'https://wa.me/'.static::formatWaNumber($record->whatsapp),
-                        shouldOpenInNewTab: true
-                    ),
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make()
+                        ->modalHeading('Ubah Data Pelanggan')
+                        ->modalSubmitActionLabel('Simpan Perubahan')
+                        ->modalCancelAction(false)
+                        ->modalWidth(MaxWidth::ThreeExtraLarge),
+                    Action::make('chat_wa')
+                        ->label('Chat WhatsApp')
+                        ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                        ->color('success')
+                        ->url(
+                            fn (Customer $record): string => 'https://wa.me/'.static::formatWaNumber($record->whatsapp),
+                            shouldOpenInNewTab: true
+                        ),
+                    DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc')
+            ->poll('60s');
     }
 
     public static function infolist(Infolist $infolist): Infolist
@@ -241,85 +283,40 @@ class CustomerResource extends Resource
 
                 TextEntry::make('email')
                     ->label('Email')
-                    ->placeholder('—')
+                    ->default('-')
                     ->columnSpan(['default' => 1, 'sm' => 1]),
 
-                TextEntry::make('user.name')
-                    ->label('Akun User Web')
-                    ->placeholder('Belum terhubung ke akun web')
+                TextEntry::make('created_at')
+                    ->label('Terdaftar Sejak')
+                    ->dateTime('d F Y, H:i')
                     ->columnSpan(['default' => 1, 'sm' => 1]),
 
                 TextEntry::make('notes')
                     ->label('Catatan Khusus')
-                    ->placeholder('—')
+                    ->default('-')
                     ->columnSpanFull(),
             ])->columns(['default' => 1, 'sm' => 2]),
 
-            InfoSection::make('Statistik Aktivitas')->schema([
-                TextEntry::make('orders_count')
-                    ->state(fn (Customer $record): int => $record->orders()->count())
-                    ->label('Total Transaksi Pesanan')
-                    ->badge()
-                    ->color('info')
-                    ->columnSpan(['default' => 1, 'sm' => 1]),
+            InfoSection::make('Daftar Alamat Pengiriman')->schema([
+                RepeatableEntry::make('addresses')->schema([
+                    TextEntry::make('label')
+                        ->label('Label')
+                        ->badge()
+                        ->default('Alamat'),
 
-                TextEntry::make('services_count')
-                    ->state(fn (Customer $record): int => $record->services()->count())
-                    ->label('Total Unit Servis')
-                    ->badge()
-                    ->color('warning')
-                    ->columnSpan(['default' => 1, 'sm' => 1]),
-            ])->columns(['default' => 1, 'sm' => 2]),
+                    TextEntry::make('recipient_name')
+                        ->label('Penerima'),
 
-            InfoSection::make('Daftar Alamat Pengiriman Tersimpan')->schema([
-                RepeatableEntry::make('addresses')
-                    ->schema([
-                        TextEntry::make('label')
-                            ->label('Label')
-                            ->badge()
-                            ->color('gray')
-                            ->columnSpan(['default' => 1, 'sm' => 1]),
+                    TextEntry::make('phone')
+                        ->label('No. HP'),
 
-                        TextEntry::make('recipient_name')
-                            ->label('Penerima')
-                            ->weight('bold')
-                            ->columnSpan(['default' => 1, 'sm' => 1]),
-
-                        TextEntry::make('phone')
-                            ->label('Telepon')
-                            ->columnSpan(['default' => 1, 'sm' => 1]),
-
-                        TextEntry::make('city')
-                            ->label('Kota & Provinsi')
-                            ->formatStateUsing(fn ($record) => ($record->city ?? '').', '.($record->province ?? '').($record->postal_code ? ' '.$record->postal_code : ''))
-                            ->columnSpan(['default' => 1, 'sm' => 1]),
-
-                        TextEntry::make('address')
-                            ->label('Alamat')
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(['default' => 1, 'sm' => 2])
-                    ->placeholder('Belum ada alamat tersimpan'),
+                    TextEntry::make('full_address')
+                        ->label('Alamat Lengkap')
+                        ->state(fn ($record) => $record->address.', '.$record->city.', '.$record->province.' '.$record->postal_code)
+                        ->columnSpanFull(),
+                ])->columns(['default' => 1, 'sm' => 3]),
             ]),
         ]);
-    }
-
-    public static function formatWaNumber(string $phone): string
-    {
-        $cleaned = preg_replace('/[^0-9]/', '', $phone) ?? '';
-
-        if (str_starts_with($cleaned, '0')) {
-            return '62'.substr($cleaned, 1);
-        }
-
-        return $cleaned;
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
@@ -330,5 +327,18 @@ class CustomerResource extends Resource
             'view' => Pages\ViewCustomer::route('/{record}'),
             'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
+    }
+
+    public static function formatWaNumber(string $phone): string
+    {
+        $cleaned = preg_replace('/[^0-9]/', '', $phone);
+        if (str_starts_with($cleaned, '0')) {
+            return '62'.substr($cleaned, 1);
+        }
+        if (str_starts_with($cleaned, '8')) {
+            return '62'.$cleaned;
+        }
+
+        return $cleaned;
     }
 }

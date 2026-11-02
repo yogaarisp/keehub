@@ -46,7 +46,7 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(fn () => Setting::faviconUrl())
             ->darkMode(true)
             ->sidebarCollapsibleOnDesktop()
-            ->sidebarWidth('16.75rem')
+            ->sidebarWidth('14rem')
             ->collapsedSidebarWidth('4.5rem')
             ->collapsibleNavigationGroups(true)
             ->navigationGroups([

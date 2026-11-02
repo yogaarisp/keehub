@@ -138,37 +138,6 @@
         font-weight: 700 !important;
     }
 
-    .keehub-mobile-close {
-        width: 1.85rem !important;
-        height: 1.85rem !important;
-        border-radius: 0.45rem !important;
-        background-color: transparent !important;
-        border: none !important;
-        color: #94a3b8 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        transition: all 0.15s ease !important;
-        flex-shrink: 0 !important;
-    }
-
-    .keehub-mobile-close:hover {
-        background-color: rgba(245, 158, 11, 0.1) !important;
-        color: #d97706 !important;
-        transform: scale(1.05) !important;
-    }
-
-    .dark .keehub-mobile-close {
-        background-color: transparent !important;
-        border: none !important;
-        color: #94a3b8 !important;
-    }
-
-    .dark .keehub-mobile-close:hover {
-        background-color: rgba(255, 255, 255, 0.08) !important;
-        color: #fbbf24 !important;
-    }
-
     /* Alpine Cloak - Prevent pre-render flash of hidden elements */
     [x-cloak] {
         display: none !important;
@@ -606,8 +575,8 @@
     @media (max-width: 1023px) {
         /* Mobile Sidebar Drawer */
         aside.fi-sidebar {
-            width: min(18.5rem, 85vw) !important;
-            max-width: 18.5rem !important;
+            width: min(15rem, 80vw) !important;
+            max-width: 15rem !important;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3) !important;
             z-index: 50 !important;
         }
