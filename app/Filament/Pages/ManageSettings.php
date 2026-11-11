@@ -48,6 +48,9 @@ class ManageSettings extends Page implements HasForms
             'store_logo' => Setting::get('store_logo'),
             'store_favicon' => Setting::get('store_favicon'),
             'hero_background' => Setting::get('hero_background'),
+            'hero_background_fit' => Setting::get('hero_background_fit', 'cover') ?: 'cover',
+            'hero_background_position' => Setting::get('hero_background_position', 'center') ?: 'center',
+            'hero_background_height' => Setting::get('hero_background_height', 'compact') ?: 'compact',
             'store_name' => Setting::get('store_name', 'KeeHub'),
             'store_tagline' => Setting::get('store_tagline', 'Build Your PC. Your Way.'),
             'store_description' => Setting::get('store_description', ''),
@@ -141,6 +144,40 @@ class ManageSettings extends Page implements HasForms
                                 )
                                     ->imageEditor()
                                     ->helperText('Opsional. Gambar latar banner hero di halaman depan toko (rekomendasi 1920x700px, maks 4MB). Setelah status Upload complete muncul, klik tombol Simpan Pengaturan untuk menerapkan.'),
+
+                                Grid::make(['default' => 1, 'md' => 3])->schema([
+                                    Select::make('hero_background_fit')
+                                        ->label('Mode Tampilan Background')
+                                        ->options([
+                                            'cover' => 'Penuh / Cover (Auto crop full layar)',
+                                            'contain' => 'Fit Utuh / Contain (Tanpa terpotong)',
+                                            'fill' => 'Stretch / Fill (Sesuai ukuran banner)',
+                                        ])
+                                        ->required()
+                                        ->helperText('Pilih "Fit Utuh" agar seluruh gambar tampil tanpa terpotong.'),
+
+                                    Select::make('hero_background_position')
+                                        ->label('Posisi Fokus Gambar')
+                                        ->options([
+                                            'center' => 'Tengah (Center)',
+                                            'top' => 'Atas (Top)',
+                                            'bottom' => 'Bawah (Bottom)',
+                                            'right' => 'Kanan (Right)',
+                                            'left' => 'Kiri (Left)',
+                                        ])
+                                        ->required()
+                                        ->helperText('Misal pilih "Kanan" saat memakai mode Fit Utuh.'),
+
+                                    Select::make('hero_background_height')
+                                        ->label('Tinggi Area Hero Desktop')
+                                        ->options([
+                                            'compact' => 'Ringkas (~420px - Default)',
+                                            'medium' => 'Sedang (~520px)',
+                                            'tall' => 'Tinggi (~620px)',
+                                        ])
+                                        ->required()
+                                        ->helperText('Atur tinggi banner hero jika memakai gambar tinggi.'),
+                                ]),
 
                                 Grid::make(['default' => 1, 'md' => 2])->schema([
                                     TextInput::make('store_name')

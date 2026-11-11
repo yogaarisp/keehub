@@ -159,4 +159,30 @@ class ManageSettingsTest extends TestCase
             ->assertSuccessful()
             ->assertDontSee('alt="Hero Background"', false);
     }
+
+    public function test_owner_can_configure_hero_background_fit_position_and_height(): void
+    {
+        Storage::fake('public');
+        $owner = User::factory()->create(['role' => 'owner']);
+        $file = UploadedFile::fake()->image('hero.jpg', 1920, 700);
+
+        Livewire::actingAs($owner)
+            ->test(ManageSettings::class)
+            ->set('data.hero_background', $file)
+            ->set('data.hero_background_fit', 'contain')
+            ->set('data.hero_background_position', 'right')
+            ->set('data.hero_background_height', 'medium')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertSame('contain', Setting::get('hero_background_fit'));
+        $this->assertSame('right', Setting::get('hero_background_position'));
+        $this->assertSame('medium', Setting::get('hero_background_height'));
+
+        $this->get('/')
+            ->assertSuccessful()
+            ->assertSee('object-contain', false)
+            ->assertSee('object-center md:object-right', false)
+            ->assertSee('py-14 md:py-24', false);
+    }
 }

@@ -51,6 +51,49 @@ class Setting extends Model
         return static::storedFileUrl('hero_background');
     }
 
+    /**
+     * Resolve Tailwind layout classes for the storefront hero background.
+     *
+     * @return array{fitClass: string, positionClass: string, paddingClass: string, overlayClass: string}
+     */
+    public static function heroDisplayConfig(): array
+    {
+        $fit = static::get('hero_background_fit', 'cover') ?: 'cover';
+        $position = static::get('hero_background_position', 'center') ?: 'center';
+        $height = static::get('hero_background_height', 'compact') ?: 'compact';
+
+        $fitMap = [
+            'cover' => 'object-cover',
+            'contain' => 'object-contain',
+            'fill' => 'object-fill',
+        ];
+
+        $positionMap = [
+            'center' => $fit === 'cover' ? 'object-[72%_70%] md:object-center' : 'object-center',
+            'top' => 'object-top',
+            'bottom' => 'object-bottom',
+            'left' => 'object-left',
+            'right' => 'object-center md:object-right',
+        ];
+
+        $heightMap = [
+            'compact' => 'py-12 md:py-16',
+            'medium' => 'py-14 md:py-24',
+            'tall' => 'py-16 md:py-32',
+        ];
+
+        $overlayClass = $fit === 'contain'
+            ? 'bg-gradient-to-r from-slate-950/95 via-slate-950/65 to-slate-950/25'
+            : 'bg-gradient-to-r from-slate-950/90 via-slate-950/75 to-slate-950/60';
+
+        return [
+            'fitClass' => $fitMap[$fit] ?? $fitMap['cover'],
+            'positionClass' => $positionMap[$position] ?? $positionMap['center'],
+            'paddingClass' => $heightMap[$height] ?? $heightMap['compact'],
+            'overlayClass' => $overlayClass,
+        ];
+    }
+
     public function items(): HasMany
     {
         return $this->hasMany(Setting::class, 'key', 'key');
