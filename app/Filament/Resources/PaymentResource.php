@@ -6,10 +6,12 @@ use App\Filament\Resources\PaymentResource\Pages;
 use App\Models\Invoice;
 use App\Models\Payment;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -24,6 +26,10 @@ class PaymentResource extends Resource
 
     protected static ?string $navigationLabel = 'Pembayaran';
 
+    protected static ?string $modelLabel = 'Pembayaran';
+
+    protected static ?string $pluralModelLabel = 'Pembayaran';
+
     protected static ?int $navigationSort = 3;
 
     public static function canCreate(): bool
@@ -34,14 +40,39 @@ class PaymentResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('invoice_id')->label('Invoice')->relationship('invoice', 'code')
-                ->searchable()->preload()->required()
-                ->getOptionLabelFromRecordUsing(fn (Invoice $record) => "{$record->code} — sisa Rp".number_format($record->remainingAmount(), 0, ',', '.')),
-            Select::make('method')->options(array_combine(Payment::METHODS, array_map(ucfirst(...), Payment::METHODS)))->default('transfer')->required(),
-            TextInput::make('amount')->numeric()->prefix('Rp')->required()->minValue(1),
-            DatePicker::make('paid_at')->default(today())->required(),
-            TextInput::make('reference')->label('Referensi (no. transfer/dsb)'),
-            TextInput::make('notes'),
+            Section::make('Catat Pembayaran')
+                ->icon('heroicon-o-banknotes')
+                ->schema([
+                    Select::make('invoice_id')
+                        ->label('Invoice')
+                        ->relationship('invoice', 'code')
+                        ->searchable()
+                        ->preload()
+                        ->required()
+                        ->getOptionLabelFromRecordUsing(fn (Invoice $record) => "{$record->code} — sisa Rp".number_format($record->remainingAmount(), 0, ',', '.'))
+                        ->columnSpanFull(),
+                    Select::make('method')
+                        ->label('Metode Pembayaran')
+                        ->options(array_combine(Payment::METHODS, array_map(ucfirst(...), Payment::METHODS)))
+                        ->default('transfer')
+                        ->required(),
+                    TextInput::make('amount')
+                        ->label('Nominal Bayar')
+                        ->numeric()
+                        ->prefix('Rp')
+                        ->required()
+                        ->minValue(1),
+                    DatePicker::make('paid_at')
+                        ->label('Tanggal Bayar')
+                        ->default(today())
+                        ->required(),
+                    TextInput::make('reference')
+                        ->label('Referensi (No. Transfer/Bukti)'),
+                    TextInput::make('notes')
+                        ->label('Catatan')
+                        ->columnSpanFull(),
+                ])
+                ->columns(['default' => 1, 'sm' => 2]),
         ]);
     }
 
@@ -49,16 +80,24 @@ class PaymentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('code')->searchable(),
-                TextColumn::make('invoice.code')->label('Invoice'),
-                TextColumn::make('method')->badge(),
-                TextColumn::make('amount')->money('IDR')->sortable(),
-                TextColumn::make('paid_at')->date('d M Y')->sortable(),
-                TextColumn::make('user.name')->label('Dicatat oleh'),
+                TextColumn::make('code')
+                    ->label('No. Pembayaran')
+                    ->searchable()
+                    ->weight('bold')
+                    ->description(fn (Payment $record): string => ($record->invoice?->code ?? '—').' • Rp '.number_format((int) $record->amount, 0, ',', '.')),
+                TextColumn::make('invoice.code')->label('Invoice')->visibleFrom('md'),
+                TextColumn::make('method')->label('Metode')->badge(),
+                TextColumn::make('amount')->label('Nominal')->money('IDR')->sortable()->alignEnd()->visibleFrom('md'),
+                TextColumn::make('paid_at')->label('Tanggal')->date('d M Y')->sortable()->visibleFrom('lg'),
+                TextColumn::make('user.name')->label('Dicatat oleh')->visibleFrom('xl'),
             ])
-            ->actions([DeleteAction::make()
-                ->requiresConfirmation()
-                ->visible(fn ($record) => $record->invoice?->status !== 'void')])
+            ->actions([
+                ActionGroup::make([
+                    DeleteAction::make()
+                        ->requiresConfirmation()
+                        ->visible(fn ($record) => $record->invoice?->status !== 'void'),
+                ]),
+            ])
             ->defaultSort('created_at', 'desc');
     }
 

@@ -9,6 +9,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -54,16 +55,25 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('email')->searchable(),
-                TextColumn::make('role')->badge()->colors([
+                TextColumn::make('name')
+                    ->label('Nama')
+                    ->searchable()
+                    ->weight('semibold')
+                    ->description(fn (User $record): string => $record->email),
+                TextColumn::make('email')->label('Email')->searchable()->visibleFrom('md'),
+                TextColumn::make('role')->label('Peran')->badge()->colors([
                     'danger' => 'owner',
                     'warning' => 'staff',
                     'success' => 'customer',
                 ]),
-                TextColumn::make('created_at')->dateTime()->sortable(),
+                TextColumn::make('created_at')->label('Terdaftar')->dateTime('d M Y')->sortable()->visibleFrom('lg'),
             ])
-            ->actions([EditAction::make(), DeleteAction::make()->visible(fn ($record) => $record->id !== auth()->id())]);
+            ->actions([
+                ActionGroup::make([
+                    EditAction::make(),
+                    DeleteAction::make()->visible(fn ($record) => $record->id !== auth()->id()),
+                ]),
+            ]);
     }
 
     public static function getPages(): array

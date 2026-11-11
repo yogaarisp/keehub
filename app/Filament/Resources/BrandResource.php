@@ -11,6 +11,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
@@ -48,11 +49,16 @@ class BrandResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('products_count')->counts('products')->label('Products'),
-                IconColumn::make('is_active')->boolean(),
+                TextColumn::make('name')->label('Nama Brand')->searchable()->sortable()->weight('semibold'),
+                TextColumn::make('products_count')->counts('products')->label('Produk'),
+                IconColumn::make('is_active')->label('Aktif')->boolean(),
             ])
-            ->actions([EditAction::make(), DeleteAction::make()])
+            ->actions([
+                ActionGroup::make([
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
+            ])
             ->bulkActions([DeleteBulkAction::make()]);
     }
 

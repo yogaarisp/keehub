@@ -12,6 +12,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -29,28 +30,65 @@ class QcResource extends Resource
 
     protected static ?string $navigationLabel = 'QC / Testing';
 
+    protected static ?string $modelLabel = 'QC Record';
+
+    protected static ?string $pluralModelLabel = 'QC / Testing';
+
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('service_id')->relationship('service', 'code')->searchable()->preload()
-                ->helperText('QC untuk service/rakit PC. Untuk order build tanpa service, hubungkan via order.'),
-            Select::make('order_id')->relationship('order', 'code')->searchable()->preload(),
-            Select::make('technician_id')->label('Technician')->options(fn () => User::query()->whereIn('role', ['owner', 'staff'])->pluck('name', 'id'))->searchable(),
+            Section::make('Informasi Unit & Teknisi')
+                ->icon('heroicon-o-clipboard-document-check')
+                ->schema([
+                    Select::make('service_id')
+                        ->label('No. Servis')
+                        ->relationship('service', 'code')
+                        ->searchable()
+                        ->preload()
+                        ->helperText('QC untuk service/rakit PC. Untuk order build tanpa service, hubungkan via order.'),
+                    Select::make('order_id')
+                        ->label('No. Order (Opsional)')
+                        ->relationship('order', 'code')
+                        ->searchable()
+                        ->preload(),
+                    Select::make('technician_id')
+                        ->label('Teknisi')
+                        ->options(fn () => User::query()->whereIn('role', ['owner', 'staff'])->pluck('name', 'id'))
+                        ->searchable(),
+                ])
+                ->columns(['default' => 1, 'md' => 3]),
 
-            Section::make('Hardware')->schema([
-                CheckboxList::make('checklist_hardware')->columns(['default' => 1, 'sm' => 2, 'md' => 3])->dehydrated(false)
+            Section::make('Checklist Hardware')->schema([
+                CheckboxList::make('checklist_hardware')
+                    ->hiddenLabel()
+                    ->columns(['default' => 1, 'sm' => 2, 'md' => 3])
+                    ->dehydrated(false)
                     ->options(collect(QcRecord::CHECKLIST['hardware'])->mapWithKeys(fn ($label, $key) => [$key => $label])->all()),
             ]),
-            Section::make('Software')->schema([
-                CheckboxList::make('checklist_software')->columns(['default' => 1, 'sm' => 2, 'md' => 4])->dehydrated(false)
+            Section::make('Checklist Software')->schema([
+                CheckboxList::make('checklist_software')
+                    ->hiddenLabel()
+                    ->columns(['default' => 1, 'sm' => 2, 'md' => 4])
+                    ->dehydrated(false)
                     ->options(collect(QcRecord::CHECKLIST['software'])->mapWithKeys(fn ($label, $key) => [$key => $label])->all()),
             ]),
-            Section::make('Testing')->schema([
-                CheckboxList::make('checklist_testing')->columns(['default' => 1, 'sm' => 2, 'md' => 4])->dehydrated(false)
+            Section::make('Checklist Testing')->schema([
+                CheckboxList::make('checklist_testing')
+                    ->hiddenLabel()
+                    ->columns(['default' => 1, 'sm' => 2, 'md' => 4])
+                    ->dehydrated(false)
                     ->options(collect(QcRecord::CHECKLIST['testing'])->mapWithKeys(fn ($label, $key) => [$key => $label])->all()),
             ]),
-            Radio::make('result')->options(['pass' => 'PASS', 'fail' => 'FAIL', 'pending' => 'PENDING'])->default('pending')->inline(),
-            Textarea::make('notes')->columnSpanFull(),
+            Section::make('Hasil Pemeriksaan')->schema([
+                Radio::make('result')
+                    ->label('Hasil QC')
+                    ->options(['pass' => 'PASS', 'fail' => 'FAIL', 'pending' => 'PENDING'])
+                    ->default('pending')
+                    ->inline(),
+                Textarea::make('notes')
+                    ->label('Catatan Teknisi')
+                    ->columnSpanFull(),
+            ]),
         ]);
     }
 
@@ -58,18 +96,27 @@ class QcResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('service.code')->placeholder('—'),
-                TextColumn::make('order.code')->placeholder('—'),
-                TextColumn::make('technician.name')->placeholder('—'),
-                TextColumn::make('result')->badge()->color(fn (string $state) => match ($state) {
+                TextColumn::make('service.code')
+                    ->label('No. Servis')
+                    ->placeholder('—')
+                    ->weight('bold')
+                    ->description(fn (QcRecord $record): string => ($record->order?->code ? 'Order: '.$record->order->code.' • ' : '').($record->technician?->name ?? 'Belum ada teknisi')),
+                TextColumn::make('order.code')->label('No. Order')->placeholder('—')->visibleFrom('md'),
+                TextColumn::make('technician.name')->label('Teknisi')->placeholder('—')->visibleFrom('md'),
+                TextColumn::make('result')->label('Hasil')->badge()->color(fn (string $state) => match ($state) {
                     'pass' => 'success',
                     'fail' => 'danger',
                     'pending' => 'warning',
                     default => 'gray',
                 }),
-                TextColumn::make('checked_at')->dateTime('d M Y H:i'),
+                TextColumn::make('checked_at')->label('Waktu Cek')->dateTime('d M Y H:i')->visibleFrom('lg'),
             ])
-            ->actions([EditAction::make(), DeleteAction::make()])
+            ->actions([
+                ActionGroup::make([
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
+            ])
             ->defaultSort('created_at', 'desc');
     }
 

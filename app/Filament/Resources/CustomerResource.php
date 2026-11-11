@@ -28,7 +28,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 class CustomerResource extends Resource
 {
@@ -54,8 +53,7 @@ class CustomerResource extends Resource
                     ->label('Nama Lengkap')
                     ->placeholder('Contoh: Budi Santoso')
                     ->required()
-                    ->maxLength(255)
-                    ->columnSpan(['default' => 12, 'sm' => 6]),
+                    ->maxLength(255),
 
                 TextInput::make('whatsapp')
                     ->label('No. WhatsApp')
@@ -63,30 +61,27 @@ class CustomerResource extends Resource
                     ->required()
                     ->tel()
                     ->maxLength(25)
-                    ->helperText('Gunakan format 08xx atau 62xx untuk integrasi chat')
-                    ->columnSpan(['default' => 12, 'sm' => 6]),
+                    ->helperText('Gunakan format 08xx atau 62xx untuk integrasi chat'),
 
                 TextInput::make('email')
                     ->label('Alamat Email')
                     ->placeholder('Contoh: budi@gmail.com')
                     ->email()
-                    ->maxLength(255)
-                    ->columnSpan(['default' => 12, 'sm' => 6]),
+                    ->maxLength(255),
 
                 Select::make('user_id')
                     ->label('Tautkan ke Akun User Web')
                     ->relationship('user', 'email')
                     ->searchable()
                     ->preload()
-                    ->placeholder('Opsional (akun login customer)')
-                    ->columnSpan(['default' => 12, 'sm' => 6]),
+                    ->placeholder('Opsional (akun login customer)'),
 
                 Textarea::make('notes')
                     ->label('Catatan Pelanggan / Internal')
                     ->placeholder('Catatan preferensi rakitan, info perusahaan B2B, atau riwayat khusus...')
                     ->rows(2)
                     ->columnSpanFull(),
-            ])->columns(['default' => 12, 'sm' => 12]),
+            ])->columns(['default' => 1, 'sm' => 2]),
 
             Section::make('Daftar Alamat Pengiriman')->schema([
                 Repeater::make('addresses')
@@ -95,38 +90,32 @@ class CustomerResource extends Resource
                     ->schema([
                         TextInput::make('label')
                             ->label('Label Alamat')
-                            ->placeholder('Contoh: Rumah / Kantor / Gudang')
-                            ->columnSpan(['default' => 12, 'sm' => 4]),
+                            ->placeholder('Contoh: Rumah / Kantor / Gudang'),
 
                         TextInput::make('recipient_name')
                             ->label('Nama Penerima')
                             ->required()
-                            ->placeholder('Nama penerima paket')
-                            ->columnSpan(['default' => 12, 'sm' => 4]),
+                            ->placeholder('Nama penerima paket'),
 
                         TextInput::make('phone')
                             ->label('No. Telepon / HP')
                             ->required()
                             ->tel()
-                            ->placeholder('08xxxxxxxxxx')
-                            ->columnSpan(['default' => 12, 'sm' => 4]),
+                            ->placeholder('08xxxxxxxxxx'),
 
                         TextInput::make('city')
                             ->label('Kota / Kabupaten')
                             ->required()
-                            ->placeholder('Contoh: Surabaya')
-                            ->columnSpan(['default' => 12, 'sm' => 4]),
+                            ->placeholder('Contoh: Surabaya'),
 
                         TextInput::make('province')
                             ->label('Provinsi')
                             ->required()
-                            ->placeholder('Contoh: Jawa Timur')
-                            ->columnSpan(['default' => 12, 'sm' => 4]),
+                            ->placeholder('Contoh: Jawa Timur'),
 
                         TextInput::make('postal_code')
                             ->label('Kode Pos')
-                            ->placeholder('Contoh: 60111')
-                            ->columnSpan(['default' => 12, 'sm' => 4]),
+                            ->placeholder('Contoh: 60111'),
 
                         Textarea::make('address')
                             ->label('Alamat Lengkap (Jalan, RT/RW, No. Rumah)')
@@ -139,7 +128,7 @@ class CustomerResource extends Resource
                             ->default(false)
                             ->columnSpanFull(),
                     ])
-                    ->columns(['default' => 12, 'sm' => 12])
+                    ->columns(['default' => 1, 'sm' => 2, 'md' => 3])
                     ->defaultItems(0)
                     ->addActionLabel('+ Tambah Alamat Pengiriman')
                     ->itemLabel(fn (array $state): ?string => filled($state['recipient_name'] ?? null)
@@ -167,7 +156,7 @@ class CustomerResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->weight('bold')
-                    ->description(fn (Customer $record): ?string => $record->email ?: ($record->notes ? Str::limit($record->notes, 30) : 'Pelanggan Toko')),
+                    ->description(fn (Customer $record): string => $record->whatsapp.' • Rp '.number_format((int) ($record->orders_sum_total ?? 0), 0, ',', '.')),
 
                 TextColumn::make('whatsapp')
                     ->label('No. WhatsApp')
@@ -180,7 +169,8 @@ class CustomerResource extends Resource
                     ->url(
                         fn (Customer $record): string => 'https://wa.me/'.static::formatWaNumber($record->whatsapp),
                         shouldOpenInNewTab: true
-                    ),
+                    )
+                    ->visibleFrom('md'),
 
                 TextColumn::make('orders_sum_total')
                     ->label('Total Transaksi')
@@ -189,7 +179,8 @@ class CustomerResource extends Resource
                     ->sortable()
                     ->weight('bold')
                     ->alignEnd()
-                    ->description(fn (Customer $record): string => ($record->orders_count ?? 0).' pesanan'),
+                    ->description(fn (Customer $record): string => ($record->orders_count ?? 0).' pesanan')
+                    ->visibleFrom('md'),
 
                 TextColumn::make('orders_count')
                     ->label('Pesanan')

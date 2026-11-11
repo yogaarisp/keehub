@@ -1277,19 +1277,18 @@
             width: 100% !important;
         }
 
-        /* Prevent table container horizontal scrollbar on mobile */
+        /* Allow horizontal touch scroll for multi-column / tablet tables */
         .fi-ta-content {
-            overflow-x: hidden !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
             width: 100% !important;
             max-width: 100% !important;
         }
 
-        /* Fixed table layout: perfect 100% fit with NO horizontal overflow */
         .fi-ta-table {
-            table-layout: fixed !important;
+            table-layout: auto !important;
             width: 100% !important;
             min-width: 100% !important;
-            max-width: 100% !important;
         }
 
         /* Table cells: compact and balanced */
@@ -1302,20 +1301,48 @@
             font-size: 0.78rem !important;
         }
 
-        /* Column 1: Primary column in resource tables with row actions (52%) */
-        .fi-ta-table:has(.fi-ta-actions-cell) th:first-child,
-        .fi-ta-table:has(.fi-ta-actions-cell) td:first-child {
-            width: 52% !important;
-            max-width: 52% !important;
-            overflow: hidden !important;
+        /* Dashboard widget tables: auto balanced widths */
+        .fi-wi-table .fi-ta-table {
+            table-layout: auto !important;
         }
 
-        /* Column 2: Status & Biaya (34%) */
-        .fi-ta-table:has(.fi-ta-actions-cell) th.fi-ta-col-status,
-        .fi-ta-table:has(.fi-ta-actions-cell) td.fi-ta-col-status {
-            width: 34% !important;
-            max-width: 34% !important;
-            text-align: right !important;
+        /* Table header cells: prevent wrapping */
+        .fi-ta-table th {
+            white-space: nowrap !important;
+        }
+
+        /* Mobile (< 768px) 3-column card tables with status column (no bulk checkboxes) */
+        @media (max-width: 767px) {
+            .fi-ta-content:has(.fi-ta-table:has(.fi-ta-actions-cell):has(td.fi-ta-col-status):not(:has(.fi-ta-selection-cell))) {
+                overflow-x: hidden !important;
+            }
+
+            .fi-ta-table:has(.fi-ta-actions-cell):has(td.fi-ta-col-status):not(:has(.fi-ta-selection-cell)) {
+                table-layout: fixed !important;
+                max-width: 100% !important;
+            }
+
+            .fi-ta-table:has(.fi-ta-actions-cell):has(td.fi-ta-col-status):not(:has(.fi-ta-selection-cell)) th:first-child,
+            .fi-ta-table:has(.fi-ta-actions-cell):has(td.fi-ta-col-status):not(:has(.fi-ta-selection-cell)) td:first-child {
+                width: 52% !important;
+                max-width: 52% !important;
+                overflow: hidden !important;
+            }
+
+            .fi-ta-table:has(.fi-ta-actions-cell):has(td.fi-ta-col-status):not(:has(.fi-ta-selection-cell)) th.fi-ta-col-status,
+            .fi-ta-table:has(.fi-ta-actions-cell):has(td.fi-ta-col-status):not(:has(.fi-ta-selection-cell)) td.fi-ta-col-status {
+                width: 34% !important;
+                max-width: 34% !important;
+                text-align: right !important;
+            }
+
+            .fi-ta-table:has(.fi-ta-actions-cell):has(td.fi-ta-col-status):not(:has(.fi-ta-selection-cell)) th:last-child,
+            .fi-ta-table:has(.fi-ta-actions-cell):has(td.fi-ta-col-status):not(:has(.fi-ta-selection-cell)) td:last-child {
+                width: 14% !important;
+                max-width: 14% !important;
+                text-align: right !important;
+                padding-right: 0.35rem !important;
+            }
         }
 
         .fi-ta-col-status .fi-ta-text-item {
@@ -1338,25 +1365,6 @@
 
         .dark .fi-ta-col-status .fi-ta-text-item-description {
             color: #fbbf24 !important;
-        }
-
-        /* Actions Column (14%) */
-        .fi-ta-table:has(.fi-ta-actions-cell) th:last-child,
-        .fi-ta-table:has(.fi-ta-actions-cell) td:last-child {
-            width: 14% !important;
-            max-width: 14% !important;
-            text-align: right !important;
-            padding-right: 0.35rem !important;
-        }
-
-        /* Dashboard widget tables: auto balanced widths without squishing last column */
-        .fi-wi-table .fi-ta-table {
-            table-layout: auto !important;
-        }
-
-        /* Table header cells: prevent wrapping */
-        .fi-ta-table th {
-            white-space: nowrap !important;
         }
 
         /* Table pagination: compact, wrap, center */

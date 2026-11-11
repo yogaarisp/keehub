@@ -21,6 +21,7 @@ use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -140,14 +141,19 @@ class ProductResource extends Resource
                     ->defaultImageUrl(asset('storage/products/placeholder.svg'))
                     ->checkFileExistence(false)
                     ->extraImgAttributes(['class' => 'rounded-lg object-cover shadow-xs border border-gray-200 dark:border-gray-700']),
-                TextColumn::make('sku')->label('SKU')->searchable()->sortable(),
-                TextColumn::make('name')->label('Nama Produk')->searchable()->sortable()->limit(40),
-                TextColumn::make('category.name')->label('Kategori')->sortable(),
-                TextColumn::make('brand.name')->label('Brand')->sortable(),
-                TextColumn::make('price')->label('Harga')->money('IDR')->sortable(),
+                TextColumn::make('sku')->label('SKU')->searchable()->sortable()->visibleFrom('lg'),
+                TextColumn::make('name')
+                    ->label('Nama Produk')
+                    ->searchable()
+                    ->sortable()
+                    ->limit(40)
+                    ->description(fn (Product $record): string => ($record->sku ? $record->sku.' • ' : '').'Rp '.number_format((int) $record->price, 0, ',', '.')),
+                TextColumn::make('category.name')->label('Kategori')->sortable()->visibleFrom('md'),
+                TextColumn::make('brand.name')->label('Brand')->sortable()->visibleFrom('lg'),
+                TextColumn::make('price')->label('Harga')->money('IDR')->sortable()->visibleFrom('md'),
                 TextColumn::make('inventory.current_stock')->label('Stok')->badge()
                     ->color(fn ($state, $record) => ($state ?? 0) <= 0 ? 'danger' : (($state ?? 0) <= ($record->inventory?->min_stock ?? 0) ? 'warning' : 'success')),
-                IconColumn::make('is_active')->label('Aktif')->boolean(),
+                IconColumn::make('is_active')->label('Aktif')->boolean()->visibleFrom('md'),
             ])
             ->filters([
                 SelectFilter::make('category')->relationship('category', 'name')->label('Kategori'),
@@ -155,47 +161,49 @@ class ProductResource extends Resource
                 TernaryFilter::make('is_active')->label('Status Aktif'),
             ])
             ->actions([
-                Action::make('manage_images')
-                    ->label('Foto')
-                    ->tooltip('Kelola Foto Produk')
-                    ->icon('heroicon-o-photo')
-                    ->color('gray')
-                    ->modalHeading(fn (Product $record): string => 'Kelola Foto: '.$record->name)
-                    ->modalDescription('Upload, atur urutan, atau hapus foto produk. Foto pertama akan menjadi foto utama.')
-                    ->modalSubmitActionLabel('Simpan Foto')
-                    ->modalWidth('lg')
-                    ->form([
-                        FileUpload::make('images_upload')
-                            ->label('Foto Produk')
-                            ->image()
-                            ->imageEditor()
-                            ->directory('products')
-                            ->disk('public')
-                            ->multiple()
-                            ->reorderable()
-                            ->panelLayout('grid')
-                            ->maxFiles(10)
-                            ->helperText('Klik atau seret foto ke sini. Gambar pertama adalah foto utama.'),
-                    ])
-                    ->fillForm(fn (Product $record): array => [
-                        'images_upload' => $record->images->pluck('path')->toArray(),
-                    ])
-                    ->action(function (Product $record, array $data): void {
-                        $record->images()->delete();
-                        foreach (($data['images_upload'] ?? []) as $i => $path) {
-                            ProductImage::query()->create([
-                                'product_id' => $record->id,
-                                'path' => $path,
-                                'is_primary' => $i === 0,
-                                'sort_order' => $i,
-                            ]);
-                        }
-                        Notification::make()
-                            ->title('Foto produk berhasil disimpan')
-                            ->success()
-                            ->send();
-                    }),
-                EditAction::make(),
+                ActionGroup::make([
+                    EditAction::make(),
+                    Action::make('manage_images')
+                        ->label('Kelola Foto')
+                        ->tooltip('Kelola Foto Produk')
+                        ->icon('heroicon-o-photo')
+                        ->color('gray')
+                        ->modalHeading(fn (Product $record): string => 'Kelola Foto: '.$record->name)
+                        ->modalDescription('Upload, atur urutan, atau hapus foto produk. Foto pertama akan menjadi foto utama.')
+                        ->modalSubmitActionLabel('Simpan Foto')
+                        ->modalWidth('lg')
+                        ->form([
+                            FileUpload::make('images_upload')
+                                ->label('Foto Produk')
+                                ->image()
+                                ->imageEditor()
+                                ->directory('products')
+                                ->disk('public')
+                                ->multiple()
+                                ->reorderable()
+                                ->panelLayout('grid')
+                                ->maxFiles(10)
+                                ->helperText('Klik atau seret foto ke sini. Gambar pertama adalah foto utama.'),
+                        ])
+                        ->fillForm(fn (Product $record): array => [
+                            'images_upload' => $record->images->pluck('path')->toArray(),
+                        ])
+                        ->action(function (Product $record, array $data): void {
+                            $record->images()->delete();
+                            foreach (($data['images_upload'] ?? []) as $i => $path) {
+                                ProductImage::query()->create([
+                                    'product_id' => $record->id,
+                                    'path' => $path,
+                                    'is_primary' => $i === 0,
+                                    'sort_order' => $i,
+                                ]);
+                            }
+                            Notification::make()
+                                ->title('Foto produk berhasil disimpan')
+                                ->success()
+                                ->send();
+                        }),
+                ]),
             ])
             ->bulkActions([])
             ->defaultSort('created_at', 'desc');
