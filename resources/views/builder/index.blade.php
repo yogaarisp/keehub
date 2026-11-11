@@ -126,7 +126,7 @@ $slotMeta = [
     {{-- Step 1 & 2: Kebutuhan + Budget --}}
     <div class="mt-6 grid gap-4 sm:grid-cols-2">
         {{-- 1. Kebutuhan --}}
-        <div class="x-card p-4 sm:p-5">
+        <div class="x-card min-w-0 p-4 sm:p-5">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/15 text-[11px] font-semibold text-amber-600 dark:text-amber-400">1</span>
@@ -149,7 +149,7 @@ $slotMeta = [
         </div>
 
         {{-- 2. Budget --}}
-        <div class="x-card p-4 sm:p-5">
+        <div class="x-card min-w-0 p-4 sm:p-5">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="flex h-5 w-5 items-center justify-center rounded-full bg-kee-500/20 text-[11px] font-extrabold text-kee-600 dark:text-kee-400">2</span>
@@ -180,7 +180,7 @@ $slotMeta = [
     {{-- Main Workspace: Slots List (Left) & Sticky Summary (Right) --}}
     <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_22rem]">
         {{-- Slot Components --}}
-        <div class="space-y-3 sm:space-y-3.5">
+        <div class="min-w-0 space-y-3 sm:space-y-3.5">
             <div class="flex items-center justify-between px-1">
                 <div class="flex items-center gap-2">
                     <span class="flex h-5 w-5 items-center justify-center rounded-full bg-kee-500/20 text-[11px] font-extrabold text-kee-600 dark:text-kee-400">3</span>
@@ -218,13 +218,13 @@ $slotMeta = [
                                 </div>
 
                                 {{-- Product Name or Placeholder --}}
-                                <div class="mt-0.5">
+                                <div class="mt-0.5 min-w-0">
                                     <template x-if="items['{{ $slot }}']">
-                                        <div>
-                                            <p class="truncate text-sm font-bold text-gray-900 dark:text-white" x-text="items['{{ $slot }}'].name" :title="items['{{ $slot }}'].name"></p>
-                                            <div class="flex items-center gap-2 mt-0.5">
-                                                <span class="text-xs font-extrabold text-kee-600 dark:text-kee-400" x-text="'Rp ' + items['{{ $slot }}'].price.toLocaleString('id-ID')"></span>
-                                                <span class="text-[11px] text-gray-400" x-show="items['{{ $slot }}'].brand" x-text="'• ' + items['{{ $slot }}'].brand"></span>
+                                        <div class="min-w-0">
+                                            <p class="line-clamp-2 sm:truncate text-sm font-bold text-gray-900 dark:text-white" x-text="items['{{ $slot }}'].name" :title="items['{{ $slot }}'].name"></p>
+                                            <div class="mt-0.5 flex min-w-0 items-center gap-2">
+                                                <span class="shrink-0 text-xs font-extrabold text-kee-600 dark:text-kee-400" x-text="'Rp ' + items['{{ $slot }}'].price.toLocaleString('id-ID')"></span>
+                                                <span class="truncate text-[11px] text-gray-400" x-show="items['{{ $slot }}'].brand" x-text="'• ' + items['{{ $slot }}'].brand"></span>
                                             </div>
                                         </div>
                                     </template>
