@@ -183,7 +183,7 @@ class ManageSettingsTest extends TestCase
             ->assertSuccessful()
             ->assertSee('object-contain', false)
             ->assertSee('object-center md:object-right', false)
-            ->assertSee('py-14 md:min-h-[580px] md:py-24', false);
+            ->assertSee('py-10 sm:py-14 md:min-h-[580px] md:py-24', false);
 
         Livewire::actingAs($owner)
             ->test(ManageSettings::class)

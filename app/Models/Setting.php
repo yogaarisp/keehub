@@ -78,9 +78,9 @@ class Setting extends Model
         ];
 
         $heightMap = [
-            'compact' => 'py-12 md:min-h-[520px] md:py-20',
-            'medium' => 'py-14 md:min-h-[580px] md:py-24',
-            'tall' => 'py-16 md:min-h-[640px] md:py-28',
+            'compact' => 'py-9 sm:py-12 md:min-h-[520px] md:py-20',
+            'medium' => 'py-10 sm:py-14 md:min-h-[580px] md:py-24',
+            'tall' => 'py-12 sm:py-16 md:min-h-[640px] md:py-28',
         ];
 
         $overlayClass = $fit === 'contain'

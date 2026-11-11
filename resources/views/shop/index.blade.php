@@ -22,12 +22,12 @@
             <div class="max-w-3xl">
                 <span class="x-badge bg-amber-500/15 text-amber-300 ring-1 ring-amber-400/25">PC Parts • PC Builder • IT Service</span>
 
-                <h1 class="mt-4 text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+                <h1 class="mt-3 text-3xl font-extrabold leading-[1.1] tracking-tight sm:mt-4 sm:text-5xl lg:text-6xl">
                     Build Your PC.<br>
                     <span class="text-amber-400">Your Way.</span>
                 </h1>
 
-                <p class="mt-4 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base lg:text-lg">
+                <p class="mt-3 max-w-xl text-sm leading-relaxed text-slate-300 sm:mt-4 sm:text-base lg:text-lg">
                     Temukan komponen PC, buat PC rakitan sesuai budget, dan dapatkan bantuan dari tim KeeHub.
                 </p>
 
@@ -61,35 +61,35 @@
                     ];
                 @endphp
 
-                <div class="mt-6 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:gap-3">
+                <div class="mt-5 grid grid-cols-2 gap-2 sm:mt-6 sm:flex sm:flex-wrap sm:gap-3">
                     @foreach ($heroHighlights as $item)
                         <a href="{{ $item['href'] }}"
-                           class="group flex items-center gap-2.5 rounded-2xl border border-white/15 bg-slate-900/70 px-3.5 py-2.5 backdrop-blur-md transition hover:-translate-y-0.5 hover:border-amber-400/50 hover:bg-slate-900/90">
-                            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-amber-400 transition group-hover:bg-amber-500/20">
-                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                           class="group flex items-center gap-2 rounded-xl border border-white/15 bg-slate-900/75 px-2.5 py-2 backdrop-blur-md transition hover:-translate-y-0.5 hover:border-amber-400/50 hover:bg-slate-900/90 sm:gap-2.5 sm:rounded-2xl sm:px-3.5 sm:py-2.5 {{ $loop->last ? 'col-span-2 justify-center sm:col-span-1 sm:justify-start' : '' }}">
+                            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 text-amber-400 transition group-hover:bg-amber-500/20 sm:h-8 sm:w-8 sm:rounded-xl">
+                                <svg class="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}" />
                                 </svg>
                             </span>
-                            <span class="whitespace-pre-line text-xs font-medium leading-tight text-slate-100">{{ $item['label'] }}</span>
+                            <span class="text-[11px] font-medium leading-snug text-slate-100 sm:whitespace-pre-line sm:text-xs sm:leading-tight">{{ $item['label'] }}</span>
                         </a>
                     @endforeach
                 </div>
 
-                <div class="mt-7 flex flex-wrap items-center gap-3">
+                <div class="mt-5 grid grid-cols-2 gap-2.5 sm:mt-7 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
                     <a href="{{ route('builder.index') }}"
-                       class="inline-flex items-center gap-2 rounded-full bg-amber-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-600/25 transition hover:bg-amber-500">
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                       class="inline-flex items-center justify-center gap-1.5 rounded-full bg-amber-600 px-3.5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-amber-600/25 transition hover:bg-amber-500 sm:gap-2 sm:px-6 sm:py-3 sm:text-sm">
+                        <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25z" />
                         </svg>
                         <span>Mulai PC Builder</span>
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg class="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                         </svg>
                     </a>
 
                     <a href="{{ route('shop.index') }}"
-                       class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-slate-900/50 px-6 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:border-white/40 hover:bg-white/15">
-                        <svg class="h-4 w-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                       class="inline-flex items-center justify-center gap-1.5 rounded-full border border-white/25 bg-slate-900/60 px-3.5 py-2.5 text-xs font-semibold text-white backdrop-blur-md transition hover:border-white/40 hover:bg-white/15 sm:gap-2 sm:px-6 sm:py-3 sm:text-sm">
+                        <svg class="h-4 w-4 shrink-0 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
                         </svg>
                         <span>Belanja Part</span>
