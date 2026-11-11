@@ -10,7 +10,7 @@
     @endphp
     <section class="relative overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 text-white">
         @if ($heroBgUrl)
-            <img src="{{ $heroBgUrl }}" alt="Hero Background" class="pointer-events-none absolute inset-0 h-full w-full object-cover object-center">
+            <img src="{{ $heroBgUrl }}" alt="Hero Background" class="pointer-events-none absolute inset-0 h-full w-full object-cover object-[72%_70%] md:object-center">
             <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/75 to-slate-950/60"></div>
         @else
             <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-kee-500/20 blur-3xl"></div>
