@@ -44,6 +44,7 @@ class ManageSettings extends Page implements HasForms
         $this->form->fill([
             'store_logo' => Setting::get('store_logo'),
             'store_favicon' => Setting::get('store_favicon'),
+            'hero_background' => Setting::get('hero_background'),
             'store_name' => Setting::get('store_name', 'KeeHub'),
             'store_tagline' => Setting::get('store_tagline', 'Build Your PC. Your Way.'),
             'store_description' => Setting::get('store_description', ''),
@@ -121,6 +122,16 @@ class ManageSettings extends Page implements HasForms
                                         ->maxSize(1024)
                                         ->helperText('Ikon kecil untuk tab browser. Rekomendasi rasio 1:1 (PNG/ICO), maks 1MB.'),
                                 ]),
+
+                                FileUpload::make('hero_background')
+                                    ->label('Background Hero Halaman Utama')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->disk('public')
+                                    ->directory('settings')
+                                    ->visibility('public')
+                                    ->maxSize(4096)
+                                    ->helperText('Opsional. Gambar latar banner hero di halaman depan toko (rekomendasi rasio lebar 1920x700px, maks 4MB). Kosongkan atau hapus untuk kembali ke gradient default.'),
 
                                 Grid::make(['default' => 1, 'md' => 2])->schema([
                                     TextInput::make('store_name')

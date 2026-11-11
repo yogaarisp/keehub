@@ -6,6 +6,8 @@ use App\Filament\Pages\ManageSettings;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -101,5 +103,43 @@ class ManageSettingsTest extends TestCase
         $this->assertSame('BCA: 987654321 a/n Yoga AP', Setting::get('invoice_payment_instructions'));
         $this->assertSame('Keetech Management', Setting::get('invoice_signature_name'));
         $this->assertSame('Terima kasih telah mempercayakan servis komputer kepada kami.', Setting::get('service_invoice_footer'));
+    }
+
+    public function test_owner_can_upload_and_clear_hero_background_setting(): void
+    {
+        Storage::fake('public');
+        $owner = User::factory()->create(['role' => 'owner']);
+        $file = UploadedFile::fake()->image('hero.jpg', 1920, 700);
+
+        $this->assertNull(Setting::heroBackgroundUrl());
+
+        Livewire::actingAs($owner)
+            ->test(ManageSettings::class)
+            ->set('data.hero_background', $file)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $savedPath = Setting::get('hero_background');
+
+        $this->assertNotEmpty($savedPath);
+        Storage::disk('public')->assertExists($savedPath);
+        $this->assertSame(Storage::disk('public')->url($savedPath), Setting::heroBackgroundUrl());
+
+        $this->get('/')
+            ->assertSuccessful()
+            ->assertSee(Setting::heroBackgroundUrl(), false)
+            ->assertSee('alt="Hero Background"', false);
+
+        Livewire::actingAs($owner)
+            ->test(ManageSettings::class)
+            ->set('data.hero_background', null)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertNull(Setting::heroBackgroundUrl());
+
+        $this->get('/')
+            ->assertSuccessful()
+            ->assertDontSee('alt="Hero Background"', false);
     }
 }

@@ -46,6 +46,16 @@ class Setting extends Model
         return asset('favicon-32.png');
     }
 
+    public static function heroBackgroundUrl(): ?string
+    {
+        $background = static::get('hero_background');
+        if ($background && Storage::disk('public')->exists($background)) {
+            return Storage::disk('public')->url($background);
+        }
+
+        return null;
+    }
+
     public function items(): HasMany
     {
         return $this->hasMany(Setting::class, 'key', 'key');

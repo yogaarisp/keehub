@@ -5,9 +5,17 @@
 @section('content')
 <div>
     {{-- Hero --}}
+    @php
+        $heroBgUrl = \App\Models\Setting::heroBackgroundUrl();
+    @endphp
     <section class="relative overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 text-white">
-        <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-kee-500/20 blur-3xl"></div>
-        <div class="pointer-events-none absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"></div>
+        @if ($heroBgUrl)
+            <img src="{{ $heroBgUrl }}" alt="Hero Background" class="pointer-events-none absolute inset-0 h-full w-full object-cover object-center">
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/75 to-slate-950/60"></div>
+        @else
+            <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-kee-500/20 blur-3xl"></div>
+            <div class="pointer-events-none absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"></div>
+        @endif
         <div class="x-container relative grid gap-10 py-16 md:grid-cols-2 md:items-center md:py-24">
             <div>
                 <span class="x-badge bg-amber-500/15 text-amber-300">PC Parts • PC Builder • IT Service</span>
