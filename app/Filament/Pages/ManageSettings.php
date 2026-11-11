@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\Setting;
 use Filament\Actions\Action;
+use Filament\Forms\Components\BaseFileUpload;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
@@ -21,6 +22,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\HtmlString;
 
 class ManageSettings extends Page implements HasForms
 {
@@ -114,36 +116,30 @@ class ManageSettings extends Page implements HasForms
                         Tab::make('Identitas & Branding')
                             ->icon('heroicon-o-paint-brush')
                             ->schema([
-                                ViewComponent::make('filament.components.branding-preview'),
-
                                 Grid::make(['default' => 1, 'md' => 2])->schema([
-                                    FileUpload::make('store_logo')
-                                        ->label('Logo Utama Toko')
-                                        ->image()
-                                        ->disk('public')
-                                        ->directory('settings')
-                                        ->visibility('public')
-                                        ->maxSize(2048)
-                                        ->helperText('Ditampilkan di Header Website, Sidebar Admin, dan Nota. Rekomendasi PNG transparan rasio 1:1, maks 2MB.'),
+                                    $this->makeBrandingUpload(
+                                        name: 'store_logo',
+                                        label: 'Logo Utama Toko',
+                                        maxSizeKb: 2048,
+                                        placeholderHtml: '<span style="display:inline-flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;"><img src="/logo-96.png" alt="Logo Default Aktif" width="44" height="44" style="width:44px;height:44px;object-fit:contain;border-radius:0.5rem;background:rgba(148,163,184,0.12);padding:4px;"><span style="text-align:left;line-height:1.35;"><span style="display:block;font-weight:600;font-size:0.8125rem;">Logo Default Aktif</span><span style="display:block;font-size:0.75rem;opacity:0.8;">Drag &amp; Drop atau <span class="filepond--label-action">Browse</span> untuk ganti</span></span></span>',
+                                    )->helperText('Ditampilkan di Header Website, Sidebar Admin, dan Nota. Rekomendasi PNG transparan rasio 1:1, maks 2MB.'),
 
-                                    FileUpload::make('store_favicon')
-                                        ->label('Favicon Tab Browser')
-                                        ->image()
-                                        ->disk('public')
-                                        ->directory('settings')
-                                        ->visibility('public')
-                                        ->maxSize(1024)
-                                        ->helperText('Ikon kecil untuk tab browser. Rekomendasi rasio 1:1 (PNG/ICO), maks 1MB.'),
+                                    $this->makeBrandingUpload(
+                                        name: 'store_favicon',
+                                        label: 'Favicon Tab Browser',
+                                        maxSizeKb: 1024,
+                                        placeholderHtml: '<span style="display:inline-flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;"><img src="/favicon-32.png" alt="Favicon Default Aktif" width="36" height="36" style="width:36px;height:36px;object-fit:contain;border-radius:0.5rem;background:rgba(148,163,184,0.12);padding:4px;"><span style="text-align:left;line-height:1.35;"><span style="display:block;font-weight:600;font-size:0.8125rem;">Favicon Default Aktif</span><span style="display:block;font-size:0.75rem;opacity:0.8;">Drag &amp; Drop atau <span class="filepond--label-action">Browse</span> untuk ganti</span></span></span>',
+                                    )->helperText('Ikon kecil untuk tab browser. Rekomendasi rasio 1:1 (PNG/ICO), maks 1MB.'),
                                 ]),
 
-                                FileUpload::make('hero_background')
-                                    ->label('Background Hero Halaman Utama')
-                                    ->image()
+                                $this->makeBrandingUpload(
+                                    name: 'hero_background',
+                                    label: 'Background Hero Halaman Utama',
+                                    maxSizeKb: 4096,
+                                    placeholderHtml: '<span style="display:inline-flex;align-items:center;justify-content:center;gap:0.875rem;flex-wrap:wrap;"><span style="display:inline-flex;align-items:center;justify-content:center;width:112px;height:48px;border-radius:0.5rem;background:linear-gradient(135deg,#030712 0%,#111827 55%,#1f2937 100%);color:#fbbf24;font-size:0.6875rem;font-weight:700;letter-spacing:0.02em;flex-shrink:0;border:1px solid rgba(255,255,255,0.12);">Build Your PC</span><span style="text-align:left;line-height:1.35;"><span style="display:block;font-weight:600;font-size:0.8125rem;">Gradient Default Aktif</span><span style="display:block;font-size:0.75rem;opacity:0.8;">Drag &amp; Drop atau <span class="filepond--label-action">Browse</span> untuk ganti gambar hero</span></span></span>',
+                                    previewHeight: '160',
+                                )
                                     ->imageEditor()
-                                    ->disk('public')
-                                    ->directory('settings')
-                                    ->visibility('public')
-                                    ->maxSize(4096)
                                     ->helperText('Opsional. Gambar latar banner hero di halaman depan toko (rekomendasi 1920x700px, maks 4MB). Setelah status Upload complete muncul, klik tombol Simpan Pengaturan untuk menerapkan.'),
 
                                 Grid::make(['default' => 1, 'md' => 2])->schema([
@@ -518,5 +514,43 @@ class ManageSettings extends Page implements HasForms
             ->body('Seluruh perubahan identitas toko, operasional, printer, dan ekspedisi kurir telah diperbarui.')
             ->success()
             ->send();
+    }
+
+    protected function makeBrandingUpload(
+        string $name,
+        string $label,
+        int $maxSizeKb,
+        string $placeholderHtml,
+        string $previewHeight = '120',
+    ): FileUpload {
+        return FileUpload::make($name)
+            ->label($label)
+            ->image()
+            ->disk('public')
+            ->directory('settings')
+            ->visibility('public')
+            ->maxSize($maxSizeKb)
+            ->imagePreviewHeight($previewHeight)
+            ->placeholder(new HtmlString($placeholderHtml))
+            ->getUploadedFileUsing(static function (BaseFileUpload $component, string $file, string|array|null $storedFileNames): ?array {
+                $storage = $component->getDisk();
+
+                if ($component->shouldFetchFileInformation()) {
+                    try {
+                        if (! $storage->exists($file)) {
+                            return null;
+                        }
+                    } catch (\Throwable) {
+                        return null;
+                    }
+                }
+
+                return [
+                    'name' => ($component->isMultiple() ? ($storedFileNames[$file] ?? null) : $storedFileNames) ?? basename($file),
+                    'size' => $component->shouldFetchFileInformation() ? $storage->size($file) : 0,
+                    'type' => $component->shouldFetchFileInformation() ? $storage->mimeType($file) : null,
+                    'url' => '/storage/'.ltrim($file, '/'),
+                ];
+            });
     }
 }

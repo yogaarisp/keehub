@@ -116,8 +116,9 @@ class ManageSettingsTest extends TestCase
         $this->actingAs($owner)
             ->get(route('filament.admin.pages.manage-settings'))
             ->assertSuccessful()
-            ->assertSee('Gambar Aktif Saat Ini')
-            ->assertSee('Gradient Default');
+            ->assertSee('Logo Default Aktif')
+            ->assertSee('Favicon Default Aktif')
+            ->assertSee('Gradient Default Aktif');
 
         Livewire::actingAs($owner)
             ->test(ManageSettings::class)
@@ -131,12 +132,15 @@ class ManageSettingsTest extends TestCase
         Storage::disk('public')->assertExists($savedPath);
         $this->assertSame('/storage/'.ltrim($savedPath, '/'), Setting::heroBackgroundUrl());
 
-        $this->actingAs($owner)
-            ->get(route('filament.admin.pages.manage-settings'))
-            ->assertSuccessful()
-            ->assertSee('Custom Gambar')
-            ->assertSee('alt="Background Hero Aktif"', false)
-            ->assertSee(Setting::heroBackgroundUrl(), false);
+        $uploadedFiles = Livewire::actingAs($owner)
+            ->test(ManageSettings::class)
+            ->instance()
+            ->getFormUploadedFiles('data.hero_background');
+
+        $this->assertIsArray($uploadedFiles);
+        $this->assertNotEmpty($uploadedFiles);
+        $firstUploaded = reset($uploadedFiles);
+        $this->assertSame('/storage/'.ltrim($savedPath, '/'), $firstUploaded['url'] ?? null);
 
         $this->get('/')
             ->assertSuccessful()
