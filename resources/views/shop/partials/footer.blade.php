@@ -17,8 +17,16 @@
                     <span class="text-base font-bold text-slate-900 dark:text-slate-100">{{ $storeName }}</span>
                 @endif
             </div>
-            <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">{{ \App\Models\Setting::get('store_tagline', 'PC Parts • PC Builder • PC Rakitan • IT Service') }}</p>
-            <p class="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Build. Buy. Upgrade.</p>
+            @php
+                $storeDesc = trim((string) \App\Models\Setting::get('store_description', ''));
+                $footerSubtitle = $storeDesc !== '' ? $storeDesc : 'PC Parts • PC Builder • PC Rakitan • IT Service';
+                $storeTagline = trim((string) \App\Models\Setting::get('store_tagline', 'Build. Buy. Upgrade.'));
+                $footerTagline = $storeTagline !== '' ? $storeTagline : 'Build. Buy. Upgrade.';
+            @endphp
+            <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">{{ $footerSubtitle }}</p>
+            @if (strcasecmp($footerTagline, $footerSubtitle) !== 0)
+                <p class="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-300">{{ $footerTagline }}</p>
+            @endif
         </div>
         <div>
             <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-800 dark:text-slate-200">Kontak</h3>
