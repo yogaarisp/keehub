@@ -409,7 +409,8 @@ $slotMeta = [
 
     {{-- Component Picker Modal / Bottom Sheet --}}
     <div x-show="picker.open" x-cloak
-         class="fixed inset-0 z-50 overflow-y-auto"
+         x-on:keydown.escape.window="closePicker()"
+         class="fixed inset-0 z-[60] overflow-hidden overscroll-none"
          role="dialog" aria-modal="true">
         {{-- Backdrop --}}
         <div x-show="picker.open"
@@ -420,9 +421,9 @@ $slotMeta = [
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0"
              x-on:click="closePicker()"
-             class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+             class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm"></div>
 
-        <div class="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 text-center">
+        <div class="relative flex h-full items-end sm:items-center justify-center p-0 sm:p-4 text-center pointer-events-none">
             <div x-show="picker.open"
                  x-transition:enter="transition ease-out duration-300"
                  x-transition:enter-start="opacity-0 translate-y-full sm:translate-y-4 sm:scale-95"
@@ -430,7 +431,7 @@ $slotMeta = [
                  x-transition:leave="transition ease-in duration-200"
                  x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
                  x-transition:leave-end="opacity-0 translate-y-full sm:translate-y-4 sm:scale-95"
-                 class="relative w-full max-w-2xl transform rounded-t-3xl sm:rounded-2xl bg-white text-left shadow-2xl transition-all dark:bg-gray-900 max-h-[85vh] sm:max-h-[80vh] flex flex-col">
+                 class="pointer-events-auto relative w-full max-w-2xl transform rounded-t-3xl sm:rounded-2xl bg-white text-left shadow-2xl transition-all dark:bg-slate-900 max-h-[85vh] sm:max-h-[80vh] flex flex-col">
 
                 {{-- Header --}}
                 <div class="flex items-center justify-between border-b border-gray-100 p-4 sm:p-5 dark:border-gray-800">
@@ -466,7 +467,7 @@ $slotMeta = [
                 </div>
 
                 {{-- Products List --}}
-                <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-2.5">
+                <div class="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5 space-y-2.5">
                     {{-- Loading State --}}
                     <div x-show="picker.loading" class="py-12 text-center">
                         <div class="inline-block h-8 w-8 animate-spin rounded-full border-3 border-solid border-kee-500 border-r-transparent"></div>
@@ -535,7 +536,8 @@ $slotMeta = [
 
     {{-- Mobile Summary Drawer / Bottom Sheet --}}
     <div x-show="summarySheetOpen" x-cloak
-         class="fixed inset-0 z-50 overflow-hidden lg:hidden"
+         x-on:keydown.escape.window="summarySheetOpen = false"
+         class="fixed inset-0 z-[60] overflow-hidden overscroll-none lg:hidden"
          role="dialog" aria-modal="true">
         {{-- Backdrop --}}
         <div x-show="summarySheetOpen"
@@ -546,9 +548,9 @@ $slotMeta = [
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0"
              x-on:click="summarySheetOpen = false"
-             class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+             class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm"></div>
 
-        <div class="fixed inset-x-0 bottom-0 max-h-[85vh] flex flex-col rounded-t-3xl bg-white shadow-2xl transition-all dark:bg-gray-900">
+        <div class="fixed inset-x-0 bottom-0 max-h-[85vh] flex flex-col rounded-t-3xl bg-white shadow-2xl transition-all dark:bg-slate-900">
             {{-- Drawer Handle & Header --}}
             <div class="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
                 <div>
@@ -561,7 +563,7 @@ $slotMeta = [
             </div>
 
             {{-- Content --}}
-            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+            <div class="flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
                 {{-- Items breakdown --}}
                 <div class="divide-y divide-gray-100 text-xs dark:divide-gray-800">
                     <template x-for="(item, slot) in items" :key="slot">
@@ -672,6 +674,15 @@ $slotMeta = [
             },
 
             init() {
+                const syncBodyScrollLock = () => {
+                    const locked = this.picker.open || this.summarySheetOpen;
+                    document.documentElement.classList.toggle('overflow-hidden', locked);
+                    document.body.classList.toggle('overflow-hidden', locked);
+                };
+
+                this.$watch('picker.open', syncBodyScrollLock);
+                this.$watch('summarySheetOpen', syncBodyScrollLock);
+
                 (config.initialItems || []).forEach(({ slot, product_id }) => {
                     if (product_id) this.fetchProduct(slot, product_id);
                 });
