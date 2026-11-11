@@ -164,4 +164,25 @@ class ServiceFeatureTest extends TestCase
         $response->assertStatus(200);
         $response->assertHeader('content-type', 'application/pdf');
     }
+
+    public function test_edit_service_page_and_live_totals_work(): void
+    {
+        $service = $this->createServiceWithItems();
+        $admin = User::factory()->create(['role' => 'owner']);
+
+        $this->actingAs($admin)
+            ->get(ServiceResource::getUrl('edit', ['record' => $service]))
+            ->assertOk()
+            ->assertSee('Ringkasan Biaya (Live)')
+            ->assertSee('Rp 2.250.000');
+
+        $totals = ServiceResource::calculateFormTotals([
+            'a' => ['quantity' => 2, 'price' => 150000, 'part_source' => 'keehub'],
+            'b' => ['quantity' => 1, 'price' => 500000, 'part_source' => 'vendor'],
+        ]);
+
+        $this->assertSame(300000, $totals['invoice']);
+        $this->assertSame(500000, $totals['vendor']);
+        $this->assertSame(800000, $totals['work_order']);
+    }
 }

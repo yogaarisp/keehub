@@ -29,7 +29,7 @@ class EditService extends EditRecord
             ViewAction::make()
                 ->label('Lihat Detail'),
             DeleteAction::make()
-                ->label('Hapus Servis'),
+                ->label('Hapus'),
         ];
     }
 
