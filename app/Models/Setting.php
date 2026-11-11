@@ -54,22 +54,23 @@ class Setting extends Model
     /**
      * Resolve Tailwind layout classes for the storefront hero background.
      *
-     * @return array{fitClass: string, positionClass: string, paddingClass: string, overlayClass: string}
+     * @return array{isAuto: bool, fitClass: string, positionClass: string, paddingClass: string, overlayClass: string}
      */
     public static function heroDisplayConfig(): array
     {
-        $fit = static::get('hero_background_fit', 'cover') ?: 'cover';
+        $fit = static::get('hero_background_fit', 'auto') ?: 'auto';
         $position = static::get('hero_background_position', 'center') ?: 'center';
         $height = static::get('hero_background_height', 'compact') ?: 'compact';
 
         $fitMap = [
+            'auto' => 'object-cover',
             'cover' => 'object-cover',
             'contain' => 'object-contain',
             'fill' => 'object-fill',
         ];
 
         $positionMap = [
-            'center' => $fit === 'cover' ? 'object-[72%_70%] md:object-center' : 'object-center',
+            'center' => in_array($fit, ['auto', 'cover'], true) ? 'object-[72%_70%] md:object-center' : 'object-center',
             'top' => 'object-top',
             'bottom' => 'object-bottom',
             'left' => 'object-left',
@@ -77,9 +78,9 @@ class Setting extends Model
         ];
 
         $heightMap = [
-            'compact' => 'py-12 md:py-16',
-            'medium' => 'py-14 md:py-24',
-            'tall' => 'py-16 md:py-32',
+            'compact' => 'py-12 md:min-h-[520px] md:py-20',
+            'medium' => 'py-14 md:min-h-[580px] md:py-24',
+            'tall' => 'py-16 md:min-h-[640px] md:py-28',
         ];
 
         $overlayClass = $fit === 'contain'
@@ -87,6 +88,7 @@ class Setting extends Model
             : 'bg-gradient-to-r from-slate-950/90 via-slate-950/75 to-slate-950/60';
 
         return [
+            'isAuto' => $fit === 'auto',
             'fitClass' => $fitMap[$fit] ?? $fitMap['cover'],
             'positionClass' => $positionMap[$position] ?? $positionMap['center'],
             'paddingClass' => $heightMap[$height] ?? $heightMap['compact'],

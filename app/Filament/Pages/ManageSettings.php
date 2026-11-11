@@ -48,7 +48,7 @@ class ManageSettings extends Page implements HasForms
             'store_logo' => Setting::get('store_logo'),
             'store_favicon' => Setting::get('store_favicon'),
             'hero_background' => Setting::get('hero_background'),
-            'hero_background_fit' => Setting::get('hero_background_fit', 'cover') ?: 'cover',
+            'hero_background_fit' => Setting::get('hero_background_fit', 'auto') ?: 'auto',
             'hero_background_position' => Setting::get('hero_background_position', 'center') ?: 'center',
             'hero_background_height' => Setting::get('hero_background_height', 'compact') ?: 'compact',
             'store_name' => Setting::get('store_name', 'KeeHub'),
@@ -149,12 +149,13 @@ class ManageSettings extends Page implements HasForms
                                     Select::make('hero_background_fit')
                                         ->label('Mode Tampilan Background')
                                         ->options([
-                                            'cover' => 'Penuh / Cover (Auto crop full layar)',
-                                            'contain' => 'Fit Utuh / Contain (Tanpa terpotong)',
+                                            'auto' => 'Otomatis Sesuai Rasio Gambar (Anti potong desktop)',
+                                            'cover' => 'Penuh / Cover (Auto crop mengikuti tinggi)',
+                                            'contain' => 'Fit Utuh / Contain (Rata penuh tanpa crop)',
                                             'fill' => 'Stretch / Fill (Sesuai ukuran banner)',
                                         ])
                                         ->required()
-                                        ->helperText('Pilih "Fit Utuh" agar seluruh gambar tampil tanpa terpotong.'),
+                                        ->helperText('Pilih "Otomatis" agar tinggi banner desktop mengikuti rasio gambar asli tanpa terpotong.'),
 
                                     Select::make('hero_background_position')
                                         ->label('Posisi Fokus Gambar')
@@ -171,12 +172,12 @@ class ManageSettings extends Page implements HasForms
                                     Select::make('hero_background_height')
                                         ->label('Tinggi Area Hero Desktop')
                                         ->options([
-                                            'compact' => 'Ringkas (~420px - Default)',
-                                            'medium' => 'Sedang (~520px)',
-                                            'tall' => 'Tinggi (~620px)',
+                                            'compact' => 'Standar (~520px - Default)',
+                                            'medium' => 'Sedang (~580px)',
+                                            'tall' => 'Tinggi (~640px)',
                                         ])
                                         ->required()
-                                        ->helperText('Atur tinggi banner hero jika memakai gambar tinggi.'),
+                                        ->helperText('Berlaku untuk mode Cover, Fit Utuh, dan Stretch.'),
                                 ]),
 
                                 Grid::make(['default' => 1, 'md' => 2])->schema([

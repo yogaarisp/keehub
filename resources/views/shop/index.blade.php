@@ -8,16 +8,17 @@
     @php
         $heroBgUrl = \App\Models\Setting::heroBackgroundUrl();
         $heroDisplay = \App\Models\Setting::heroDisplayConfig();
+        $isAutoRatio = $heroBgUrl && $heroDisplay['isAuto'];
     @endphp
-    <section class="relative overflow-hidden {{ $heroBgUrl ? 'bg-gray-950' : 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800' }} text-white">
+    <section class="relative overflow-hidden {{ $heroBgUrl ? 'bg-gray-950' : 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800' }} {{ $isAutoRatio ? 'md:grid md:grid-cols-1 md:grid-rows-1' : 'md:flex md:items-center' }} text-white">
         @if ($heroBgUrl)
-            <img src="{{ $heroBgUrl }}" alt="Hero Background" class="pointer-events-none absolute inset-0 h-full w-full {{ $heroDisplay['fitClass'] }} {{ $heroDisplay['positionClass'] }}">
-            <div class="pointer-events-none absolute inset-0 {{ $heroDisplay['overlayClass'] }}"></div>
+            <img src="{{ $heroBgUrl }}" alt="Hero Background" class="pointer-events-none {{ $isAutoRatio ? 'absolute inset-0 h-full w-full object-cover object-[72%_70%] md:static md:col-start-1 md:row-start-1 md:h-auto md:w-full md:self-stretch md:object-cover md:object-center' : 'absolute inset-0 h-full w-full ' . $heroDisplay['fitClass'] . ' ' . $heroDisplay['positionClass'] }}">
+            <div class="pointer-events-none {{ $isAutoRatio ? 'absolute inset-0 md:col-start-1 md:row-start-1' : 'absolute inset-0' }} {{ $heroDisplay['overlayClass'] }}"></div>
         @else
             <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-kee-500/20 blur-3xl"></div>
             <div class="pointer-events-none absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"></div>
         @endif
-        <div class="x-container relative grid gap-8 {{ $heroDisplay['paddingClass'] }} md:grid-cols-2 md:items-center">
+        <div class="x-container relative grid gap-8 {{ $heroDisplay['paddingClass'] }} md:grid-cols-2 md:items-center {{ $isAutoRatio ? 'md:col-start-1 md:row-start-1 md:z-10 md:self-center' : '' }}">
             <div>
                 <span class="x-badge bg-amber-500/15 text-amber-300">PC Parts • PC Builder • IT Service</span>
                 <h1 class="mt-4 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">Build Your PC.<br><span class="text-amber-400">Your Way.</span></h1>
