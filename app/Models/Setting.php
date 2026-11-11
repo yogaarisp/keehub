@@ -26,34 +26,29 @@ class Setting extends Model
         static::query()->updateOrCreate(['key' => $key], ['value' => $value]);
     }
 
-    public static function logoUrl(): string
+    public static function storedFileUrl(string $key): ?string
     {
-        $logo = static::get('store_logo');
-        if ($logo && Storage::disk('public')->exists($logo)) {
-            return Storage::disk('public')->url($logo);
+        $path = static::get($key);
+        if ($path && Storage::disk('public')->exists($path)) {
+            return '/storage/'.ltrim($path, '/');
         }
 
-        return asset('logo-96.png');
+        return null;
+    }
+
+    public static function logoUrl(): string
+    {
+        return static::storedFileUrl('store_logo') ?? '/logo-96.png';
     }
 
     public static function faviconUrl(): string
     {
-        $favicon = static::get('store_favicon');
-        if ($favicon && Storage::disk('public')->exists($favicon)) {
-            return Storage::disk('public')->url($favicon);
-        }
-
-        return asset('favicon-32.png');
+        return static::storedFileUrl('store_favicon') ?? '/favicon-32.png';
     }
 
     public static function heroBackgroundUrl(): ?string
     {
-        $background = static::get('hero_background');
-        if ($background && Storage::disk('public')->exists($background)) {
-            return '/storage/'.ltrim($background, '/');
-        }
-
-        return null;
+        return static::storedFileUrl('hero_background');
     }
 
     public function items(): HasMany

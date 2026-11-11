@@ -113,6 +113,12 @@ class ManageSettingsTest extends TestCase
 
         $this->assertNull(Setting::heroBackgroundUrl());
 
+        $this->actingAs($owner)
+            ->get(route('filament.admin.pages.manage-settings'))
+            ->assertSuccessful()
+            ->assertSee('Gambar Aktif Saat Ini')
+            ->assertSee('Gradient Default');
+
         Livewire::actingAs($owner)
             ->test(ManageSettings::class)
             ->set('data.hero_background', $file)
@@ -124,6 +130,13 @@ class ManageSettingsTest extends TestCase
         $this->assertNotEmpty($savedPath);
         Storage::disk('public')->assertExists($savedPath);
         $this->assertSame('/storage/'.ltrim($savedPath, '/'), Setting::heroBackgroundUrl());
+
+        $this->actingAs($owner)
+            ->get(route('filament.admin.pages.manage-settings'))
+            ->assertSuccessful()
+            ->assertSee('Custom Gambar')
+            ->assertSee('alt="Background Hero Aktif"', false)
+            ->assertSee(Setting::heroBackgroundUrl(), false);
 
         $this->get('/')
             ->assertSuccessful()

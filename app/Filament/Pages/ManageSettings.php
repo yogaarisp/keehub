@@ -114,6 +114,8 @@ class ManageSettings extends Page implements HasForms
                         Tab::make('Identitas & Branding')
                             ->icon('heroicon-o-paint-brush')
                             ->schema([
+                                ViewComponent::make('filament.components.branding-preview'),
+
                                 Grid::make(['default' => 1, 'md' => 2])->schema([
                                     FileUpload::make('store_logo')
                                         ->label('Logo Utama Toko')
