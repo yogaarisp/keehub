@@ -47,6 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.5rem')
             ->favicon(fn () => Setting::faviconUrl())
             ->darkMode(true)
+            ->breadcrumbs(false)
             ->maxContentWidth(MaxWidth::Full)
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('14rem')
