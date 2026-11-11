@@ -16,7 +16,7 @@
             <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-kee-500/20 blur-3xl"></div>
             <div class="pointer-events-none absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"></div>
         @endif
-        <div class="x-container relative grid gap-10 py-16 md:grid-cols-2 md:items-center md:py-24">
+        <div class="x-container relative grid gap-8 py-12 md:grid-cols-2 md:items-center md:py-16">
             <div>
                 <span class="x-badge bg-amber-500/15 text-amber-300">PC Parts • PC Builder • IT Service</span>
                 <h1 class="mt-4 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">Build Your PC.<br><span class="text-amber-400">Your Way.</span></h1>
@@ -42,66 +42,68 @@
         </div>
     </section>
 
-    {{-- Categories --}}
-    <section class="x-container py-10">
-        <h2 class="x-section-title">Kategori</h2>
-        <div class="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7">
-            @foreach ($categories as $category)
-                <a href="{{ route('shop.index', ['category' => $category->slug]) }}" class="x-card group flex flex-col items-center gap-2 p-4 text-center transition hover:-translate-y-0.5 hover:shadow-md">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-base font-semibold text-amber-600 transition group-hover:bg-amber-600 group-hover:text-white dark:text-amber-400">{{ strtoupper(mb_substr($category->name, 0, 1)) }}</span>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-200">{{ $category->name }}</span>
-                </a>
-            @endforeach
-        </div>
-    </section>
+    <div class="flex flex-col gap-7 py-6 md:gap-8 md:py-8">
+        {{-- Categories --}}
+        <section class="x-container">
+            <h2 class="x-section-title">Kategori</h2>
+            <div class="mt-3.5 grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7">
+                @foreach ($categories as $category)
+                    <a href="{{ route('shop.index', ['category' => $category->slug]) }}" class="x-card group flex flex-col items-center gap-2 p-3 text-center transition hover:-translate-y-0.5 hover:shadow-md">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-base font-semibold text-amber-600 transition group-hover:bg-amber-600 group-hover:text-white dark:text-amber-400">{{ strtoupper(mb_substr($category->name, 0, 1)) }}</span>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-200">{{ $category->name }}</span>
+                    </a>
+                @endforeach
+            </div>
+        </section>
 
-    {{-- Builder CTA --}}
-    <section class="x-container py-6">
-        <div class="overflow-hidden rounded-3xl bg-gradient-to-r from-kee-500 to-kee-600 p-1">
-            <div class="grid gap-6 rounded-[calc(1.5rem-1px)] bg-gray-950 p-8 md:grid-cols-[1fr_auto] md:items-center">
-                <div>
-                    <h2 class="text-2xl font-bold text-white">Bingung memilih komponen?</h2>
-                    <p class="mt-2 text-gray-400">Masukkan budget dan kebutuhanmu — sistem cek kompatibilitas otomatis dan hitung daya real-time.</p>
+        {{-- Builder CTA --}}
+        <section class="x-container">
+            <div class="overflow-hidden rounded-3xl bg-gradient-to-r from-kee-500 to-kee-600 p-1">
+                <div class="grid gap-4 rounded-[calc(1.5rem-1px)] bg-gray-950 p-6 md:grid-cols-[1fr_auto] md:items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Bingung memilih komponen?</h2>
+                        <p class="mt-1.5 text-gray-400">Masukkan budget dan kebutuhanmu — sistem cek kompatibilitas otomatis dan hitung daya real-time.</p>
+                    </div>
+                    <a href="{{ route('builder.index') }}" class="x-btn-primary w-fit whitespace-nowrap">Buat Build PC →</a>
                 </div>
-                <a href="{{ route('builder.index') }}" class="x-btn-primary w-fit whitespace-nowrap">Buat Build PC →</a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    {{-- Best Seller --}}
-    @if ($bestSellers->isNotEmpty())
-        <section class="x-container py-10">
-            <div class="flex items-center justify-between">
-                <h2 class="x-section-title">Best Seller</h2>
-                <a href="{{ route('shop.index') }}" class="text-sm font-semibold text-kee-600 hover:underline dark:text-kee-400">Lihat semua →</a>
-            </div>
-            <div class="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                @foreach ($bestSellers as $product)
+        {{-- Best Seller --}}
+        @if ($bestSellers->isNotEmpty())
+            <section class="x-container">
+                <div class="flex items-center justify-between">
+                    <h2 class="x-section-title">Best Seller</h2>
+                    <a href="{{ route('shop.index') }}" class="text-sm font-semibold text-kee-600 hover:underline dark:text-kee-400">Lihat semua →</a>
+                </div>
+                <div class="mt-3.5 grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-4">
+                    @foreach ($bestSellers as $product)
+                        <x-product-card :product="$product" />
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        {{-- Newest --}}
+        <section class="x-container">
+            <h2 class="x-section-title">Produk Terbaru</h2>
+            <div class="mt-3.5 grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-4">
+                @foreach ($newest as $product)
                     <x-product-card :product="$product" />
                 @endforeach
             </div>
         </section>
-    @endif
 
-    {{-- Newest --}}
-    <section class="x-container py-10">
-        <h2 class="x-section-title">Produk Terbaru</h2>
-        <div class="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            @foreach ($newest as $product)
-                <x-product-card :product="$product" />
-            @endforeach
-        </div>
-    </section>
-
-    {{-- Service CTA --}}
-    <section class="x-container py-10">
-        <div class="x-card grid gap-6 p-8 md:grid-cols-[1fr_auto] md:items-center">
-            <div>
-                <h2 class="x-section-title">Punya PC bermasalah?</h2>
-                <p class="mt-2 text-gray-600 dark:text-gray-400">Service PC, rakit PC, cleaning, thermal paste, install Windows — dikerjakan teknisi berpengalaman dengan QC menyeluruh.</p>
+        {{-- Service CTA --}}
+        <section class="x-container">
+            <div class="x-card grid gap-4 p-6 md:grid-cols-[1fr_auto] md:items-center">
+                <div>
+                    <h2 class="x-section-title">Punya PC bermasalah?</h2>
+                    <p class="mt-1.5 text-gray-600 dark:text-gray-400">Service PC, rakit PC, cleaning, thermal paste, install Windows — dikerjakan teknisi berpengalaman dengan QC menyeluruh.</p>
+                </div>
+                <a href="{{ route('service.create') }}" class="x-btn-dark w-fit whitespace-nowrap">Request Service</a>
             </div>
-            <a href="{{ route('service.create') }}" class="x-btn-dark w-fit whitespace-nowrap">Request Service</a>
-        </div>
-    </section>
+        </section>
+    </div>
 </div>
 @endsection
