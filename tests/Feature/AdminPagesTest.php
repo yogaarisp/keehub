@@ -3,9 +3,14 @@
 namespace Tests\Feature;
 
 use App\Filament\Pages\Reports;
+use App\Filament\Widgets\LowStock;
+use App\Filament\Widgets\RecentOrders;
+use App\Filament\Widgets\RecentServices;
+use App\Filament\Widgets\StatsOverview;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Customer;
+use App\Models\Inventory;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\QcRecord;
@@ -148,5 +153,61 @@ class AdminPagesTest extends TestCase
             ->test(Reports::class)
             ->callAction('export_excel')
             ->assertSuccessful();
+    }
+
+    public function test_dashboard_widgets_render_with_records(): void
+    {
+        $admin = User::factory()->create(['role' => 'owner']);
+        $brand = Brand::factory()->create();
+        $category = Category::factory()->create();
+        $customer = Customer::factory()->create();
+        $product = Product::factory()->create(['brand_id' => $brand->id, 'category_id' => $category->id]);
+
+        Inventory::query()->updateOrCreate(
+            ['product_id' => $product->id],
+            ['current_stock' => 1, 'min_stock' => 5],
+        );
+
+        $order = Order::query()->create([
+            'code' => 'ORD-DASH-001',
+            'customer_id' => $customer->id,
+            'type' => 'product',
+            'channel' => 'admin',
+            'status' => 'pending',
+            'subtotal' => 250000,
+            'discount' => 0,
+            'shipping_cost' => 0,
+            'total' => 250000,
+            'shipping_name' => $customer->name,
+            'shipping_phone' => $customer->whatsapp,
+        ]);
+
+        $service = Service::query()->create([
+            'code' => 'SVC-DASH-001',
+            'invoice_number' => 'INV-SVC-DASH-001',
+            'customer_id' => $customer->id,
+            'device_name' => 'PC Workstation Test',
+            'service_type' => 'troubleshooting',
+            'status' => 'processing',
+        ]);
+
+        Livewire::actingAs($admin)
+            ->test(StatsOverview::class)
+            ->assertSee('Penjualan Hari Ini')
+            ->assertSee('Pesanan Hari Ini')
+            ->assertSee('Servis Aktif')
+            ->assertSee('Stok Menipis');
+
+        Livewire::actingAs($admin)
+            ->test(RecentOrders::class)
+            ->assertCanSeeTableRecords([$order]);
+
+        Livewire::actingAs($admin)
+            ->test(LowStock::class)
+            ->assertSee($product->name);
+
+        Livewire::actingAs($admin)
+            ->test(RecentServices::class)
+            ->assertCanSeeTableRecords([$service]);
     }
 }

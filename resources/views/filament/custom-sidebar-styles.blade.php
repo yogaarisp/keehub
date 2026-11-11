@@ -1302,17 +1302,17 @@
             font-size: 0.78rem !important;
         }
 
-        /* Column 1: No. Servis (52%) */
-        .fi-ta-table th:first-child,
-        .fi-ta-table td:first-child {
+        /* Column 1: Primary column in resource tables with row actions (52%) */
+        .fi-ta-table:has(.fi-ta-actions-cell) th:first-child,
+        .fi-ta-table:has(.fi-ta-actions-cell) td:first-child {
             width: 52% !important;
             max-width: 52% !important;
             overflow: hidden !important;
         }
 
         /* Column 2: Status & Biaya (34%) */
-        .fi-ta-table th.fi-ta-col-status,
-        .fi-ta-table td.fi-ta-col-status {
+        .fi-ta-table:has(.fi-ta-actions-cell) th.fi-ta-col-status,
+        .fi-ta-table:has(.fi-ta-actions-cell) td.fi-ta-col-status {
             width: 34% !important;
             max-width: 34% !important;
             text-align: right !important;
@@ -1341,12 +1341,17 @@
         }
 
         /* Actions Column (14%) */
-        .fi-ta-table th:last-child,
-        .fi-ta-table td:last-child {
+        .fi-ta-table:has(.fi-ta-actions-cell) th:last-child,
+        .fi-ta-table:has(.fi-ta-actions-cell) td:last-child {
             width: 14% !important;
             max-width: 14% !important;
             text-align: right !important;
             padding-right: 0.35rem !important;
+        }
+
+        /* Dashboard widget tables: auto balanced widths without squishing last column */
+        .fi-wi-table .fi-ta-table {
+            table-layout: auto !important;
         }
 
         /* Table header cells: prevent wrapping */
@@ -1927,6 +1932,13 @@
        DESKTOP CENTERED MODAL POPUP (>= 1024px)
        ======================================================== */
     @media (min-width: 1024px) {
+        .fi-main {
+            padding-left: 1.75rem !important;
+            padding-right: 1.75rem !important;
+            padding-top: 1.25rem !important;
+            padding-bottom: 2rem !important;
+        }
+
         .fi-mobile-bottom-nav {
             display: none !important;
         }

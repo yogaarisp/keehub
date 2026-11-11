@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Dashboard;
 use App\Filament\Widgets\LowStock;
 use App\Filament\Widgets\RecentOrders;
+use App\Filament\Widgets\RecentServices;
 use App\Filament\Widgets\StatsOverview;
 use App\Http\Middleware\EnsureAdminAccess;
 use App\Models\Setting;
@@ -17,6 +18,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -45,6 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.5rem')
             ->favicon(fn () => Setting::faviconUrl())
             ->darkMode(true)
+            ->maxContentWidth(MaxWidth::Full)
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('14rem')
             ->collapsedSidebarWidth('4.5rem')
@@ -94,6 +97,7 @@ class AdminPanelProvider extends PanelProvider
                 StatsOverview::class,
                 RecentOrders::class,
                 LowStock::class,
+                RecentServices::class,
             ])
             ->middleware([
                 EncryptCookies::class,
