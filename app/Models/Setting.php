@@ -50,7 +50,7 @@ class Setting extends Model
     {
         $background = static::get('hero_background');
         if ($background && Storage::disk('public')->exists($background)) {
-            return Storage::disk('public')->url($background);
+            return '/storage/'.ltrim($background, '/');
         }
 
         return null;

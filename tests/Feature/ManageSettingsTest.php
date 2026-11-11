@@ -123,7 +123,7 @@ class ManageSettingsTest extends TestCase
 
         $this->assertNotEmpty($savedPath);
         Storage::disk('public')->assertExists($savedPath);
-        $this->assertSame(Storage::disk('public')->url($savedPath), Setting::heroBackgroundUrl());
+        $this->assertSame('/storage/'.ltrim($savedPath, '/'), Setting::heroBackgroundUrl());
 
         $this->get('/')
             ->assertSuccessful()

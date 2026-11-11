@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
+use Filament\Actions\Action;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
@@ -93,6 +94,16 @@ class ManageSettings extends Page implements HasForms
         return auth()->user()?->role === 'owner';
     }
 
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('save')
+                ->label('Simpan Pengaturan')
+                ->icon('heroicon-m-check')
+                ->action('save'),
+        ];
+    }
+
     public function form(Form $form): Form
     {
         return $form
@@ -131,7 +142,7 @@ class ManageSettings extends Page implements HasForms
                                     ->directory('settings')
                                     ->visibility('public')
                                     ->maxSize(4096)
-                                    ->helperText('Opsional. Gambar latar banner hero di halaman depan toko (rekomendasi rasio lebar 1920x700px, maks 4MB). Kosongkan atau hapus untuk kembali ke gradient default.'),
+                                    ->helperText('Opsional. Gambar latar banner hero di halaman depan toko (rekomendasi 1920x700px, maks 4MB). Setelah status Upload complete muncul, klik tombol Simpan Pengaturan untuk menerapkan.'),
 
                                 Grid::make(['default' => 1, 'md' => 2])->schema([
                                     TextInput::make('store_name')
