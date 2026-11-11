@@ -8,43 +8,43 @@
         <img src="{{ \App\Models\Setting::logoUrl() }}" alt="{{ \App\Models\Setting::get('store_name', 'KeeHub') }}" class="h-9 w-9 object-contain">
         @php $currentStoreName = \App\Models\Setting::get('store_name', 'KeeHub'); @endphp
         @if ($currentStoreName === 'KeeHub')
-            <span class="text-lg font-extrabold tracking-tight">Kee<span class="text-kee-500">Hub</span></span>
+            <span class="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100">Kee<span class="text-amber-600 dark:text-amber-400">Hub</span></span>
         @else
-            <span class="text-lg font-extrabold tracking-tight">{{ $currentStoreName }}</span>
+            <span class="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100">{{ $currentStoreName }}</span>
         @endif
     </a>
 
     <nav class="hidden items-center gap-1 lg:flex">
-        <a href="{{ route('home') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Home</a>
+        <a href="{{ route('home') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">Home</a>
         <div class="relative" x-data="{ open: false }" @mouseleave="open = false">
-            <a href="{{ route('shop.index') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800" @mouseenter="open = true">Shop</a>
-            <div x-show="open" x-cloak class="absolute left-0 top-full grid w-[32rem] grid-cols-3 gap-1 rounded-2xl border border-gray-100 bg-white p-3 shadow-xl dark:border-gray-800 dark:bg-gray-900">
+            <a href="{{ route('shop.index') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white" @mouseenter="open = true">Shop</a>
+            <div x-show="open" x-cloak class="absolute left-0 top-full grid w-[32rem] grid-cols-3 gap-1 rounded-2xl border border-slate-100 bg-white p-3 shadow-xl dark:border-slate-800 dark:bg-slate-900">
                 @foreach ($categories as $category)
-                    <a href="{{ route('shop.index', ['category' => $category->slug]) }}" class="rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">{{ $category->name }}</a>
+                    <a href="{{ route('shop.index', ['category' => $category->slug]) }}" class="rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">{{ $category->name }}</a>
                 @endforeach
             </div>
         </div>
-        <a href="{{ route('builder.index') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">PC Builder</a>
-        <a href="{{ route('rakitan.index') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">PC Rakitan</a>
-        <a href="{{ route('service.create') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">Service</a>
+        <a href="{{ route('builder.index') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">PC Builder</a>
+        <a href="{{ route('rakitan.index') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">PC Rakitan</a>
+        <a href="{{ route('service.create') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">Service</a>
     </nav>
 
     <div class="flex items-center gap-2">
-        <button x-on:click="dark = !dark" class="rounded-xl p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800" aria-label="Toggle dark mode">
+        <button x-on:click="dark = !dark" class="rounded-xl p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200" aria-label="Toggle dark mode">
             <svg x-show="!dark" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
             <svg x-show="dark" x-cloak class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
         </button>
 
         @auth
-            <a href="{{ route('account.dashboard') }}" class="hidden rounded-xl p-2 text-gray-600 hover:bg-gray-100 sm:block dark:text-gray-400 dark:hover:bg-gray-800" aria-label="Account">
+            <a href="{{ route('account.dashboard') }}" class="hidden rounded-xl p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 sm:block dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200" aria-label="Account">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             </a>
         @endauth
 
-        <a href="{{ route('cart.index') }}" class="relative rounded-xl p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800" aria-label="Cart">
+        <a href="{{ route('cart.index') }}" class="relative rounded-xl p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200" aria-label="Cart">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             @if (($cartCount = \App\Services\CartService::count()) > 0)
-                <span class="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-kee-500 px-1 text-[10px] font-bold text-gray-950">{{ $cartCount }}</span>
+                <span class="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-600 px-1 text-[10px] font-semibold text-white">{{ $cartCount }}</span>
             @endif
         </a>
 

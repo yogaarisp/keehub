@@ -11,7 +11,7 @@
                 <span class="rounded bg-gray-100 px-2 py-0.5 font-mono text-xs font-bold text-gray-700 dark:bg-gray-800 dark:text-gray-300">{{ $build->code }}</span>
                 <span class="text-xs text-gray-400">• Build Publik</span>
             </div>
-            <h1 class="mt-1 text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">{{ $build->name ?: 'Rakitan PC '.$build->code }}</h1>
+            <h1 class="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl dark:text-slate-100">{{ $build->name ?: 'Rakitan PC '.$build->code }}</h1>
             <p class="mt-1 text-xs sm:text-sm text-gray-500">
                 @if ($build->purpose) Kebutuhan: <span class="font-semibold text-gray-700 dark:text-gray-300 capitalize">{{ $build->purpose }}</span> • @endif
                 Disusun via KeeHub PC Builder

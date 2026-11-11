@@ -92,8 +92,8 @@ $slotMeta = [
                     <span>•</span>
                     <span x-text="selectedCount + ' / ' + totalSlots + ' Komponen'"></span>
                 </div>
-                <h1 class="mt-1 text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">PC Builder</h1>
-                <p class="mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400">Susun spesifikasi PC impianmu — kompatibilitas & kalkulasi watt dicek realtime.</p>
+                <h1 class="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl dark:text-slate-100">PC Builder</h1>
+                <p class="mt-1 text-xs sm:text-sm text-slate-500 dark:text-slate-400">Susun spesifikasi PC impianmu — kompatibilitas & kalkulasi watt dicek realtime.</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
@@ -129,18 +129,18 @@ $slotMeta = [
         <div class="x-card p-4 sm:p-5">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-kee-500/20 text-[11px] font-extrabold text-kee-600 dark:text-kee-400">1</span>
-                    <h2 class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Tujuan Penggunaan</h2>
+                    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/15 text-[11px] font-semibold text-amber-600 dark:text-amber-400">1</span>
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tujuan Penggunaan</h2>
                 </div>
-                <span class="text-[11px] text-gray-400" x-text="purpose ? purpose.toUpperCase() : 'Bebas'"></span>
+                <span class="text-[11px] text-slate-400" x-text="purpose ? purpose.toUpperCase() : 'Bebas'"></span>
             </div>
 
             <div class="mt-3 flex flex-wrap gap-1.5 sm:gap-2">
                 @foreach ($purposes as $p)
                     <button type="button" x-on:click="purpose = '{{ $p }}'; refresh()"
                             x-bind:class="purpose === '{{ $p }}'
-                                ? 'bg-kee-500 text-gray-800 font-semibold shadow-sm shadow-kee-500/20'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'"
+                                ? 'bg-amber-600 text-white font-semibold shadow-sm shadow-amber-600/20'
+                                : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'"
                             class="rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition">
                         {{ $p }}
                     </button>
@@ -162,8 +162,8 @@ $slotMeta = [
                 @foreach ([5000000, 7000000, 10000000, 15000000, 20000000] as $b)
                     <button type="button" x-on:click="budget = {{ $b }}; refresh()"
                             x-bind:class="budget === {{ $b }}
-                                ? 'bg-kee-500 text-gray-800 font-semibold shadow-sm shadow-kee-500/20'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'"
+                                ? 'bg-amber-600 text-white font-semibold shadow-sm shadow-amber-600/20'
+                                : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'"
                             class="rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-medium transition">
                         Rp{{ number_format($b / 1000000, 0) }}jt
                     </button>
@@ -240,7 +240,7 @@ $slotMeta = [
                             {{-- When NOT selected --}}
                             <button type="button" x-show="!items['{{ $slot }}']"
                                     x-on:click="openPicker('{{ $slot }}', '{{ $meta['name'] }}')"
-                                    class="inline-flex items-center gap-1.5 rounded-xl bg-kee-500 px-3 py-1.5 text-xs font-semibold text-gray-800 transition hover:bg-kee-400 hover:text-gray-900 active:scale-95 shadow-sm shadow-kee-500/20">
+                                    class="inline-flex items-center gap-1.5 rounded-xl bg-amber-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-amber-500 active:scale-95 shadow-sm shadow-amber-600/15">
                                 <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                                 <span>Pilih</span>
                             </button>
@@ -383,18 +383,18 @@ $slotMeta = [
                     <span x-show="compatibility.overall === 'warning'" x-cloak class="inline-block h-2 w-2 rounded-full bg-amber-500"></span>
                     <span x-show="compatibility.overall === 'incompatible'" x-cloak class="inline-block h-2 w-2 rounded-full bg-rose-500"></span>
                 </div>
-                <p class="truncate text-base font-extrabold text-kee-600 dark:text-kee-400" x-text="'Rp ' + total.toLocaleString('id-ID')"></p>
+                <p class="truncate text-base font-bold tabular-nums text-amber-600 dark:text-amber-400" x-text="'Rp ' + total.toLocaleString('id-ID')"></p>
             </div>
 
             <div class="flex items-center gap-2 shrink-0">
                 <button type="button" x-on:click="summarySheetOpen = true"
-                        class="inline-flex items-center gap-1 rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-bold text-gray-800 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-                    <svg class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+                        class="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                    <svg class="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
                     <span>Detail</span>
                 </button>
 
                 <button type="button" x-on:click="addToCart()" x-show="isLoggedIn" x-bind:disabled="selectedCount === 0"
-                        class="inline-flex items-center gap-1 rounded-xl bg-kee-500 px-3.5 py-2 text-xs font-semibold text-gray-800 hover:bg-kee-400 hover:text-gray-900 disabled:opacity-40">
+                        class="inline-flex items-center gap-1 rounded-xl bg-amber-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-amber-500 disabled:opacity-40">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                     <span>+ Cart</span>
                 </button>
@@ -496,10 +496,10 @@ $slotMeta = [
                                         </div>
                                     </div>
 
-                                    <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0 border-t border-gray-100 pt-2.5 sm:border-0 sm:pt-0 dark:border-gray-800">
-                                        <span class="text-base font-extrabold text-kee-600 dark:text-kee-400" x-text="'Rp ' + product.price.toLocaleString('id-ID')"></span>
+                                    <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0 border-t border-slate-100 pt-2.5 sm:border-0 sm:pt-0 dark:border-slate-800">
+                                        <span class="text-base font-semibold tabular-nums text-amber-600 dark:text-amber-400" x-text="'Rp ' + product.price.toLocaleString('id-ID')"></span>
                                         <button type="button" x-on:click="choose(picker.slot, product)"
-                                                class="inline-flex items-center justify-center rounded-xl bg-kee-500 px-4 py-1.5 text-xs font-semibold text-gray-800 transition hover:bg-kee-400 hover:text-gray-900 active:scale-95 shadow-sm shadow-kee-500/20">
+                                                class="inline-flex items-center justify-center rounded-xl bg-amber-600 px-4 py-1.5 text-xs font-medium text-white transition hover:bg-amber-500 active:scale-95 shadow-sm shadow-amber-600/15">
                                             Pilih Ini
                                         </button>
                                     </div>

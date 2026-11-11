@@ -12,9 +12,9 @@
                 class="w-full h-full object-contain"
             >
         </div>
-        <span class="text-sm font-bold text-slate-900 dark:text-white tracking-tight leading-none truncate max-w-[110px] sm:max-w-none">
+        <span class="text-sm font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-none truncate max-w-[110px] sm:max-w-none">
             @if ($storeName === 'KeeHub')
-                Kee<span class="text-amber-500 font-extrabold">Hub</span>
+                Kee<span class="text-amber-600 dark:text-amber-400">Hub</span>
             @else
                 {{ $storeName }}
             @endif
@@ -23,9 +23,9 @@
 
     {{-- Desktop Breadcrumb / System Context Indicator --}}
     <div class="hidden lg:flex items-center gap-2 text-xs">
-        <span class="font-semibold text-slate-800 dark:text-slate-100 tracking-tight">{{ \App\Models\Setting::get('store_name', 'KeeHub') }} Admin</span>
+        <span class="font-semibold text-slate-800 dark:text-slate-100 tracking-tight">{{ \App\Models\Setting::get('store_name', 'KeeHub') }}</span>
         <span class="text-slate-300 dark:text-slate-600">/</span>
-        <span class="text-slate-500 dark:text-slate-400 font-medium">Dashboard</span>
+        <span class="text-slate-500 dark:text-slate-400 font-medium">Admin Panel</span>
     </div>
 
     {{-- Live System Status Pill (Hidden on small mobile to prevent topbar overflow) --}}

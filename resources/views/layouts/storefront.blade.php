@@ -13,12 +13,12 @@
     <meta name="description" content="@yield('meta_description', 'KeeHub — toko PC parts, PC builder, PC rakitan, dan IT service. Build Your PC. Your Way.')">
     @stack('meta')
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-50 font-sans text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100">
+<body class="bg-slate-50 font-sans text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100">
     <div class="flex min-h-screen flex-col">
-        <header class="sticky top-0 z-40 border-b border-gray-100 bg-white/90 backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
+        <header class="sticky top-0 z-40 border-b border-slate-200/70 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
             @include('shop.partials.navbar')
         </header>
 
@@ -26,7 +26,7 @@
             @yield('content')
         </main>
 
-        <footer class="border-t border-gray-100 bg-white dark:border-gray-800 dark:bg-gray-950">
+        <footer class="border-t border-slate-200/70 bg-white dark:border-slate-800 dark:bg-slate-950">
             @include('shop.partials.footer')
         </footer>
 

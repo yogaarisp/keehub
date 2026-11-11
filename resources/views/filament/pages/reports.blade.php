@@ -7,24 +7,24 @@
 
         <div class="grid gap-3 grid-cols-2 sm:gap-4 lg:grid-cols-5">
             <x-filament::card>
-                <p class="text-[10px] sm:text-xs font-semibold uppercase text-gray-500">Pendapatan</p>
-                <p class="text-base sm:text-xl font-black text-success-600 break-all">Rp{{ number_format($this->getSummary()['revenue'], 0, ',', '.') }}</p>
+                <p class="text-[10px] sm:text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Pendapatan</p>
+                <p class="mt-1 text-base sm:text-xl font-bold tabular-nums text-emerald-600 dark:text-emerald-400 break-all">Rp{{ number_format($this->getSummary()['revenue'], 0, ',', '.') }}</p>
             </x-filament::card>
             <x-filament::card>
-                <p class="text-[10px] sm:text-xs font-semibold uppercase text-gray-500">Orders</p>
-                <p class="text-base sm:text-xl font-black">{{ $this->getSummary()['orders'] }}</p>
+                <p class="text-[10px] sm:text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Orders</p>
+                <p class="mt-1 text-base sm:text-xl font-bold tabular-nums text-slate-900 dark:text-slate-100">{{ $this->getSummary()['orders'] }}</p>
             </x-filament::card>
             <x-filament::card>
-                <p class="text-[10px] sm:text-xs font-semibold uppercase text-gray-500">Nilai Order</p>
-                <p class="text-base sm:text-xl font-black break-all">Rp{{ number_format($this->getSummary()['order_value'], 0, ',', '.') }}</p>
+                <p class="text-[10px] sm:text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Nilai Order</p>
+                <p class="mt-1 text-base sm:text-xl font-bold tabular-nums text-slate-900 dark:text-slate-100 break-all">Rp{{ number_format($this->getSummary()['order_value'], 0, ',', '.') }}</p>
             </x-filament::card>
             <x-filament::card>
-                <p class="text-[10px] sm:text-xs font-semibold uppercase text-gray-500">Service</p>
-                <p class="text-base sm:text-xl font-black">{{ $this->getSummary()['services'] }}</p>
+                <p class="text-[10px] sm:text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Service</p>
+                <p class="mt-1 text-base sm:text-xl font-bold tabular-nums text-slate-900 dark:text-slate-100">{{ $this->getSummary()['services'] }}</p>
             </x-filament::card>
             <x-filament::card>
-                <p class="text-[10px] sm:text-xs font-semibold uppercase text-gray-500">Piutang</p>
-                <p class="text-base sm:text-xl font-black text-danger-600 break-all">Rp{{ number_format($this->getSummary()['unpaid'], 0, ',', '.') }}</p>
+                <p class="text-[10px] sm:text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Piutang</p>
+                <p class="mt-1 text-base sm:text-xl font-bold tabular-nums text-rose-600 dark:text-rose-400 break-all">Rp{{ number_format($this->getSummary()['unpaid'], 0, ',', '.') }}</p>
             </x-filament::card>
         </div>
 

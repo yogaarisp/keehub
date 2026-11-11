@@ -54,21 +54,21 @@
         {{-- Info --}}
         <div>
             <div class="flex flex-wrap items-center gap-2">
-                <span class="x-badge bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">{{ $product->brand?->name ?? '-' }}</span>
+                <span class="x-badge bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ $product->brand?->name ?? '-' }}</span>
                 @if ($product->sold_count >= 10)
-                    <span class="x-badge bg-kee-500 text-gray-950">Best Seller</span>
+                    <span class="x-badge bg-amber-600 text-white">Best Seller</span>
                 @endif
                 @if ($product->stockStatus() === 'low_stock')
-                    <span class="x-badge bg-orange-500 text-white">Low Stock</span>
+                    <span class="x-badge bg-orange-600 text-white">Low Stock</span>
                 @elseif ($product->stockStatus() === 'out_of_stock')
-                    <span class="x-badge bg-gray-900 text-white">Out of Stock</span>
+                    <span class="x-badge bg-slate-900 text-white">Out of Stock</span>
                 @endif
             </div>
 
-            <h1 class="mt-3 text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl dark:text-white">{{ $product->name }}</h1>
-            <p class="mt-1 text-sm text-gray-400">SKU: {{ $product->sku }}</p>
+            <h1 class="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">{{ $product->name }}</h1>
+            <p class="mt-1 text-sm text-slate-400">SKU: {{ $product->sku }}</p>
 
-            <p class="mt-4 text-3xl font-extrabold text-kee-600 dark:text-kee-400">Rp{{ number_format($product->price, 0, ',', '.') }}</p>
+            <p class="mt-4 text-3xl font-bold tabular-nums text-amber-600 dark:text-amber-400">Rp{{ number_format($product->price, 0, ',', '.') }}</p>
 
             @if ($product->inventory && $product->inventory->current_stock > 0)
                 <p class="mt-1 text-sm text-green-600 dark:text-green-400">Stok tersedia: {{ $product->inventory->current_stock }}</p>

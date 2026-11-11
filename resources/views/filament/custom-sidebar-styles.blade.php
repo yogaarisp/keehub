@@ -4,11 +4,15 @@
        ======================================================== */
 
     /* Typography & Base */
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+    .fi-body,
     .fi-sidebar,
-    .fi-sidebar * {
-        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+    .fi-sidebar *,
+    .fi-topbar,
+    .fi-main {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+        font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     }
 
     /* Sidebar Shell & Backdrop */
@@ -971,9 +975,15 @@
         .fi-wi-stats-overview-stat {
             padding: 0.75rem !important;
         }
-        .fi-wi-stats-overview-stat-label,
+        .fi-wi-stats-overview-stat-label {
+            font-size: 0.75rem !important;
+            font-weight: 500 !important;
+        }
         .fi-wi-stats-overview-stat-value {
-            font-size: 0.85rem !important;
+            font-size: 1.125rem !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.02em !important;
+            font-variant-numeric: tabular-nums !important;
         }
 
         /* Dashboard widgets: tighter gap */
@@ -1004,8 +1014,8 @@
 
         .fi-header-heading {
             font-size: 1.25rem !important;
-            font-weight: 800 !important;
-            letter-spacing: -0.025em !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.02em !important;
             line-height: 1.25 !important;
             margin: 0 !important;
             word-break: break-word !important;
@@ -1317,8 +1327,9 @@
 
         .fi-ta-col-status .fi-ta-text-item-description {
             display: block !important;
-            font-weight: 800 !important;
+            font-weight: 600 !important;
             font-size: 0.775rem !important;
+            font-variant-numeric: tabular-nums !important;
             color: #d97706 !important;
             white-space: nowrap !important;
             line-height: 1.1 !important;
@@ -2142,17 +2153,18 @@
 
     .fi-bottom-nav-center span {
         font-size: 0.6875rem !important;
-        font-weight: 700 !important;
+        font-weight: 500 !important;
         line-height: 1 !important;
         margin-top: 0.25rem !important;
-        color: #1e293b !important;
+        color: #475569 !important;
     }
 
     .dark .fi-bottom-nav-center span {
-        color: #f1f5f9 !important;
+        color: #cbd5e1 !important;
     }
 
     .fi-bottom-nav-center.active span {
+        font-weight: 600 !important;
         color: #d97706 !important;
     }
 

@@ -11,10 +11,10 @@
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             Real-Time Service Tracker
         </div>
-        <h1 class="mt-4 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
+        <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
             Pantau Progres Servis PC Anda
         </h1>
-        <p class="mt-2 text-sm text-gray-600 sm:text-base dark:text-gray-400">
+        <p class="mt-2 text-sm text-slate-600 sm:text-base dark:text-slate-400">
             Ketahui status pengerjaan, hasil diagnosa hardware, dan riwayat perbaikan perangkat PC Anda secara transparan.
         </p>
 
@@ -92,7 +92,7 @@
                     <div class="flex flex-wrap gap-2">
                         @foreach ($services as $srv)
                             <a href="{{ route('service.index', ['q' => $search, 'code' => $srv->code]) }}"
-                               class="rounded-xl px-3.5 py-2 text-xs font-medium transition {{ $selectedService?->id === $srv->id ? 'bg-kee-500 text-gray-950 font-bold shadow-sm' : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800' }}">
+                               class="rounded-xl px-3.5 py-2 text-xs font-medium transition {{ $selectedService?->id === $srv->id ? 'bg-amber-600 text-white font-semibold shadow-sm' : 'bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800' }}">
                                 {{ $srv->code }} — {{ $srv->device_name ?: 'PC Unit' }}
                                 <span class="ml-1 opacity-75">({{ ucfirst($srv->status) }})</span>
                             </a>
@@ -189,45 +189,45 @@
                                     <div class="relative grid grid-cols-4 text-center">
                                         <!-- Step 1: Diterima -->
                                         <div class="flex flex-col items-center">
-                                            <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 transition {{ $currentStep >= 1 ? 'border-kee-500 bg-kee-500 text-gray-950 shadow-md ring-4 ring-kee-500/20' : 'border-gray-300 bg-white text-gray-400 dark:border-gray-700 dark:bg-gray-900' }}">
+                                            <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 transition {{ $currentStep >= 1 ? 'border-amber-600 bg-amber-600 text-white shadow-md ring-4 ring-amber-500/20' : 'border-slate-300 bg-white text-slate-400 dark:border-slate-700 dark:bg-slate-900' }}">
                                                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                                             </div>
-                                            <span class="mt-2.5 text-xs font-bold {{ $currentStep >= 1 ? 'text-gray-900 dark:text-white' : 'text-gray-400' }}">Diterima</span>
-                                            <span class="hidden text-[10px] text-gray-500 sm:block">Unit di workshop</span>
+                                            <span class="mt-2.5 text-xs font-semibold {{ $currentStep >= 1 ? 'text-slate-900 dark:text-slate-100' : 'text-slate-400' }}">Diterima</span>
+                                            <span class="hidden text-[10px] text-slate-500 sm:block">Unit di workshop</span>
                                         </div>
 
                                         <!-- Step 2: Pengecekan -->
                                         <div class="flex flex-col items-center">
-                                            <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 transition {{ $currentStep >= 2 ? 'border-kee-500 bg-kee-500 text-gray-950 shadow-md ring-4 ring-kee-500/20' : ($currentStep == 1 ? 'border-kee-500 bg-white text-kee-600 dark:bg-gray-900' : 'border-gray-300 bg-white text-gray-400 dark:border-gray-700 dark:bg-gray-900') }}">
+                                            <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 transition {{ $currentStep >= 2 ? 'border-amber-600 bg-amber-600 text-white shadow-md ring-4 ring-amber-500/20' : ($currentStep == 1 ? 'border-amber-500 bg-white text-amber-600 dark:bg-slate-900 dark:text-amber-400' : 'border-slate-300 bg-white text-slate-400 dark:border-slate-700 dark:bg-slate-900') }}">
                                                 @if ($currentStep >= 2)
                                                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                                                 @else
                                                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                                                 @endif
                                             </div>
-                                            <span class="mt-2.5 text-xs font-bold {{ $currentStep >= 2 ? 'text-gray-900 dark:text-white' : 'text-gray-400' }}">Pengecekan</span>
-                                            <span class="hidden text-[10px] text-gray-500 sm:block">Diagnosa hardware</span>
+                                            <span class="mt-2.5 text-xs font-semibold {{ $currentStep >= 2 ? 'text-slate-900 dark:text-slate-100' : 'text-slate-400' }}">Pengecekan</span>
+                                            <span class="hidden text-[10px] text-slate-500 sm:block">Diagnosa hardware</span>
                                         </div>
 
                                         <!-- Step 3: Proses Perbaikan -->
                                         <div class="flex flex-col items-center">
-                                            <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 transition {{ $currentStep >= 3 ? 'border-kee-500 bg-kee-500 text-gray-950 shadow-md ring-4 ring-kee-500/20' : ($currentStep == 2 ? 'border-kee-500 bg-white text-kee-600 dark:bg-gray-900' : 'border-gray-300 bg-white text-gray-400 dark:border-gray-700 dark:bg-gray-900') }}">
+                                            <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 transition {{ $currentStep >= 3 ? 'border-amber-600 bg-amber-600 text-white shadow-md ring-4 ring-amber-500/20' : ($currentStep == 2 ? 'border-amber-500 bg-white text-amber-600 dark:bg-slate-900 dark:text-amber-400' : 'border-slate-300 bg-white text-slate-400 dark:border-slate-700 dark:bg-slate-900') }}">
                                                 @if ($currentStep >= 3)
                                                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                                                 @else
                                                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                                                 @endif
                                             </div>
-                                            <span class="mt-2.5 text-xs font-bold {{ $currentStep >= 3 ? 'text-gray-900 dark:text-white' : 'text-gray-400' }}">Perbaikan</span>
-                                            <span class="hidden text-[10px] text-gray-500 sm:block">Ganti part & testing</span>
+                                            <span class="mt-2.5 text-xs font-semibold {{ $currentStep >= 3 ? 'text-slate-900 dark:text-slate-100' : 'text-slate-400' }}">Perbaikan</span>
+                                            <span class="hidden text-[10px] text-slate-500 sm:block">Ganti part & testing</span>
                                         </div>
 
                                         <!-- Step 4: Selesai -->
                                         <div class="flex flex-col items-center">
-                                            <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 transition {{ $currentStep >= 4 ? 'border-green-500 bg-green-500 text-white shadow-md ring-4 ring-green-500/20' : 'border-gray-300 bg-white text-gray-400 dark:border-gray-700 dark:bg-gray-900' }}">
+                                            <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 transition {{ $currentStep >= 4 ? 'border-emerald-600 bg-emerald-600 text-white shadow-md ring-4 ring-emerald-500/20' : 'border-slate-300 bg-white text-slate-400 dark:border-slate-700 dark:bg-slate-900' }}">
                                                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                             </div>
-                                            <span class="mt-2.5 text-xs font-bold {{ $currentStep >= 4 ? 'text-green-600 dark:text-green-400' : 'text-gray-400' }}">Selesai</span>
+                                            <span class="mt-2.5 text-xs font-semibold {{ $currentStep >= 4 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400' }}">Selesai</span>
                                             <span class="hidden text-[10px] text-gray-500 sm:block">Siap diambil / kirim</span>
                                         </div>
                                     </div>

@@ -16,22 +16,22 @@
 
         <div class="absolute left-2 top-2 flex flex-col gap-1">
             @if ($product->sold_count >= 10)
-                <span class="x-badge bg-kee-500 text-gray-950">Best Seller</span>
+                <span class="x-badge bg-amber-600 text-white shadow-sm">Best Seller</span>
             @endif
             @if ($stock === 'out_of_stock')
-                <span class="x-badge bg-gray-900 text-white">Out of Stock</span>
+                <span class="x-badge bg-slate-900/90 text-white">Out of Stock</span>
             @elseif ($stock === 'low_stock')
-                <span class="x-badge bg-orange-500 text-white">Low Stock</span>
+                <span class="x-badge bg-orange-600 text-white">Low Stock</span>
             @endif
         </div>
     </div>
 
     <div class="flex flex-1 flex-col gap-1 p-3.5">
-        <span class="text-[11px] font-medium uppercase tracking-wide text-gray-400">{{ $product->brand?->name ?? $product->category->name }}</span>
-        <h3 class="line-clamp-2 text-sm font-semibold text-gray-900 group-hover:text-kee-600 dark:text-white dark:group-hover:text-kee-400">{{ $product->name }}</h3>
+        <span class="text-[11px] font-medium uppercase tracking-wide text-slate-400">{{ $product->brand?->name ?? $product->category->name }}</span>
+        <h3 class="line-clamp-2 text-sm font-medium text-slate-800 group-hover:text-amber-600 dark:text-slate-100 dark:group-hover:text-amber-400">{{ $product->name }}</h3>
         <div class="mt-auto flex items-end justify-between pt-2">
-            <span class="text-base font-bold text-kee-600 dark:text-kee-400">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
-            <span class="x-badge {{ $stock === 'in_stock' ? 'bg-green-100 text-green-700' : '' }}">
+            <span class="text-base font-semibold tabular-nums text-amber-600 dark:text-amber-400">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+            <span class="x-badge {{ $stock === 'in_stock' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400' }}">
                 @if ($stock === 'in_stock') Stok @else {{ $stock === 'low_stock' ? 'Stok Low' : 'Habis' }} @endif
             </span>
         </div>

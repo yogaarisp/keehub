@@ -10,9 +10,9 @@
         <div class="pointer-events-none absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"></div>
         <div class="x-container relative grid gap-10 py-16 md:grid-cols-2 md:items-center md:py-24">
             <div>
-                <span class="x-badge bg-kee-500/15 text-kee-300">PC Parts • PC Builder • IT Service</span>
-                <h1 class="mt-4 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">Build Your PC.<br><span class="text-kee-400">Your Way.</span></h1>
-                <p class="mt-4 max-w-md text-base text-gray-300 sm:text-lg">Temukan komponen PC, buat PC rakitan sesuai budget, dan dapatkan bantuan dari tim KeeHub.</p>
+                <span class="x-badge bg-amber-500/15 text-amber-300">PC Parts • PC Builder • IT Service</span>
+                <h1 class="mt-4 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">Build Your PC.<br><span class="text-amber-400">Your Way.</span></h1>
+                <p class="mt-4 max-w-md text-base text-slate-300 sm:text-lg">Temukan komponen PC, buat PC rakitan sesuai budget, dan dapatkan bantuan dari tim KeeHub.</p>
                 <div class="mt-8 flex flex-wrap gap-3">
                     <a href="{{ route('builder.index') }}" class="x-btn-primary !px-6 !py-3">Mulai PC Builder</a>
                     <a href="{{ route('shop.index') }}" class="x-btn !bg-white/10 !text-white backdrop-blur hover:!bg-white/20">Belanja Part</a>
@@ -40,8 +40,8 @@
         <div class="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7">
             @foreach ($categories as $category)
                 <a href="{{ route('shop.index', ['category' => $category->slug]) }}" class="x-card group flex flex-col items-center gap-2 p-4 text-center transition hover:-translate-y-0.5 hover:shadow-md">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-kee-500/10 text-base font-bold text-kee-600 group-hover:bg-kee-500 group-hover:text-gray-950 dark:text-kee-400">{{ strtoupper(mb_substr($category->name, 0, 1)) }}</span>
-                    <span class="text-xs font-semibold text-gray-800 dark:text-gray-200">{{ $category->name }}</span>
+                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-base font-semibold text-amber-600 transition group-hover:bg-amber-600 group-hover:text-white dark:text-amber-400">{{ strtoupper(mb_substr($category->name, 0, 1)) }}</span>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-200">{{ $category->name }}</span>
                 </a>
             @endforeach
         </div>
