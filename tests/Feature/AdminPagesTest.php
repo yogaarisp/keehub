@@ -151,6 +151,10 @@ class AdminPagesTest extends TestCase
 
         Livewire::actingAs($admin)
             ->test(Reports::class)
+            ->call('applyPreset', 'today')
+            ->assertSet('activePreset', 'today')
+            ->call('applyFilter')
+            ->assertHasNoErrors()
             ->callAction('export_excel')
             ->assertSuccessful();
     }
@@ -163,7 +167,7 @@ class AdminPagesTest extends TestCase
         $customer = Customer::factory()->create();
         $product = Product::factory()->create(['brand_id' => $brand->id, 'category_id' => $category->id]);
 
-        Inventory::query()->updateOrCreate(
+        $inventory = Inventory::query()->updateOrCreate(
             ['product_id' => $product->id],
             ['current_stock' => 1, 'min_stock' => 5],
         );
@@ -204,7 +208,7 @@ class AdminPagesTest extends TestCase
 
         Livewire::actingAs($admin)
             ->test(LowStock::class)
-            ->assertSee($product->name);
+            ->assertCanSeeTableRecords([$inventory]);
 
         Livewire::actingAs($admin)
             ->test(RecentServices::class)

@@ -1489,9 +1489,8 @@
             -webkit-overflow-scrolling: touch !important;
         }
 
-        /* ---- Reports page: table scroll ---- */
-        .fi-page table {
-            display: block !important;
+        /* ---- Reports page: preserve table layout inside overflow wrapper ---- */
+        .fi-page .overflow-x-auto {
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch !important;
         }
