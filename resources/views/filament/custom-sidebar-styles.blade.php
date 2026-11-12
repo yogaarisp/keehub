@@ -1082,6 +1082,18 @@
             font-size: 0.75rem !important;
         }
 
+        /* Infolist repeatable cards & entry wrapping on mobile */
+        .fi-in-repeatable-item {
+            padding: 0.75rem !important;
+            border-radius: 0.75rem !important;
+        }
+        .fi-in-entry-wrp,
+        .fi-in-entry-wrp-label,
+        .fi-in-text {
+            min-width: 0 !important;
+            word-break: break-word !important;
+        }
+
         /* ---- Repeater items: compact mobile card ---- */
         .fi-fo-repeater-item,
         .fi-repeater-item {

@@ -7,6 +7,7 @@ use App\Filament\Resources\OrderResource;
 use App\Models\Order;
 use App\Services\OrderService;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -39,6 +40,7 @@ class ViewOrder extends ViewRecord
     {
         return $infolist->schema([
             InfoSection::make()
+                ->compact()
                 ->schema([
                     TextEntry::make('status')
                         ->label('Status Pesanan')
@@ -47,19 +49,20 @@ class ViewOrder extends ViewRecord
                         ->color(fn (string $state): string => OrderResource::statusColor($state))
                         ->formatStateUsing(fn (string $state): string => OrderResource::statusLabel($state)),
 
+                    TextEntry::make('total')
+                        ->label('Total Pesanan')
+                        ->money('IDR')
+                        ->size(TextEntrySize::Large)
+                        ->weight('bold')
+                        ->color('success')
+                        ->extraAttributes(['class' => 'tabular-nums whitespace-nowrap']),
+
                     TextEntry::make('invoice.code')
                         ->label('No. Invoice')
                         ->placeholder('Belum terbit')
                         ->badge()
                         ->color('warning')
                         ->copyable(),
-
-                    TextEntry::make('total')
-                        ->label('Total Pesanan')
-                        ->money('IDR')
-                        ->size(TextEntrySize::Large)
-                        ->weight('bold')
-                        ->color('success'),
 
                     TextEntry::make('created_at')
                         ->label('Tanggal Pesanan')
@@ -79,12 +82,30 @@ class ViewOrder extends ViewRecord
                                     TextEntry::make('name')
                                         ->label('Nama Item')
                                         ->weight('semibold')
-                                        ->columnSpan(['default' => 2, 'sm' => 2, 'lg' => 2]),
+                                        ->columnSpan(['default' => 2, 'sm' => 4, 'lg' => 5]),
                                     TextEntry::make('item_type')
                                         ->label('Kategori')
                                         ->badge()
-                                        ->color(fn (string $state): string => $state === 'customer_owned' ? 'gray' : 'primary')
-                                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
+                                        ->formatStateUsing(fn (string $state): string => match ($state) {
+                                            'product' => 'Produk Toko',
+                                            'build' => 'PC Build',
+                                            'service' => 'Servis',
+                                            'labor' => 'Jasa / Pasang',
+                                            'customer_owned' => 'Milik Customer',
+                                            default => ucfirst(str_replace('_', ' ', $state)),
+                                        })
+                                        ->color(fn (string $state): string => match ($state) {
+                                            'customer_owned' => 'gray',
+                                            'build' => 'info',
+                                            'service', 'labor' => 'warning',
+                                            default => 'primary',
+                                        })
+                                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 2]),
+                                    TextEntry::make('price')
+                                        ->label('Harga')
+                                        ->money('IDR')
+                                        ->extraAttributes(['class' => 'tabular-nums'])
+                                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 2]),
                                     TextEntry::make('quantity')
                                         ->label('Qty')
                                         ->suffix('x')
@@ -93,10 +114,13 @@ class ViewOrder extends ViewRecord
                                         ->label('Subtotal')
                                         ->money('IDR')
                                         ->weight('bold')
-                                        ->columnSpan(['default' => 2, 'sm' => 2, 'lg' => 1]),
+                                        ->color('primary')
+                                        ->extraAttributes(['class' => 'tabular-nums'])
+                                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 2]),
                                 ])
-                                ->columns(['default' => 2, 'sm' => 2, 'lg' => 5])
-                                ->contained(false),
+                                ->columns(['default' => 2, 'sm' => 4, 'lg' => 12])
+                                ->contained(true)
+                                ->placeholder('Belum ada item dalam pesanan ini.'),
                         ]),
 
                     InfoSection::make('Pelanggan & Pengiriman')
@@ -110,6 +134,7 @@ class ViewOrder extends ViewRecord
                                 ->color(fn (Order $record): ?string => $record->customer ? 'primary' : null),
                             TextEntry::make('customer.whatsapp')
                                 ->label('WhatsApp')
+                                ->icon('heroicon-m-phone')
                                 ->placeholder('—')
                                 ->copyable(),
                             TextEntry::make('shipping_name')
@@ -117,7 +142,8 @@ class ViewOrder extends ViewRecord
                                 ->placeholder('—'),
                             TextEntry::make('shipping_phone')
                                 ->label('Telp Penerima')
-                                ->placeholder('—'),
+                                ->placeholder('—')
+                                ->copyable(),
                             TextEntry::make('shipping_address')
                                 ->label('Alamat Pengiriman')
                                 ->placeholder('Pickup di toko / tidak ada alamat')
@@ -136,18 +162,19 @@ class ViewOrder extends ViewRecord
                                         ->badge()
                                         ->color(fn (string $state): string => OrderResource::statusColor($state))
                                         ->formatStateUsing(fn (string $state): string => OrderResource::statusLabel($state)),
+                                    TextEntry::make('created_at')
+                                        ->label('Waktu')
+                                        ->dateTime('d M Y, H:i'),
                                     TextEntry::make('user.name')
                                         ->label('Oleh')
                                         ->placeholder('System'),
-                                    TextEntry::make('created_at')
-                                        ->label('Waktu')
-                                        ->dateTime('d M Y H:i'),
                                     TextEntry::make('notes')
                                         ->label('Catatan')
                                         ->placeholder('—'),
                                 ])
-                                ->columns(['default' => 1, 'sm' => 2, 'lg' => 4])
-                                ->contained(false),
+                                ->columns(['default' => 2, 'sm' => 2, 'lg' => 4])
+                                ->contained(true)
+                                ->placeholder('Belum ada riwayat perubahan status.'),
                         ])
                         ->collapsible(),
                 ])->columnSpan(['default' => 1, 'lg' => 8]),
@@ -158,21 +185,30 @@ class ViewOrder extends ViewRecord
                         ->schema([
                             TextEntry::make('subtotal')
                                 ->label('Subtotal Item')
-                                ->money('IDR'),
+                                ->money('IDR')
+                                ->inlineLabel()
+                                ->extraAttributes(['class' => 'tabular-nums justify-end']),
                             TextEntry::make('discount')
                                 ->label('Potongan Diskon')
-                                ->money('IDR'),
+                                ->money('IDR')
+                                ->inlineLabel()
+                                ->color(fn ($state): ?string => (int) $state > 0 ? 'danger' : null)
+                                ->extraAttributes(['class' => 'tabular-nums justify-end']),
                             TextEntry::make('shipping_cost')
                                 ->label('Biaya Kirim')
-                                ->money('IDR'),
+                                ->money('IDR')
+                                ->inlineLabel()
+                                ->extraAttributes(['class' => 'tabular-nums justify-end']),
                             TextEntry::make('total')
                                 ->label('Total Tagihan')
                                 ->money('IDR')
+                                ->inlineLabel()
                                 ->weight('bold')
                                 ->size(TextEntrySize::Large)
-                                ->color('success'),
+                                ->color('success')
+                                ->extraAttributes(['class' => 'tabular-nums justify-end']),
                         ])
-                        ->columns(['default' => 2, 'lg' => 1]),
+                        ->columns(1),
 
                     InfoSection::make('Info Tambahan')
                         ->icon('heroicon-o-information-circle')
@@ -185,7 +221,13 @@ class ViewOrder extends ViewRecord
                                 ->label('Saluran')
                                 ->badge()
                                 ->color('gray')
-                                ->formatStateUsing(fn (?string $state): string => ucfirst((string) $state)),
+                                ->formatStateUsing(fn (?string $state): string => match ($state) {
+                                    'admin' => 'Admin POS',
+                                    'website' => 'Website',
+                                    'whatsapp' => 'WhatsApp',
+                                    'offline' => 'Toko Fisik',
+                                    default => ucfirst((string) $state),
+                                }),
                             TextEntry::make('notes')
                                 ->label('Catatan')
                                 ->placeholder('Tidak ada catatan.')
@@ -200,26 +242,10 @@ class ViewOrder extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make(),
-
-            Action::make('thermal_receipt')
-                ->label('Cetak Struk Thermal')
-                ->icon('heroicon-m-printer')
-                ->color('success')
-                ->url(fn () => route('admin.order.receipt', $this->getRecord()))
-                ->openUrlInNewTab(),
-
-            Action::make('invoice_pdf')
-                ->label('Download Invoice PDF')
-                ->icon('heroicon-m-document-arrow-down')
-                ->color('gray')
-                ->visible(fn () => $this->getRecord()->invoice !== null)
-                ->url(fn () => route('admin.invoice.pdf', ['invoice' => $this->getRecord()->invoice]))
-                ->openUrlInNewTab(),
-
             Action::make('advance_status')
                 ->label('Ubah Status')
                 ->icon('heroicon-m-arrow-path')
+                ->color('primary')
                 ->form([
                     Select::make('to_status')
                         ->label('Status Baru')
@@ -237,6 +263,30 @@ class ViewOrder extends ViewRecord
                     }
                 })
                 ->visible(fn (): bool => ! empty(OrderService::statusFlow()[$this->getRecord()->status])),
+
+            EditAction::make()
+                ->color('gray'),
+
+            ActionGroup::make([
+                Action::make('thermal_receipt')
+                    ->label('Cetak Struk Thermal')
+                    ->icon('heroicon-m-printer')
+                    ->color('success')
+                    ->url(fn () => route('admin.order.receipt', $this->getRecord()))
+                    ->openUrlInNewTab(),
+
+                Action::make('invoice_pdf')
+                    ->label('Download Invoice PDF')
+                    ->icon('heroicon-m-document-arrow-down')
+                    ->color('gray')
+                    ->visible(fn () => $this->getRecord()->invoice !== null)
+                    ->url(fn () => route('admin.invoice.pdf', ['invoice' => $this->getRecord()->invoice]))
+                    ->openUrlInNewTab(),
+            ])
+                ->label('Cetak')
+                ->icon('heroicon-m-printer')
+                ->color('success')
+                ->button(),
         ];
     }
 }

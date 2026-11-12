@@ -13,7 +13,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class PaymentResource extends Resource
@@ -31,6 +33,31 @@ class PaymentResource extends Resource
     protected static ?string $pluralModelLabel = 'Pembayaran';
 
     protected static ?int $navigationSort = 3;
+
+    public static function methodLabel(string $state): string
+    {
+        return match ($state) {
+            'cash' => 'Tunai',
+            'transfer' => 'Transfer Bank',
+            'qris' => 'QRIS',
+            'ewallet' => 'E-Wallet',
+            'debit' => 'Kartu Debit',
+            'credit' => 'Kartu Kredit',
+            'other' => 'Lainnya',
+            default => ucfirst($state),
+        };
+    }
+
+    public static function methodColor(string $state): string
+    {
+        return match ($state) {
+            'cash' => 'success',
+            'transfer' => 'info',
+            'qris' => 'primary',
+            'ewallet' => 'warning',
+            default => 'gray',
+        };
+    }
 
     public static function canCreate(): bool
     {
@@ -53,7 +80,7 @@ class PaymentResource extends Resource
                         ->columnSpanFull(),
                     Select::make('method')
                         ->label('Metode Pembayaran')
-                        ->options(array_combine(Payment::METHODS, array_map(ucfirst(...), Payment::METHODS)))
+                        ->options(collect(Payment::METHODS)->mapWithKeys(fn (string $m): array => [$m => static::methodLabel($m)]))
                         ->default('transfer')
                         ->required(),
                     TextInput::make('amount')
@@ -83,16 +110,48 @@ class PaymentResource extends Resource
                 TextColumn::make('code')
                     ->label('No. Pembayaran')
                     ->searchable()
+                    ->sortable()
+                    ->copyable()
                     ->weight('bold')
-                    ->description(fn (Payment $record): string => ($record->invoice?->code ?? '—').' • Rp '.number_format((int) $record->amount, 0, ',', '.')),
-                TextColumn::make('invoice.code')->label('Invoice')->visibleFrom('md'),
-                TextColumn::make('method')->label('Metode')->badge(),
-                TextColumn::make('amount')->label('Nominal')->money('IDR')->sortable()->alignEnd()->visibleFrom('md'),
-                TextColumn::make('paid_at')->label('Tanggal')->date('d M Y')->sortable()->visibleFrom('lg'),
-                TextColumn::make('user.name')->label('Dicatat oleh')->visibleFrom('xl'),
+                    ->description(fn (Payment $record): string => ($record->invoice?->code ?? '—').($record->paid_at ? ' • '.$record->paid_at->format('d M Y') : '')),
+                TextColumn::make('invoice.code')
+                    ->label('Invoice')
+                    ->badge()
+                    ->color('warning')
+                    ->copyable()
+                    ->searchable()
+                    ->visibleFrom('md'),
+                TextColumn::make('method')
+                    ->label('Metode')
+                    ->badge()
+                    ->color(fn (string $state): string => static::methodColor($state))
+                    ->formatStateUsing(fn (string $state): string => static::methodLabel($state))
+                    ->description(fn (Payment $record): string => 'Rp '.number_format((int) $record->amount, 0, ',', '.')),
+                TextColumn::make('amount')
+                    ->label('Nominal')
+                    ->money('IDR')
+                    ->sortable()
+                    ->weight('bold')
+                    ->alignEnd()
+                    ->visibleFrom('md'),
+                TextColumn::make('paid_at')
+                    ->label('Tanggal')
+                    ->date('d M Y')
+                    ->sortable()
+                    ->visibleFrom('lg'),
+                TextColumn::make('user.name')
+                    ->label('Dicatat oleh')
+                    ->placeholder('System')
+                    ->visibleFrom('xl'),
+            ])
+            ->filters([
+                SelectFilter::make('method')
+                    ->label('Metode Pembayaran')
+                    ->options(collect(Payment::METHODS)->mapWithKeys(fn (string $m): array => [$m => static::methodLabel($m)])),
             ])
             ->actions([
                 ActionGroup::make([
+                    ViewAction::make(),
                     DeleteAction::make()
                         ->requiresConfirmation()
                         ->visible(fn ($record) => $record->invoice?->status !== 'void'),
@@ -106,6 +165,7 @@ class PaymentResource extends Resource
         return [
             'index' => Pages\ListPayments::route('/'),
             'create' => Pages\CreatePayment::route('/create'),
+            'view' => Pages\ViewPayment::route('/{record}'),
         ];
     }
 }

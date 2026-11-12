@@ -37,6 +37,7 @@ class ViewQuotation extends ViewRecord
     {
         return $infolist->schema([
             InfoSection::make()
+                ->compact()
                 ->schema([
                     TextEntry::make('status')
                         ->label('Status Penawaran')
@@ -44,6 +45,14 @@ class ViewQuotation extends ViewRecord
                         ->size(TextEntrySize::Large)
                         ->color(fn (string $state): string => QuotationResource::statusColor($state))
                         ->formatStateUsing(fn (string $state): string => QuotationResource::statusLabel($state)),
+
+                    TextEntry::make('total')
+                        ->label('Total Penawaran')
+                        ->money('IDR')
+                        ->size(TextEntrySize::Large)
+                        ->weight('bold')
+                        ->color('success')
+                        ->extraAttributes(['class' => 'tabular-nums whitespace-nowrap']),
 
                     TextEntry::make('quotation_date')
                         ->label('Tanggal Penawaran')
@@ -55,13 +64,6 @@ class ViewQuotation extends ViewRecord
                         ->date('d M Y')
                         ->placeholder('—')
                         ->icon('heroicon-m-clock'),
-
-                    TextEntry::make('total')
-                        ->label('Total Penawaran')
-                        ->money('IDR')
-                        ->size(TextEntrySize::Large)
-                        ->weight('bold')
-                        ->color('success'),
                 ])
                 ->columns(['default' => 2, 'sm' => 2, 'lg' => 4]),
 
@@ -76,11 +78,30 @@ class ViewQuotation extends ViewRecord
                                     TextEntry::make('name')
                                         ->label('Nama Item')
                                         ->weight('semibold')
-                                        ->columnSpan(['default' => 2, 'sm' => 2, 'lg' => 2]),
+                                        ->columnSpan(['default' => 2, 'sm' => 4, 'lg' => 5]),
                                     TextEntry::make('item_type')
-                                        ->label('Jenis')
+                                        ->label('Kategori')
                                         ->badge()
-                                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
+                                        ->formatStateUsing(fn (string $state): string => match ($state) {
+                                            'product' => 'Produk Toko',
+                                            'build' => 'PC Build',
+                                            'service' => 'Servis',
+                                            'labor' => 'Jasa / Pasang',
+                                            'customer_owned' => 'Milik Customer',
+                                            default => ucfirst(str_replace('_', ' ', $state)),
+                                        })
+                                        ->color(fn (string $state): string => match ($state) {
+                                            'customer_owned' => 'gray',
+                                            'build' => 'info',
+                                            'service', 'labor' => 'warning',
+                                            default => 'primary',
+                                        })
+                                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 2]),
+                                    TextEntry::make('price')
+                                        ->label('Harga')
+                                        ->money('IDR')
+                                        ->extraAttributes(['class' => 'tabular-nums'])
+                                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 2]),
                                     TextEntry::make('quantity')
                                         ->label('Qty')
                                         ->suffix('x')
@@ -89,10 +110,13 @@ class ViewQuotation extends ViewRecord
                                         ->label('Subtotal')
                                         ->money('IDR')
                                         ->weight('bold')
-                                        ->columnSpan(['default' => 2, 'sm' => 2, 'lg' => 1]),
+                                        ->color('primary')
+                                        ->extraAttributes(['class' => 'tabular-nums'])
+                                        ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 2]),
                                 ])
-                                ->columns(['default' => 2, 'sm' => 2, 'lg' => 5])
-                                ->contained(false),
+                                ->columns(['default' => 2, 'sm' => 4, 'lg' => 12])
+                                ->contained(true)
+                                ->placeholder('Belum ada item dalam penawaran ini.'),
                         ]),
 
                     InfoSection::make('Catatan & Syarat Ketentuan')
@@ -111,6 +135,36 @@ class ViewQuotation extends ViewRecord
                 ])->columnSpan(['default' => 1, 'lg' => 8]),
 
                 Group::make([
+                    InfoSection::make('Rincian Harga')
+                        ->icon('heroicon-o-banknotes')
+                        ->schema([
+                            TextEntry::make('subtotal')
+                                ->label('Subtotal Item')
+                                ->money('IDR')
+                                ->inlineLabel()
+                                ->extraAttributes(['class' => 'tabular-nums justify-end']),
+                            TextEntry::make('discount')
+                                ->label('Potongan Diskon')
+                                ->money('IDR')
+                                ->inlineLabel()
+                                ->color(fn ($state): ?string => (int) $state > 0 ? 'danger' : null)
+                                ->extraAttributes(['class' => 'tabular-nums justify-end']),
+                            TextEntry::make('shipping')
+                                ->label('Biaya Pengiriman')
+                                ->money('IDR')
+                                ->inlineLabel()
+                                ->extraAttributes(['class' => 'tabular-nums justify-end']),
+                            TextEntry::make('total')
+                                ->label('Total Akhir')
+                                ->money('IDR')
+                                ->inlineLabel()
+                                ->weight('bold')
+                                ->size(TextEntrySize::Large)
+                                ->color('success')
+                                ->extraAttributes(['class' => 'tabular-nums justify-end']),
+                        ])
+                        ->columns(1),
+
                     InfoSection::make('Informasi Pelanggan')
                         ->icon('heroicon-o-user')
                         ->schema([
@@ -122,6 +176,7 @@ class ViewQuotation extends ViewRecord
                                 ->color(fn (Quotation $record): ?string => $record->customer ? 'primary' : null),
                             TextEntry::make('customer.whatsapp')
                                 ->label('WhatsApp')
+                                ->icon('heroicon-m-phone')
                                 ->placeholder('—')
                                 ->copyable(),
                             TextEntry::make('order.code')
@@ -130,28 +185,8 @@ class ViewQuotation extends ViewRecord
                                 ->badge()
                                 ->color('primary')
                                 ->url(fn (Quotation $record): ?string => $record->order ? OrderResource::getUrl('view', ['record' => $record->order]) : null),
-                        ]),
-
-                    InfoSection::make('Rincian Harga')
-                        ->icon('heroicon-o-banknotes')
-                        ->schema([
-                            TextEntry::make('subtotal')
-                                ->label('Subtotal')
-                                ->money('IDR'),
-                            TextEntry::make('discount')
-                                ->label('Potongan Diskon')
-                                ->money('IDR'),
-                            TextEntry::make('shipping')
-                                ->label('Biaya Pengiriman')
-                                ->money('IDR'),
-                            TextEntry::make('total')
-                                ->label('Total Akhir')
-                                ->money('IDR')
-                                ->weight('bold')
-                                ->size(TextEntrySize::Large)
-                                ->color('success'),
                         ])
-                        ->columns(['default' => 2, 'lg' => 1]),
+                        ->columns(['default' => 1, 'sm' => 2, 'lg' => 1]),
                 ])->columnSpan(['default' => 1, 'lg' => 4]),
             ]),
         ]);

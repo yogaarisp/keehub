@@ -516,7 +516,7 @@ class ManageSettings extends Page implements HasForms
                                                     'tiki' => 'TIKI',
                                                     'wahana' => 'Wahana Express',
                                                 ])
-                                                ->columns(2),
+                                                ->columns(['default' => 1, 'sm' => 2]),
                                         ]),
 
                                         Textarea::make('courier_coming_soon_note')

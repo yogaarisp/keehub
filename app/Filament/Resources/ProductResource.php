@@ -151,7 +151,10 @@ class ProductResource extends Resource
                 TextColumn::make('category.name')->label('Kategori')->sortable()->visibleFrom('md'),
                 TextColumn::make('brand.name')->label('Brand')->sortable()->visibleFrom('lg'),
                 TextColumn::make('price')->label('Harga')->money('IDR')->sortable()->visibleFrom('md'),
-                TextColumn::make('inventory.current_stock')->label('Stok')->badge()
+                TextColumn::make('inventory.current_stock')
+                    ->label('Stok')
+                    ->default(0)
+                    ->badge()
                     ->color(fn ($state, $record) => ($state ?? 0) <= 0 ? 'danger' : (($state ?? 0) <= ($record->inventory?->min_stock ?? 0) ? 'warning' : 'success')),
                 IconColumn::make('is_active')->label('Aktif')->boolean()->visibleFrom('md'),
             ])

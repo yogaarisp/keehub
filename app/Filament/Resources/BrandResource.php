@@ -16,7 +16,9 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
@@ -35,13 +37,29 @@ class BrandResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Section::make()->schema([
-                TextInput::make('name')->required()->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug((string) $state))),
-                TextInput::make('slug')->required()->unique(ignoreRecord: true),
-                FileUpload::make('logo')->image()->directory('brands'),
-                Toggle::make('is_active')->default(true),
-            ])->columns(['default' => 1, 'sm' => 2]),
+            Section::make('Informasi Brand')
+                ->icon('heroicon-o-tag')
+                ->schema([
+                    TextInput::make('name')
+                        ->label('Nama Brand')
+                        ->required()
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug((string) $state))),
+                    TextInput::make('slug')
+                        ->label('Slug URL')
+                        ->required()
+                        ->unique(ignoreRecord: true),
+                    FileUpload::make('logo')
+                        ->label('Logo Brand')
+                        ->image()
+                        ->disk('public')
+                        ->directory('brands')
+                        ->columnSpanFull(),
+                    Toggle::make('is_active')
+                        ->label('Brand Aktif')
+                        ->default(true)
+                        ->columnSpanFull(),
+                ])->columns(['default' => 1, 'sm' => 2]),
         ]);
     }
 
@@ -49,9 +67,29 @@ class BrandResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Nama Brand')->searchable()->sortable()->weight('semibold'),
-                TextColumn::make('products_count')->counts('products')->label('Produk'),
-                IconColumn::make('is_active')->label('Aktif')->boolean(),
+                ImageColumn::make('logo')
+                    ->label('Logo')
+                    ->disk('public')
+                    ->square()
+                    ->size(36)
+                    ->checkFileExistence(false)
+                    ->visibleFrom('sm'),
+                TextColumn::make('name')
+                    ->label('Nama Brand')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('semibold')
+                    ->description(fn (Brand $record): string => $record->slug),
+                TextColumn::make('products_count')
+                    ->counts('products')
+                    ->label('Produk')
+                    ->badge()
+                    ->color('info')
+                    ->suffix(' produk'),
+                IconColumn::make('is_active')->label('Aktif')->boolean()->visibleFrom('md'),
+            ])
+            ->filters([
+                TernaryFilter::make('is_active')->label('Status Aktif'),
             ])
             ->actions([
                 ActionGroup::make([

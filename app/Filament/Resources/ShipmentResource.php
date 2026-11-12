@@ -15,7 +15,9 @@ use Filament\Resources\Resource;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class ShipmentResource extends Resource
@@ -34,6 +36,30 @@ class ShipmentResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
+    public static function statusLabel(string $state): string
+    {
+        return match ($state) {
+            'preparing' => 'Disiapkan',
+            'shipped' => 'Dikirim',
+            'in_transit' => 'Dalam Perjalanan',
+            'delivered' => 'Terkirim',
+            'pickup' => 'Ambil di Toko',
+            default => str_replace('_', ' ', ucfirst($state)),
+        };
+    }
+
+    public static function statusColor(string $state): string
+    {
+        return match ($state) {
+            'preparing' => 'warning',
+            'shipped' => 'info',
+            'in_transit' => 'primary',
+            'delivered' => 'success',
+            'pickup' => 'gray',
+            default => 'gray',
+        };
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -48,7 +74,7 @@ class ShipmentResource extends Resource
                         ->required(),
                     Select::make('status')
                         ->label('Status Pengiriman')
-                        ->options(array_combine(Shipment::STATUSES, array_map(fn ($s) => str_replace('_', ' ', ucfirst($s)), Shipment::STATUSES)))
+                        ->options(collect(Shipment::STATUSES)->mapWithKeys(fn (string $s): array => [$s => static::statusLabel($s)]))
                         ->default('preparing'),
                     Checkbox::make('is_pickup')
                         ->label('Pickup at Store (tanpa resi)')
@@ -82,19 +108,50 @@ class ShipmentResource extends Resource
                 TextColumn::make('order.code')
                     ->label('No. Pesanan')
                     ->searchable()
+                    ->sortable()
+                    ->copyable()
                     ->weight('bold')
-                    ->description(fn (Shipment $record): string => ($record->courier ?: 'Pickup').($record->tracking_number ? ' • '.$record->tracking_number : '')),
-                TextColumn::make('courier')->label('Kurir')->placeholder('Pickup')->visibleFrom('md'),
-                TextColumn::make('tracking_number')->label('Resi')->searchable()->copyable()->placeholder('—')->visibleFrom('lg'),
-                TextColumn::make('shipping_cost')->label('Ongkir')->money('IDR')->alignEnd()->visibleFrom('md'),
+                    ->description(fn (Shipment $record): string => ($record->is_pickup ? 'Pickup di Toko' : ($record->courier ?: 'Kurir')).($record->tracking_number ? ' • '.$record->tracking_number : '')),
+                TextColumn::make('courier')
+                    ->label('Kurir')
+                    ->placeholder('Pickup')
+                    ->visibleFrom('md'),
+                TextColumn::make('tracking_number')
+                    ->label('Resi')
+                    ->searchable()
+                    ->copyable()
+                    ->placeholder('—')
+                    ->visibleFrom('lg'),
+                TextColumn::make('shipping_cost')
+                    ->label('Ongkir')
+                    ->money('IDR')
+                    ->sortable()
+                    ->weight('bold')
+                    ->alignEnd()
+                    ->visibleFrom('md'),
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
+                    ->color(fn (string $state): string => static::statusColor($state))
+                    ->formatStateUsing(fn (string $state): string => static::statusLabel($state))
                     ->description(fn (Shipment $record): string => 'Rp '.number_format((int) ($record->shipping_cost ?? 0), 0, ',', '.')),
-                TextColumn::make('shipped_at')->label('Tgl Kirim')->date('d M Y')->visibleFrom('lg'),
+                TextColumn::make('shipped_at')
+                    ->label('Tgl Kirim')
+                    ->date('d M Y')
+                    ->sortable()
+                    ->visibleFrom('lg'),
+            ])
+            ->filters([
+                SelectFilter::make('status')
+                    ->label('Status Pengiriman')
+                    ->options(collect(Shipment::STATUSES)->mapWithKeys(fn (string $s): array => [$s => static::statusLabel($s)])),
+                SelectFilter::make('courier')
+                    ->label('Kurir')
+                    ->options(array_combine(Shipment::COURIERS, Shipment::COURIERS)),
             ])
             ->actions([
                 ActionGroup::make([
+                    ViewAction::make(),
                     EditAction::make(),
                     DeleteAction::make(),
                 ]),
@@ -108,6 +165,7 @@ class ShipmentResource extends Resource
             'index' => Pages\ListShipments::route('/'),
             'create' => Pages\CreateShipment::route('/create'),
             'edit' => Pages\EditShipment::route('/{record}/edit'),
+            'view' => Pages\ViewShipment::route('/{record}'),
         ];
     }
 }

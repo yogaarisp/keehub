@@ -17,6 +17,7 @@ use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
@@ -35,19 +36,43 @@ class CategoryResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Section::make()->schema([
-                TextInput::make('name')->required()->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug((string) $state))),
-                TextInput::make('slug')->required()->unique(ignoreRecord: true),
-                Textarea::make('description')->columnSpanFull(),
-                TextInput::make('icon'),
-                TextInput::make('sort_order')->numeric()->default(0),
-                Toggle::make('is_active')->default(true),
-            ])->columns(['default' => 1, 'sm' => 2]),
-            Section::make('SEO')->schema([
-                TextInput::make('meta_title')->maxLength(255),
-                Textarea::make('meta_description')->maxLength(500),
-            ])->columns(1),
+            Section::make('Informasi Kategori')
+                ->icon('heroicon-o-rectangle-stack')
+                ->schema([
+                    TextInput::make('name')
+                        ->label('Nama Kategori')
+                        ->required()
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug((string) $state))),
+                    TextInput::make('slug')
+                        ->label('Slug URL')
+                        ->required()
+                        ->unique(ignoreRecord: true),
+                    Textarea::make('description')
+                        ->label('Deskripsi')
+                        ->rows(3)
+                        ->columnSpanFull(),
+                    TextInput::make('icon')
+                        ->label('Ikon (Opsional)')
+                        ->placeholder('Contoh: heroicon-o-cpu-chip'),
+                    TextInput::make('sort_order')
+                        ->label('Urutan Tampil')
+                        ->numeric()
+                        ->default(0),
+                    Toggle::make('is_active')
+                        ->label('Kategori Aktif')
+                        ->default(true)
+                        ->columnSpanFull(),
+                ])->columns(['default' => 1, 'sm' => 2]),
+            Section::make('SEO')
+                ->icon('heroicon-o-magnifying-glass')
+                ->schema([
+                    TextInput::make('meta_title')->label('Meta Title')->maxLength(255),
+                    Textarea::make('meta_description')->label('Meta Description')->maxLength(500)->rows(2),
+                ])
+                ->columns(1)
+                ->collapsible()
+                ->collapsed(),
         ]);
     }
 
@@ -55,12 +80,26 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Nama Kategori')->searchable()->sortable()->weight('semibold'),
-                TextColumn::make('slug')->visibleFrom('md'),
-                TextColumn::make('products_count')->counts('products')->label('Produk'),
+                TextColumn::make('name')
+                    ->label('Nama Kategori')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('semibold')
+                    ->description(fn (Category $record): string => $record->slug),
+                TextColumn::make('slug')
+                    ->label('Slug')
+                    ->visibleFrom('md'),
+                TextColumn::make('products_count')
+                    ->counts('products')
+                    ->label('Produk')
+                    ->badge()
+                    ->color('info')
+                    ->suffix(' produk'),
                 IconColumn::make('is_active')->label('Aktif')->boolean()->visibleFrom('md'),
             ])
-            ->filters([])
+            ->filters([
+                TernaryFilter::make('is_active')->label('Status Aktif'),
+            ])
             ->actions([
                 ActionGroup::make([
                     EditAction::make(),

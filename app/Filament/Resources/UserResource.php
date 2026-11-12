@@ -13,6 +13,7 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
 
@@ -36,18 +37,26 @@ class UserResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Section::make()->schema([
-                TextInput::make('name')->required(),
-                TextInput::make('email')->email()->required()->unique(ignoreRecord: true),
-                TextInput::make('phone')->tel(),
-                Select::make('role')
-                    ->options(array_combine(User::ROLES, array_map(ucfirst(...), User::ROLES)))
-                    ->required()
-                    ->default('staff'),
-                TextInput::make('password')->password()->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null)
-                    ->dehydrated(fn ($state) => filled($state))->required(fn (string $operation) => $operation === 'create')
-                    ->maxLength(255),
-            ])->columns(['default' => 1, 'sm' => 2]),
+            Section::make('Informasi Pengguna')
+                ->icon('heroicon-o-users')
+                ->schema([
+                    TextInput::make('name')->label('Nama Lengkap')->required(),
+                    TextInput::make('email')->label('Email')->email()->required()->unique(ignoreRecord: true),
+                    TextInput::make('phone')->label('No. Telepon')->tel(),
+                    Select::make('role')
+                        ->label('Peran')
+                        ->options(array_combine(User::ROLES, array_map(ucfirst(...), User::ROLES)))
+                        ->required()
+                        ->default('staff'),
+                    TextInput::make('password')
+                        ->label('Password')
+                        ->password()
+                        ->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null)
+                        ->dehydrated(fn ($state) => filled($state))
+                        ->required(fn (string $operation) => $operation === 'create')
+                        ->maxLength(255)
+                        ->columnSpanFull(),
+                ])->columns(['default' => 1, 'sm' => 2]),
         ]);
     }
 
@@ -58,15 +67,26 @@ class UserResource extends Resource
                 TextColumn::make('name')
                     ->label('Nama')
                     ->searchable()
+                    ->sortable()
                     ->weight('semibold')
                     ->description(fn (User $record): string => $record->email),
-                TextColumn::make('email')->label('Email')->searchable()->visibleFrom('md'),
-                TextColumn::make('role')->label('Peran')->badge()->colors([
-                    'danger' => 'owner',
-                    'warning' => 'staff',
-                    'success' => 'customer',
-                ]),
+                TextColumn::make('email')->label('Email')->searchable()->copyable()->visibleFrom('md'),
+                TextColumn::make('role')
+                    ->label('Peran')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->color(fn (string $state): string => match ($state) {
+                        'owner' => 'danger',
+                        'staff' => 'warning',
+                        'customer' => 'success',
+                        default => 'gray',
+                    }),
                 TextColumn::make('created_at')->label('Terdaftar')->dateTime('d M Y')->sortable()->visibleFrom('lg'),
+            ])
+            ->filters([
+                SelectFilter::make('role')
+                    ->label('Filter Peran')
+                    ->options(array_combine(User::ROLES, array_map(ucfirst(...), User::ROLES))),
             ])
             ->actions([
                 ActionGroup::make([
