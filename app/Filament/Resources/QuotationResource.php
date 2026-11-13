@@ -22,6 +22,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -290,7 +291,7 @@ class QuotationResource extends Resource
 
                 TextColumn::make('total')
                     ->label('Total')
-                    ->money('IDR')
+                    ->formatStateUsing(fn ($state): string => 'Rp '.number_format((int) $state, 0, ',', '.'))
                     ->sortable()
                     ->weight('bold')
                     ->alignEnd()
@@ -323,6 +324,19 @@ class QuotationResource extends Resource
             ->actions([
                 ActionGroup::make([
                     ViewAction::make(),
+                    EditAction::make(),
+                    Action::make('pdf')
+                        ->label('Cetak PDF')
+                        ->icon('heroicon-o-document-text')
+                        ->color('warning')
+                        ->url(fn (Quotation $record): string => route('admin.quotation.pdf', $record))
+                        ->openUrlInNewTab(),
+                    Action::make('whatsapp')
+                        ->label('Kirim ke WA')
+                        ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                        ->color('success')
+                        ->url(fn (Quotation $record): string => static::buildQuotationWaUrl($record))
+                        ->openUrlInNewTab(),
                     Action::make('mark_sent')
                         ->label('Tandai Terkirim')
                         ->icon('heroicon-o-paper-airplane')
@@ -337,11 +351,74 @@ class QuotationResource extends Resource
             ->defaultSort('created_at', 'desc');
     }
 
+    public static function buildQuotationWaMessage(Quotation $record): string
+    {
+        $customerName = $record->customer?->name ?? 'Pelanggan';
+        $code = $record->code;
+        $date = $record->quotation_date ? $record->quotation_date->format('d M Y') : $record->created_at->format('d M Y');
+        $expired = $record->expired_date ? $record->expired_date->format('d M Y') : '-';
+
+        $msg = "Halo Kak {$customerName},\n\n";
+        $msg .= "Berikut kami sampaikan Surat Penawaran Harga dari *KeeHub*:\n";
+        $msg .= "📄 *No. Penawaran:* {$code}\n";
+        $msg .= "📅 *Tanggal:* {$date}\n";
+        $msg .= "⏳ *Berlaku Hingga:* {$expired}\n\n";
+        $msg .= "*Rincian Item:*\n";
+
+        $i = 1;
+        foreach ($record->items as $item) {
+            $priceFormatted = 'Rp '.number_format((int) $item->price, 0, ',', '.');
+            $totalFormatted = 'Rp '.number_format((int) $item->total, 0, ',', '.');
+            $msg .= "{$i}. {$item->name} ({$item->quantity}x @ {$priceFormatted}) = {$totalFormatted}\n";
+            $i++;
+        }
+
+        $msg .= "----------------------------------\n";
+        $msg .= '*Subtotal:* Rp '.number_format((int) $record->subtotal, 0, ',', '.')."\n";
+        if ($record->discount > 0) {
+            $msg .= '*Diskon:* -Rp '.number_format((int) $record->discount, 0, ',', '.')."\n";
+        }
+        if ($record->shipping > 0) {
+            $msg .= '*Ongkir:* Rp '.number_format((int) $record->shipping, 0, ',', '.')."\n";
+        }
+        $msg .= '*TOTAL PENAWARAN:* Rp '.number_format((int) $record->total, 0, ',', '.')."\n\n";
+
+        if ($record->terms) {
+            $msg .= "*Syarat & Ketentuan:*\n{$record->terms}\n\n";
+        }
+
+        $msg .= "Untuk konfirmasi pemesanan atau pertanyaan lebih lanjut, silakan balas pesan ini ya Kak.\n\n";
+        $msg .= "Terima kasih!\n";
+        $msg .= '_KeeHub - PC Parts, PC Builder & IT Service_';
+
+        return $msg;
+    }
+
+    public static function buildQuotationWaUrl(Quotation $record): string
+    {
+        $phone = $record->customer?->whatsapp ?? '';
+        $cleaned = preg_replace('/[^0-9]/', '', $phone) ?? '';
+
+        if (str_starts_with($cleaned, '0')) {
+            $cleaned = '62'.substr($cleaned, 1);
+        }
+
+        $message = static::buildQuotationWaMessage($record);
+        $encoded = rawurlencode($message);
+
+        if ($cleaned) {
+            return "https://wa.me/{$cleaned}?text={$encoded}";
+        }
+
+        return "https://wa.me/?text={$encoded}";
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListQuotations::route('/'),
             'create' => Pages\CreateQuotation::route('/create'),
+            'edit' => Pages\EditQuotation::route('/{record}/edit'),
             'view' => Pages\ViewQuotation::route('/{record}'),
         ];
     }

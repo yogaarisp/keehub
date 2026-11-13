@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\InvoicePdfController;
+use App\Http\Controllers\Admin\QuotationPdfController;
 use App\Http\Controllers\Admin\ServicePdfController;
 use App\Http\Controllers\Admin\ThermalReceiptController;
 use App\Http\Middleware\EnsureAdminAccess;
@@ -11,6 +12,8 @@ Route::redirect('/admin/login', '/login');
 
 Route::middleware(['web', 'auth', EnsureAdminAccess::class])->prefix('admin')->group(function () {
     Route::redirect('/service', '/admin/services');
+    Route::get('/quotations/{quotation}/pdf', [QuotationPdfController::class, 'stream'])->name('admin.quotation.pdf');
+    Route::get('/quotations/{quotation}/pdf/download', [QuotationPdfController::class, 'download'])->name('admin.quotation.pdf.download');
     Route::get('/invoices/{invoice}/pdf', [InvoicePdfController::class, 'download'])->name('admin.invoice.pdf');
     Route::get('/services/{service}/work-order-pdf', [ServicePdfController::class, 'workOrder'])->name('admin.service.work-order.pdf');
     Route::get('/services/{service}/invoice-pdf', [ServicePdfController::class, 'invoice'])->name('admin.service.invoice.pdf');

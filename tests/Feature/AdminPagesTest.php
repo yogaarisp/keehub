@@ -132,6 +132,7 @@ class AdminPagesTest extends TestCase
             'services.view' => route('filament.admin.resources.services.view', $service),
             'services.edit' => route('filament.admin.resources.services.edit', $service),
             'quotations.view' => route('filament.admin.resources.quotations.view', $quotation),
+            'quotations.edit' => route('filament.admin.resources.quotations.edit', $quotation),
             'qcs.edit' => route('filament.admin.resources.qcs.edit', $qc),
             'shipments.edit' => route('filament.admin.resources.shipments.edit', $shipment),
             'users.edit' => route('filament.admin.resources.users.edit', $admin),
@@ -346,5 +347,36 @@ class AdminPagesTest extends TestCase
             'tracking_number' => 'JNE-RESI-12345',
             'shipping_cost' => 20000,
         ]);
+    }
+
+    public function test_quotation_pdf_and_wa_link_work(): void
+    {
+        $admin = User::factory()->create(['role' => 'owner']);
+        $customer = Customer::factory()->create(['whatsapp' => '081234567890']);
+        $quotation = Quotation::query()->create([
+            'code' => 'QOT-PDF-001',
+            'customer_id' => $customer->id,
+            'quotation_date' => now(),
+            'subtotal' => 1500000,
+            'total' => 1500000,
+            'status' => 'sent',
+            'terms' => 'Garansi 1 tahun resmi distributor',
+        ]);
+
+        $quotation->items()->create([
+            'name' => 'AMD Ryzen 5 7600',
+            'item_type' => 'product',
+            'quantity' => 1,
+            'price' => 1500000,
+            'total' => 1500000,
+        ]);
+
+        $pdfResponse = $this->actingAs($admin)->get(route('admin.quotation.pdf', $quotation));
+        $pdfResponse->assertOk();
+        $this->assertEquals('application/pdf', $pdfResponse->headers->get('content-type'));
+
+        $waUrl = \App\Filament\Resources\QuotationResource::buildQuotationWaUrl($quotation);
+        $this->assertStringContainsString('https://wa.me/6281234567890', $waUrl);
+        $this->assertStringContainsString('QOT-PDF-001', $waUrl);
     }
 }

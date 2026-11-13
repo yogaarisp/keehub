@@ -8,6 +8,7 @@ use App\Filament\Resources\QuotationResource;
 use App\Models\Quotation;
 use App\Services\QuotationService;
 use Filament\Actions\Action;
+use Filament\Actions\EditAction;
 use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\Group;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -48,7 +49,7 @@ class ViewQuotation extends ViewRecord
 
                     TextEntry::make('total')
                         ->label('Total Penawaran')
-                        ->money('IDR')
+                        ->formatStateUsing(fn ($state): string => 'Rp '.number_format((int) $state, 0, ',', '.'))
                         ->size(TextEntrySize::Large)
                         ->weight('bold')
                         ->color('success')
@@ -99,7 +100,7 @@ class ViewQuotation extends ViewRecord
                                         ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 2]),
                                     TextEntry::make('price')
                                         ->label('Harga')
-                                        ->money('IDR')
+                                        ->formatStateUsing(fn ($state): string => 'Rp '.number_format((int) $state, 0, ',', '.'))
                                         ->extraAttributes(['class' => 'tabular-nums'])
                                         ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 2]),
                                     TextEntry::make('quantity')
@@ -108,7 +109,7 @@ class ViewQuotation extends ViewRecord
                                         ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
                                     TextEntry::make('total')
                                         ->label('Subtotal')
-                                        ->money('IDR')
+                                        ->formatStateUsing(fn ($state): string => 'Rp '.number_format((int) $state, 0, ',', '.'))
                                         ->weight('bold')
                                         ->color('primary')
                                         ->extraAttributes(['class' => 'tabular-nums'])
@@ -140,23 +141,23 @@ class ViewQuotation extends ViewRecord
                         ->schema([
                             TextEntry::make('subtotal')
                                 ->label('Subtotal Item')
-                                ->money('IDR')
+                                ->formatStateUsing(fn ($state): string => 'Rp '.number_format((int) $state, 0, ',', '.'))
                                 ->inlineLabel()
                                 ->extraAttributes(['class' => 'tabular-nums justify-end']),
                             TextEntry::make('discount')
                                 ->label('Potongan Diskon')
-                                ->money('IDR')
+                                ->formatStateUsing(fn ($state): string => (int) $state > 0 ? '-Rp '.number_format((int) $state, 0, ',', '.') : 'Rp 0')
                                 ->inlineLabel()
                                 ->color(fn ($state): ?string => (int) $state > 0 ? 'danger' : null)
                                 ->extraAttributes(['class' => 'tabular-nums justify-end']),
                             TextEntry::make('shipping')
                                 ->label('Biaya Pengiriman')
-                                ->money('IDR')
+                                ->formatStateUsing(fn ($state): string => 'Rp '.number_format((int) $state, 0, ',', '.'))
                                 ->inlineLabel()
                                 ->extraAttributes(['class' => 'tabular-nums justify-end']),
                             TextEntry::make('total')
                                 ->label('Total Akhir')
-                                ->money('IDR')
+                                ->formatStateUsing(fn ($state): string => 'Rp '.number_format((int) $state, 0, ',', '.'))
                                 ->inlineLabel()
                                 ->weight('bold')
                                 ->size(TextEntrySize::Large)
@@ -195,14 +196,31 @@ class ViewQuotation extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            EditAction::make()
+                ->label('Ubah Penawaran')
+                ->icon('heroicon-o-pencil-square'),
+
+            Action::make('pdf')
+                ->label('Cetak Penawaran (PDF)')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('warning')
+                ->url(fn (): string => route('admin.quotation.pdf', $this->getRecord()), shouldOpenInNewTab: true),
+
+            Action::make('whatsapp')
+                ->label('Kirim ke WhatsApp')
+                ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                ->color('success')
+                ->url(fn (): string => QuotationResource::buildQuotationWaUrl($this->getRecord()), shouldOpenInNewTab: true),
+
             Action::make('mark_sent')
-                ->label('Kirim (Sent)')
+                ->label('Tandai Terkirim')
                 ->icon('heroicon-m-paper-airplane')
+                ->color('info')
                 ->visible(fn () => $this->getRecord()->status === 'draft')
                 ->action(function () {
                     try {
                         QuotationService::markSent($this->getRecord());
-                        Notification::make()->title('Quotation dikirim')->success()->send();
+                        Notification::make()->title('Quotation ditandai terkirim')->success()->send();
                     } catch (\DomainException $e) {
                         Notification::make()->title('Gagal')->body($e->getMessage())->danger()->send();
                     }
