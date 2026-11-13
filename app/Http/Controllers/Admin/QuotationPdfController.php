@@ -28,3 +28,4 @@ class QuotationPdfController extends Controller
             ->stream($quotation->code.'.pdf');
     }
 }
+

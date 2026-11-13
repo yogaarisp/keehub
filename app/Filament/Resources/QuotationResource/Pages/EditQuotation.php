@@ -59,3 +59,4 @@ class EditQuotation extends EditRecord
         return static::getResource()::getUrl('view', ['record' => $this->getRecord()]);
     }
 }
+
