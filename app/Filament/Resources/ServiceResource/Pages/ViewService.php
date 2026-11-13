@@ -61,7 +61,7 @@ class ViewService extends ViewRecord
     public function getSubheading(): ?string
     {
         return ($this->record->customer?->name ?? 'Klien Umum')
-            .($this->record->device_name ? ' • '.$this->record->device_name : '');
+            .' • '.$this->record->devicesSummary();
     }
 
     public function infolist(Infolist $infolist): Infolist
@@ -105,55 +105,63 @@ class ViewService extends ViewRecord
             Grid::make(['default' => 1, 'lg' => 12])
                 ->schema([
                     Group::make([
-                        InfoSection::make('Detail Unit PC & Diagnosa')
+                        InfoSection::make('Daftar Unit Perangkat (Multi-Device B2B)')
                             ->icon('heroicon-o-computer-desktop')
                             ->description('Spesifikasi unit, kelengkapan, keluhan pelanggan, serta hasil diagnosa teknisi')
                             ->schema([
-                                TextEntry::make('device_name')
-                                    ->label('Nama / Tipe PC')
-                                    ->weight('semibold')
-                                    ->placeholder('—')
-                                    ->columnSpan(['default' => 2, 'sm' => 1]),
+                                RepeatableEntry::make('devices')
+                                    ->hiddenLabel()
+                                    ->schema([
+                                        TextEntry::make('device_name')
+                                            ->label('Nama / Model Unit')
+                                            ->weight('bold')
+                                            ->size(TextEntrySize::Large)
+                                            ->color('primary')
+                                            ->columnSpan(['default' => 2, 'sm' => 2]),
 
-                                TextEntry::make('service_type')
-                                    ->label('Jenis Layanan')
-                                    ->formatStateUsing(fn ($state): string => Service::TYPES[$state] ?? (string) $state)
-                                    ->badge()
-                                    ->color('info')
-                                    ->columnSpan(['default' => 1, 'sm' => 1]),
+                                        TextEntry::make('service_type')
+                                            ->label('Jenis Layanan')
+                                            ->formatStateUsing(fn ($state, $record): string => Service::TYPES[$state] ?? ($state ?: (Service::TYPES[$record->service?->service_type ?? ''] ?? '—')))
+                                            ->badge()
+                                            ->color('info')
+                                            ->columnSpan(['default' => 1, 'sm' => 1]),
 
-                                TextEntry::make('serial_number')
-                                    ->label('Serial Number / Asset')
-                                    ->placeholder('—')
-                                    ->copyable()
-                                    ->columnSpan(['default' => 1, 'sm' => 1]),
+                                        TextEntry::make('serial_number')
+                                            ->label('No. Serial / No. Asset')
+                                            ->placeholder('—')
+                                            ->copyable()
+                                            ->columnSpan(['default' => 1, 'sm' => 1]),
 
-                                TextEntry::make('completeness')
-                                    ->label('Kelengkapan Unit')
-                                    ->placeholder('—')
-                                    ->columnSpan(['default' => 2, 'sm' => 1]),
+                                        TextEntry::make('completeness')
+                                            ->label('Kelengkapan Unit')
+                                            ->placeholder('—')
+                                            ->columnSpan(['default' => 2, 'sm' => 1]),
 
-                                TextEntry::make('device_specs')
-                                    ->label('Spesifikasi Unit')
-                                    ->placeholder('—')
-                                    ->columnSpanFull(),
+                                        TextEntry::make('device_specs')
+                                            ->label('Spesifikasi Unit')
+                                            ->placeholder('—')
+                                            ->columnSpan(['default' => 2, 'sm' => 1]),
 
-                                TextEntry::make('problem_description')
-                                    ->label('Keluhan Klien')
-                                    ->placeholder('—')
-                                    ->columnSpanFull(),
+                                        TextEntry::make('problem_description')
+                                            ->label('Keluhan Klien')
+                                            ->placeholder('—')
+                                            ->columnSpan(['default' => 2, 'sm' => 1]),
 
-                                TextEntry::make('diagnosis')
-                                    ->label('Diagnosa & Tindakan Teknisi')
-                                    ->placeholder('Belum ada diagnosa')
-                                    ->columnSpanFull(),
+                                        TextEntry::make('diagnosis')
+                                            ->label('Diagnosa & Tindakan Teknisi')
+                                            ->placeholder('Belum ada diagnosa')
+                                            ->columnSpan(['default' => 2, 'sm' => 1]),
 
-                                TextEntry::make('notes')
-                                    ->label('Catatan Internal')
-                                    ->placeholder('—')
-                                    ->columnSpanFull(),
-                            ])
-                            ->columns(['default' => 2, 'sm' => 2]),
+                                        TextEntry::make('notes')
+                                            ->label('Catatan Tambahan Unit')
+                                            ->placeholder('—')
+                                            ->columnSpanFull()
+                                            ->visible(fn (?string $state): bool => filled($state)),
+                                    ])
+                                    ->columns(['default' => 2, 'sm' => 2])
+                                    ->contained(true)
+                                    ->placeholder('Belum ada unit perangkat terdaftar.'),
+                            ]),
 
                         InfoSection::make('Rincian Suku Cadang & Jasa')
                             ->icon('heroicon-o-wrench-screwdriver')
@@ -165,7 +173,14 @@ class ViewService extends ViewRecord
                                         TextEntry::make('name')
                                             ->label('Nama Item / Jasa')
                                             ->weight('semibold')
-                                            ->columnSpan(['default' => 2, 'sm' => 4, 'lg' => 3]),
+                                            ->columnSpan(['default' => 2, 'sm' => 3, 'lg' => 3]),
+
+                                        TextEntry::make('device.device_name')
+                                            ->label('Peruntukan Unit')
+                                            ->badge()
+                                            ->color('gray')
+                                            ->placeholder('Semua Unit')
+                                            ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
 
                                         TextEntry::make('item_type')
                                             ->label('Tipe')
@@ -188,7 +203,7 @@ class ViewService extends ViewRecord
 
                                         TextEntry::make('quantity')
                                             ->label('Qty')
-                                            ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 2]),
+                                            ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
 
                                         TextEntry::make('price')
                                             ->label('Harga Satuan')
@@ -202,7 +217,7 @@ class ViewService extends ViewRecord
                                             ->color('primary')
                                             ->columnSpan(['default' => 1, 'sm' => 2, 'lg' => 2]),
                                     ])
-                                    ->columns(['default' => 2, 'sm' => 4, 'lg' => 6])
+                                    ->columns(['default' => 2, 'sm' => 4, 'lg' => 12])
                                     ->contained(true)
                                     ->placeholder('Belum ada suku cadang atau jasa ditambahkan.'),
                             ]),

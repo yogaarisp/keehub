@@ -9,6 +9,7 @@ class ServiceItem extends Model
 {
     protected $fillable = [
         'service_id',
+        'service_device_id',
         'item_type',
         'part_source',
         'product_id',
@@ -32,6 +33,11 @@ class ServiceItem extends Model
     public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class);
+    }
+
+    public function device(): BelongsTo
+    {
+        return $this->belongsTo(ServiceDevice::class, 'service_device_id');
     }
 
     public function product(): BelongsTo

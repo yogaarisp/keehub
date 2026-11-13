@@ -185,4 +185,77 @@ class ServiceFeatureTest extends TestCase
         $this->assertSame(500000, $totals['vendor']);
         $this->assertSame(800000, $totals['work_order']);
     }
+
+    public function test_multi_device_service_and_invoice(): void
+    {
+        $customer = Customer::query()->create([
+            'name' => 'Kantor Dinas BPS',
+            'whatsapp' => '081234567899',
+        ]);
+
+        $service = Service::query()->create([
+            'code' => 'SVC-B2B-001',
+            'invoice_number' => 'INV-SVC-B2B-001',
+            'customer_id' => $customer->id,
+            'company_name' => 'Badan Pusat Statistik',
+            'service_type' => 'troubleshooting',
+            'status' => 'processing',
+        ]);
+
+        $dev1 = $service->devices()->create([
+            'device_name' => 'PC Keuangan 01',
+            'serial_number' => 'ASSET-01',
+            'problem_description' => 'Bluescreen',
+        ]);
+
+        $dev2 = $service->devices()->create([
+            'device_name' => 'PC Kasir 02',
+            'serial_number' => 'ASSET-02',
+            'problem_description' => 'Ganti thermal paste & cleaning',
+        ]);
+
+        $service->syncPrimaryDeviceAttributes();
+
+        $this->assertEquals(2, $service->deviceCount());
+        $this->assertEquals('PC Keuangan 01 (+1 unit lainnya)', $service->devicesSummary());
+
+        ServiceItem::query()->create([
+            'service_id' => $service->id,
+            'service_device_id' => $dev1->id,
+            'item_type' => 'product',
+            'part_source' => 'keehub',
+            'name' => 'SSD NVMe 512GB',
+            'quantity' => 1,
+            'price' => 500000,
+            'total' => 500000,
+        ]);
+
+        ServiceItem::query()->create([
+            'service_id' => $service->id,
+            'service_device_id' => $dev2->id,
+            'item_type' => 'labor',
+            'part_source' => 'keehub',
+            'name' => 'Jasa Cleaning & Paste',
+            'quantity' => 1,
+            'price' => 150000,
+            'total' => 150000,
+        ]);
+
+        $service->syncTotalCost();
+
+        $this->assertEquals(650000, $service->invoiceTotal());
+
+        $admin = User::factory()->create(['role' => 'owner']);
+
+        $invResponse = $this->actingAs($admin)->get(route('admin.service.invoice.pdf', $service));
+        $invResponse->assertStatus(200);
+
+        $woResponse = $this->actingAs($admin)->get(route('admin.service.work-order.pdf', $service));
+        $woResponse->assertStatus(200);
+
+        $viewResponse = $this->actingAs($admin)->get(ServiceResource::getUrl('view', ['record' => $service]));
+        $viewResponse->assertStatus(200);
+        $viewResponse->assertSee('PC Keuangan 01');
+        $viewResponse->assertSee('PC Kasir 02');
+    }
 }

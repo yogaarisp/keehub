@@ -20,7 +20,7 @@ class EditService extends EditRecord
     public function getSubheading(): ?string
     {
         return ($this->record->customer?->name ?? 'Klien Umum')
-            .($this->record->device_name ? ' • '.$this->record->device_name : '');
+            .' • '.$this->record->devicesSummary();
     }
 
     protected function getHeaderActions(): array
@@ -37,6 +37,8 @@ class EditService extends EditRecord
     {
         /** @var Service $record */
         $record = $this->getRecord();
+
+        $record->syncPrimaryDeviceAttributes();
 
         foreach ($record->items as $item) {
             $item->total = (int) $item->quantity * (int) $item->price;

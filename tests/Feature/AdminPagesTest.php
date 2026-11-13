@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Filament\Pages\Reports;
+use App\Filament\Resources\QuotationResource\Pages\ListQuotations;
 use App\Filament\Widgets\LowStock;
 use App\Filament\Widgets\RecentOrders;
 use App\Filament\Widgets\RecentServices;
@@ -213,5 +214,48 @@ class AdminPagesTest extends TestCase
         Livewire::actingAs($admin)
             ->test(RecentServices::class)
             ->assertCanSeeTableRecords([$service]);
+    }
+
+    public function test_quotation_create_modal_action_works(): void
+    {
+        $admin = User::factory()->create(['role' => 'owner']);
+        $customer = Customer::factory()->create();
+
+        $test = Livewire::actingAs($admin)
+            ->test(ListQuotations::class)
+            ->mountAction('create');
+
+        $mountedItems = $test->get('mountedActionsData.0.items');
+        $itemKey = is_array($mountedItems) && ! empty($mountedItems)
+            ? array_key_first($mountedItems)
+            : (string) \Illuminate\Support\Str::uuid();
+
+        $test->setActionData([
+            'customer_id' => $customer->id,
+            'quotation_date' => today()->format('Y-m-d'),
+            'expired_date' => today()->addDays(14)->format('Y-m-d'),
+            'status' => 'draft',
+            'discount' => 10000,
+            'shipping' => 15000,
+            'items' => [
+                $itemKey => [
+                    'name' => 'Paket Rakit PC Office',
+                    'item_type' => 'custom',
+                    'quantity' => 2,
+                    'price' => 5000000,
+                ],
+            ],
+        ])
+            ->callMountedAction()
+            ->assertHasNoActionErrors();
+
+        $this->assertDatabaseHas('quotations', [
+            'customer_id' => $customer->id,
+            'status' => 'draft',
+            'discount' => 10000,
+            'shipping' => 15000,
+            'subtotal' => 10000000,
+            'total' => 10005000,
+        ]);
     }
 }

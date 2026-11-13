@@ -5,11 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ServiceResource\Pages;
 use App\Models\Product;
 use App\Models\Service;
+use App\Models\ServiceDevice;
+use App\Models\ServiceItem;
 use App\Models\Setting;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
@@ -26,6 +29,7 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 
 class ServiceResource extends Resource
@@ -49,53 +53,79 @@ class ServiceResource extends Resource
         return $form->schema([
             Grid::make(['default' => 1, 'lg' => 12])->schema([
                 Group::make([
-                    Section::make('Detail Unit PC & Diagnosa')
+                    Section::make('Daftar Unit Perangkat')
                         ->icon('heroicon-o-computer-desktop')
-                        ->description('Model perangkat, spesifikasi, keluhan klien, dan catatan diagnosa teknisi')
+                        ->description('Kelola 1 atau banyak unit perangkat yang diservis dalam tiket ini (bisa untuk perorangan maupun borongan kantor/instansi)')
                         ->schema([
-                            TextInput::make('device_name')
-                                ->label('Nama / Model Unit PC')
-                                ->placeholder('Contoh: PC Workstation Render / PC Kantor Dell')
-                                ->required()
+                            Hidden::make('service_type')
+                                ->default('troubleshooting'),
+
+                            Repeater::make('devices')
+                                ->hiddenLabel()
+                                ->relationship('devices')
+                                ->addActionLabel('+ Tambah Unit Perangkat')
+                                ->defaultItems(1)
+                                ->minItems(1)
+                                ->itemLabel(fn (array $state): string => filled($state['device_name'] ?? null)
+                                    ? ($state['device_name']
+                                        .(filled($state['serial_number'] ?? null) ? ' • SN: '.$state['serial_number'] : '')
+                                        .(filled($state['service_type'] ?? null) ? ' • '.(Service::TYPES[$state['service_type']] ?? $state['service_type']) : '')
+                                    )
+                                    : 'Unit Perangkat Baru'
+                                )
+                                ->schema([
+                                    TextInput::make('device_name')
+                                        ->label('Nama / Model Unit PC')
+                                        ->placeholder('Contoh: PC Kantor Keuangan 01 / Laptop Dell XPS / Workstation Render')
+                                        ->required()
+                                        ->columnSpanFull(),
+
+                                    Select::make('service_type')
+                                        ->label('Jenis Layanan')
+                                        ->options(Service::TYPES)
+                                        ->default('troubleshooting')
+                                        ->required()
+                                        ->columnSpan(['default' => 1, 'sm' => 1]),
+
+                                    TextInput::make('serial_number')
+                                        ->label('No. Serial / No. Asset')
+                                        ->placeholder('Contoh: SN-88293 / ASSET-04')
+                                        ->columnSpan(['default' => 1, 'sm' => 1]),
+
+                                    TextInput::make('completeness')
+                                        ->label('Kelengkapan Unit')
+                                        ->placeholder('Contoh: Unit PC, Kabel Power, Adaptor, Dus')
+                                        ->columnSpan(['default' => 1, 'sm' => 1]),
+
+                                    TextInput::make('device_specs')
+                                        ->label('Spesifikasi Singkat PC')
+                                        ->placeholder('Contoh: Ryzen 9 7900X, RAM 64GB, SSD 2TB, RTX 4080')
+                                        ->columnSpan(['default' => 1, 'sm' => 1]),
+
+                                    Textarea::make('problem_description')
+                                        ->label('Keluhan Klien / Problem Description')
+                                        ->rows(3)
+                                        ->placeholder('Contoh: Sering restart sendiri saat buka aplikasi berat / bluescreen WHEA')
+                                        ->columnSpan(['default' => 1, 'sm' => 1]),
+
+                                    Textarea::make('diagnosis')
+                                        ->label('Hasil Diagnosa & Solusi Teknis')
+                                        ->rows(3)
+                                        ->placeholder('Contoh: Suhu 95°C thermal paste kering, fan macet & debu tebal')
+                                        ->columnSpan(['default' => 1, 'sm' => 1]),
+
+                                    Textarea::make('notes')
+                                        ->label('Catatan Tambahan / Internal Unit (Opsional)')
+                                        ->rows(2)
+                                        ->placeholder('Contoh: Data drive D: penting jangan di-format, minta konfirmasi sebelum ganti part')
+                                        ->columnSpanFull(),
+                                ])
+                                ->columns(['default' => 1, 'sm' => 2])
+                                ->collapsible()
+                                ->cloneable()
+                                ->reorderable('sort_order')
                                 ->columnSpanFull(),
-
-                            Select::make('service_type')
-                                ->label('Jenis Layanan')
-                                ->options(Service::TYPES)
-                                ->required()
-                                ->columnSpan(['default' => 1, 'sm' => 1]),
-
-                            TextInput::make('serial_number')
-                                ->label('No. Serial / No. Asset')
-                                ->placeholder('Contoh: SN-88293 / ASSET-04')
-                                ->columnSpan(['default' => 1, 'sm' => 1]),
-
-                            TextInput::make('completeness')
-                                ->label('Kelengkapan Unit')
-                                ->placeholder('Contoh: Unit PC, Kabel Power, Dongle')
-                                ->columnSpan(['default' => 2, 'sm' => 1]),
-
-                            TextInput::make('device_specs')
-                                ->label('Spesifikasi Singkat PC')
-                                ->placeholder('Contoh: Ryzen 9 7900X, RAM 64GB, RTX 4080, PSU 850W')
-                                ->columnSpan(['default' => 2, 'sm' => 1]),
-
-                            Textarea::make('problem_description')
-                                ->label('Keluhan Klien / Problem Description')
-                                ->rows(3)
-                                ->columnSpan(['default' => 2, 'sm' => 1]),
-
-                            Textarea::make('diagnosis')
-                                ->label('Hasil Diagnosa & Solusi Teknis')
-                                ->rows(3)
-                                ->columnSpan(['default' => 2, 'sm' => 1]),
-
-                            Textarea::make('notes')
-                                ->label('Catatan Tambahan / Internal')
-                                ->rows(2)
-                                ->columnSpanFull(),
-                        ])
-                        ->columns(['default' => 2, 'sm' => 2]),
+                        ]),
 
                     Section::make('Detail Barang & Jasa (Sparepart & Labor)')
                         ->icon('heroicon-o-wrench-screwdriver')
@@ -120,7 +150,31 @@ class ServiceResource extends Resource
                                             }
                                         })
                                         ->live()
-                                        ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 12]),
+                                        ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 6]),
+
+                                    Select::make('service_device_id')
+                                        ->label('Untuk Unit Perangkat (Opsional)')
+                                        ->options(function (Get $get, ?Model $record): array {
+                                            $serviceId = null;
+                                            if ($record instanceof ServiceItem) {
+                                                $serviceId = $record->service_id;
+                                            } elseif ($record instanceof Service) {
+                                                $serviceId = $record->id;
+                                            }
+
+                                            if ($serviceId) {
+                                                return ServiceDevice::query()
+                                                    ->where('service_id', $serviceId)
+                                                    ->orderBy('sort_order')
+                                                    ->get()
+                                                    ->mapWithKeys(fn (ServiceDevice $d): array => [$d->id => $d->displayName()])
+                                                    ->toArray();
+                                            }
+
+                                            return [];
+                                        })
+                                        ->placeholder('Semua Unit / Umum')
+                                        ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 6]),
 
                                     TextInput::make('name')
                                         ->label('Nama Item / Jasa')
@@ -349,12 +403,16 @@ class ServiceResource extends Resource
                     ->wrap(),
 
                 TextColumn::make('device_name')
-                    ->label('Unit PC')
+                    ->label('Unit Perangkat')
                     ->placeholder('—')
-                    ->limit(24)
+                    ->getStateUsing(fn (Service $record): string => $record->devicesSummary())
+                    ->limit(35)
                     ->searchable()
-                    ->description(fn (Service $record): ?string => $record->service_type ? (Service::TYPES[$record->service_type] ?? $record->service_type) : null)
-                    ->visibleFrom('lg'),
+                    ->description(fn (Service $record): ?string => $record->devices()->count() > 1
+                        ? ($record->devices()->count().' Unit Perangkat')
+                        : ($record->service_type ? (Service::TYPES[$record->service_type] ?? $record->service_type) : null)
+                    )
+                    ->visibleFrom('md'),
 
                 TextColumn::make('status')
                     ->label('Status')

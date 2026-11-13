@@ -75,9 +75,9 @@ class QuotationResource extends Resource
         return $form->schema([
             Grid::make(['default' => 1, 'lg' => 12])->schema([
                 Group::make([
-                    Section::make('Daftar Item Penawaran')
+                    Section::make('Daftar Item Penawaran (Items)')
                         ->icon('heroicon-o-document-text')
-                        ->description('Rincian produk atau jasa yang ditawarkan kepada pelanggan')
+                        ->description('Pilih produk dari katalog toko atau masukkan item/jasa kustom')
                         ->schema([
                             Repeater::make('items')
                                 ->relationship('items')
@@ -140,6 +140,10 @@ class QuotationResource extends Resource
                                 ->columns(['default' => 1, 'sm' => 2, 'md' => 12])
                                 ->defaultItems(1)
                                 ->addActionLabel('+ Tambah Item Penawaran')
+                                ->itemLabel(fn (array $state): string => filled($state['name'] ?? null)
+                                    ? ($state['name'].' ('.($state['quantity'] ?? 1).'x'.(isset($state['price']) ? ' @ Rp '.number_format((int) $state['price'], 0, ',', '.') : '').')')
+                                    : 'Item Penawaran Baru'
+                                )
                                 ->mutateRelationshipDataBeforeCreateUsing(function (array $data): array {
                                     $qty = max(1, (int) ($data['quantity'] ?? 1));
                                     $price = max(0, (int) ($data['price'] ?? 0));
@@ -159,37 +163,49 @@ class QuotationResource extends Resource
                                     return $data;
                                 })
                                 ->collapsible()
+                                ->cloneable()
+                                ->collapsed(false)
+                                ->deletable()
                                 ->reorderable(false),
                         ]),
 
-                    Section::make('Catatan & Syarat Penawaran')
-                        ->icon('heroicon-o-clipboard-document-list')
-                        ->schema([
-                            Textarea::make('notes')
-                                ->label('Catatan Penawaran')
-                                ->rows(2)
-                                ->placeholder('Catatan untuk pelanggan atau spesifikasi singkat...'),
-                            Textarea::make('terms')
-                                ->label('Syarat & Ketentuan')
-                                ->rows(2)
-                                ->placeholder('Misal: Harga berlaku 14 hari, garansi resmi distributor...'),
-                        ])
-                        ->columns(['default' => 1, 'sm' => 2])
-                        ->collapsible(),
-                ])->columnSpan(['default' => 1, 'lg' => 8]),
-
-                Group::make([
-                    Section::make('Detail & Kalkulasi')
-                        ->icon('heroicon-o-calculator')
+                    Section::make('Informasi Pelanggan & Syarat Penawaran')
+                        ->icon('heroicon-o-user')
+                        ->description('Data pelanggan dan syarat & ketentuan penawaran harga')
                         ->schema([
                             Select::make('customer_id')
                                 ->label('Pelanggan')
                                 ->relationship('customer', 'name')
                                 ->searchable()
                                 ->preload()
-                                ->placeholder('Pilih pelanggan...')
+                                ->placeholder('Pilih pelanggan atau biarkan kosong (Pelanggan Umum)')
+                                ->createOptionForm([
+                                    TextInput::make('name')->label('Nama Lengkap')->required(),
+                                    TextInput::make('whatsapp')->label('No. WhatsApp')->required()->tel(),
+                                    TextInput::make('email')->label('Email')->email(),
+                                ])
                                 ->columnSpanFull(),
 
+                            Textarea::make('notes')
+                                ->label('Catatan Penawaran (Opsional)')
+                                ->rows(2)
+                                ->placeholder('Catatan khusus untuk pelanggan atau spesifikasi singkat...')
+                                ->columnSpan(['default' => 1, 'sm' => 1]),
+
+                            Textarea::make('terms')
+                                ->label('Syarat & Ketentuan')
+                                ->rows(2)
+                                ->placeholder('Misal: Harga berlaku 14 hari, garansi resmi distributor...')
+                                ->columnSpan(['default' => 1, 'sm' => 1]),
+                        ])
+                        ->columns(['default' => 1, 'sm' => 2])
+                        ->collapsible(),
+                ])->columnSpan(['default' => 1, 'lg' => 8]),
+
+                Group::make([
+                    Section::make('Status & Ringkasan Penawaran')
+                        ->icon('heroicon-o-calculator')
+                        ->schema([
                             DatePicker::make('quotation_date')
                                 ->label('Tanggal Penawaran')
                                 ->default(today())

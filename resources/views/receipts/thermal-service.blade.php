@@ -161,21 +161,36 @@
 
         <!-- Device Info -->
         <div style="font-size: 9.5px; margin: 3px 0;">
-            <div class="flex-between">
-                <span>Unit:</span>
-                <span class="font-bold">{{ $service->device_name ?? 'PC / Keyboard' }}</span>
-            </div>
-            @if($service->serial_number)
-            <div class="flex-between">
-                <span>SN:</span>
-                <span>{{ $service->serial_number }}</span>
-            </div>
-            @endif
-            @if($service->problem_description)
-            <div style="margin-top: 2px;">
-                <span>Keluhan:</span>
-                <span style="font-style: italic;">{{ $service->problem_description }}</span>
-            </div>
+            @if($service->devices->count() > 1)
+                <div class="font-bold" style="margin-bottom: 2px;">Daftar Perangkat ({{ $service->devices->count() }} Unit):</div>
+                @foreach($service->devices as $devIdx => $dev)
+                    <div style="margin-bottom: 3px; padding-left: 2px;">
+                        <span>{{ $devIdx + 1 }}. <strong>{{ $dev->device_name }}</strong></span>
+                        @if($dev->serial_number)
+                            <span style="font-size: 8.5px; color: #555;">(SN: {{ $dev->serial_number }})</span>
+                        @endif
+                        @if($dev->problem_description)
+                            <div style="font-size: 8.5px; font-style: italic; color: #444;">- {{ $dev->problem_description }}</div>
+                        @endif
+                    </div>
+                @endforeach
+            @else
+                <div class="flex-between">
+                    <span>Unit:</span>
+                    <span class="font-bold">{{ $service->devices->first()?->device_name ?: ($service->device_name ?? 'PC / Keyboard') }}</span>
+                </div>
+                @if($sn = $service->devices->first()?->serial_number ?: $service->serial_number)
+                <div class="flex-between">
+                    <span>SN:</span>
+                    <span>{{ $sn }}</span>
+                </div>
+                @endif
+                @if($prob = $service->devices->first()?->problem_description ?: $service->problem_description)
+                <div style="margin-top: 2px;">
+                    <span>Keluhan:</span>
+                    <span style="font-style: italic;">{{ $prob }}</span>
+                </div>
+                @endif
             @endif
         </div>
 

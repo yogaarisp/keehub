@@ -238,33 +238,74 @@
             <td class="info-card" style="width: 48%;">
                 <h4>Informasi Perangkat & Unit PC</h4>
                 <table class="info-table">
-                    <tr><td class="label">Unit / Model:</td><td class="val">{{ $service->device_name ?: 'PC Desktop / Rig' }}</td></tr>
-                    <tr><td class="label">Serial / Asset:</td><td class="val">{{ $service->serial_number ?: 'N/A' }}</td></tr>
+                    @if($service->devices->count() > 1)
+                        <tr><td class="label">Total Unit:</td><td class="val" style="color: #2563eb;">{{ $service->devices->count() }} Unit Perangkat</td></tr>
+                        <tr><td class="label">Rincian Unit:</td><td class="val" style="font-size: 9.5px; color: #475569;">Tertera pada tabel unit di bawah</td></tr>
+                    @else
+                        @php $singleDevice = $service->devices->first(); @endphp
+                        <tr><td class="label">Unit / Model:</td><td class="val">{{ $singleDevice?->device_name ?: ($service->device_name ?: 'PC Desktop / Rig') }}</td></tr>
+                        <tr><td class="label">Serial / Asset:</td><td class="val">{{ $singleDevice?->serial_number ?: ($service->serial_number ?: 'N/A') }}</td></tr>
+                    @endif
                     <tr><td class="label">Jenis Layanan:</td><td class="val">{{ \App\Models\Service::TYPES[$service->service_type] ?? $service->service_type }}</td></tr>
-                    <tr><td class="label">Kelengkapan:</td><td class="val">{{ $service->completeness ?: 'Unit Only' }}</td></tr>
+                    @if($service->devices->count() <= 1)
+                        <tr><td class="label">Kelengkapan:</td><td class="val">{{ $service->devices->first()?->completeness ?: ($service->completeness ?: 'Unit Only') }}</td></tr>
+                    @endif
                     <tr><td class="label">Target Selesai:</td><td class="val">{{ $service->due_date ? $service->due_date->format('d M Y') : 'Estimasi Standard' }}</td></tr>
                 </table>
             </td>
         </tr>
     </table>
 
-    <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
-        <tr>
-            <td style="width: 49%; vertical-align: top;">
-                <div class="desc-box">
-                    <strong>Keluhan / Problem Description:</strong>
-                    {{ $service->problem_description ?: 'Tidak ada keluhan spesifik dicatat.' }}
-                </div>
-            </td>
-            <td style="width: 2%;"></td>
-            <td style="width: 49%; vertical-align: top;">
-                <div class="desc-box">
-                    <strong>Hasil Diagnosa & Solusi Teknis:</strong>
-                    {{ $service->diagnosis ?: 'Pemeriksaan awal komponen hardware & software.' }}
-                </div>
-            </td>
-        </tr>
-    </table>
+    @if($service->devices->count() > 1)
+        <div style="margin-top: 6px; margin-bottom: 10px;">
+            <div class="section-title">Daftar Unit Perangkat ({{ $service->devices->count() }} Unit)</div>
+            <table class="items-table" style="margin-top: 0; margin-bottom: 10px;">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">No</th>
+                        <th style="width: 25%;">Nama / Model Unit</th>
+                        <th style="width: 18%;">No. Serial / No. Asset</th>
+                        <th style="width: 15%;">Kelengkapan</th>
+                        <th style="width: 37%;">Keluhan & Diagnosa Teknis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($service->devices as $devIndex => $device)
+                        <tr>
+                            <td>{{ $devIndex + 1 }}</td>
+                            <td><strong>{{ $device->device_name }}</strong></td>
+                            <td>{{ $device->serial_number ?: '—' }}</td>
+                            <td>{{ $device->completeness ?: '—' }}</td>
+                            <td style="font-size: 9px; color: #475569;">
+                                <div><strong>Keluhan:</strong> {{ $device->problem_description ?: '—' }}</div>
+                                @if($device->diagnosis)
+                                    <div style="color: #0369a1; margin-top: 2px;"><strong>Diagnosa:</strong> {{ $device->diagnosis }}</div>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @else
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
+            <tr>
+                <td style="width: 49%; vertical-align: top;">
+                    <div class="desc-box">
+                        <strong>Keluhan / Problem Description:</strong>
+                        {{ $service->devices->first()?->problem_description ?: ($service->problem_description ?: 'Tidak ada keluhan spesifik dicatat.') }}
+                    </div>
+                </td>
+                <td style="width: 2%;"></td>
+                <td style="width: 49%; vertical-align: top;">
+                    <div class="desc-box">
+                        <strong>Hasil Diagnosa & Solusi Teknis:</strong>
+                        {{ $service->devices->first()?->diagnosis ?: ($service->diagnosis ?: 'Pemeriksaan awal komponen hardware & software.') }}
+                    </div>
+                </td>
+            </tr>
+        </table>
+    @endif
 
     <div class="section-title">Rincian Pekerjaan & Suku Cadang (Part Log)</div>
     <table class="items-table">
@@ -285,6 +326,11 @@
                     <td>{{ $index + 1 }}</td>
                     <td>
                         <strong>{{ $item->name }}</strong>
+                        @if($item->device)
+                            <div style="font-size: 8.5px; color: #0284c7; font-weight: bold; margin-top: 1px;">
+                                ➔ Peruntukan: {{ $item->device->displayName() }}
+                            </div>
+                        @endif
                         @if($item->description)
                             <div style="font-size: 9px; color: #64748b;">{{ $item->description }}</div>
                         @endif

@@ -83,6 +83,60 @@ class Service extends Model
         return $this->hasOne(QcRecord::class);
     }
 
+    public function devices(): HasMany
+    {
+        return $this->hasMany(ServiceDevice::class)->orderBy('sort_order');
+    }
+
+    public function deviceCount(): int
+    {
+        $count = $this->devices()->count();
+
+        return $count > 0 ? $count : 1;
+    }
+
+    public function devicesSummary(): string
+    {
+        $devices = $this->devices;
+        if ($devices->isEmpty()) {
+            return $this->device_name ?: 'Unit PC';
+        }
+
+        if ($devices->count() === 1) {
+            return $devices->first()->device_name;
+        }
+
+        return $devices->first()->device_name.' (+'.($devices->count() - 1).' unit lainnya)';
+    }
+
+    public function syncPrimaryDeviceAttributes(): void
+    {
+        $devices = $this->devices()->orderBy('sort_order')->get();
+        if ($devices->isEmpty()) {
+            return;
+        }
+
+        $first = $devices->first();
+        if ($devices->count() === 1) {
+            $this->device_name = $first->device_name;
+            $this->serial_number = $first->serial_number;
+            $this->device_specs = $first->device_specs;
+            $this->completeness = $first->completeness;
+            $this->problem_description = $first->problem_description;
+            $this->diagnosis = $first->diagnosis;
+            if ($first->service_type) {
+                $this->service_type = $first->service_type;
+            }
+        } else {
+            $this->device_name = $first->device_name.' (+'.($devices->count() - 1).' unit lainnya)';
+            $serials = $devices->pluck('serial_number')->filter()->take(3)->implode(', ');
+            $this->serial_number = $serials ? $serials.($devices->count() > 3 ? '...' : '') : null;
+            $this->problem_description = $devices->map(fn ($d, $i) => ($i + 1).'. '.$d->device_name.': '.($d->problem_description ?: '-'))->implode("\n");
+        }
+
+        $this->saveQuietly();
+    }
+
     public static function generateCode(): string
     {
         return CodeGenerator::next('SVC');

@@ -229,14 +229,52 @@
             <td class="info-card" style="width: 48%;">
                 <h4>Informasi Perangkat & Layanan</h4>
                 <table class="info-table">
-                    <tr><td class="label">Unit PC / Device:</td><td class="val">{{ $service->device_name ?: 'PC Desktop' }}</td></tr>
-                    <tr><td class="label">Serial / Asset:</td><td class="val">{{ $service->serial_number ?: 'N/A' }}</td></tr>
+                    @if($service->devices->count() > 1)
+                        <tr><td class="label">Total Unit:</td><td class="val" style="color: #2563eb;">{{ $service->devices->count() }} Unit Perangkat</td></tr>
+                        <tr><td class="label">Rincian Unit:</td><td class="val" style="font-size: 9.5px; color: #475569;">Tertera pada tabel unit di bawah</td></tr>
+                    @else
+                        @php $singleDevice = $service->devices->first(); @endphp
+                        <tr><td class="label">Unit PC / Device:</td><td class="val">{{ $singleDevice?->device_name ?: ($service->device_name ?: 'PC Desktop') }}</td></tr>
+                        <tr><td class="label">Serial / Asset:</td><td class="val">{{ $singleDevice?->serial_number ?: ($service->serial_number ?: 'N/A') }}</td></tr>
+                    @endif
                     <tr><td class="label">Jenis Servis:</td><td class="val">{{ \App\Models\Service::TYPES[$service->service_type] ?? $service->service_type }}</td></tr>
                     <tr><td class="label">Jatuh Tempo:</td><td class="val">{{ $service->due_date ? $service->due_date->format('d M Y') : now()->addDays(7)->format('d M Y') }}</td></tr>
                 </table>
             </td>
         </tr>
     </table>
+
+    @if($service->devices->count() > 1)
+        <div style="margin-top: 6px; margin-bottom: 10px;">
+            <div style="font-size: 10px; font-weight: bold; text-transform: uppercase; color: #0f172a; margin-bottom: 4px; letter-spacing: 0.5px;">
+                Daftar Perangkat Servis ({{ $service->devices->count() }} Unit)
+            </div>
+            <table class="items-table" style="margin-top: 0; margin-bottom: 10px;">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">No</th>
+                        <th style="width: 32%;">Nama / Model Unit</th>
+                        <th style="width: 20%;">No. Serial / No. Asset</th>
+                        <th style="width: 18%;">Layanan</th>
+                        <th style="width: 25%;">Keluhan / Spesifikasi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($service->devices as $devIndex => $device)
+                        <tr>
+                            <td>{{ $devIndex + 1 }}</td>
+                            <td><strong>{{ $device->device_name }}</strong></td>
+                            <td>{{ $device->serial_number ?: '—' }}</td>
+                            <td>{{ \App\Models\Service::TYPES[$device->service_type] ?? ($device->service_type ?: (\App\Models\Service::TYPES[$service->service_type] ?? $service->service_type)) }}</td>
+                            <td style="font-size: 9px; color: #475569;">
+                                {{ $device->problem_description ?: ($device->device_specs ?: '—') }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
 
     <table class="items-table">
         <thead>
@@ -255,6 +293,11 @@
                     <td>{{ $index + 1 }}</td>
                     <td>
                         <strong>{{ $item->name }}</strong>
+                        @if($item->device)
+                            <div style="font-size: 8.5px; color: #0284c7; font-weight: bold; margin-top: 1px;">
+                                ➔ Peruntukan: {{ $item->device->displayName() }}
+                            </div>
+                        @endif
                         @if($item->description)
                             <div style="font-size: 9px; color: #64748b;">{{ $item->description }}</div>
                         @endif

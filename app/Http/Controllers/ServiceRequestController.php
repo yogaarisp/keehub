@@ -109,6 +109,13 @@ class ServiceRequestController extends Controller
             'problem_description' => $description,
         ]);
 
+        $service->devices()->create([
+            'device_name' => $validated['device_name'],
+            'service_type' => $validated['service_type'],
+            'problem_description' => $description,
+            'sort_order' => 0,
+        ]);
+
         $waLink = WhatsAppService::link("Halo KeeHub, saya request service PC atas nama {$validated['name']} (Kode: {$service->code}).");
 
         return redirect()->route('service.index', ['q' => $service->code])
