@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Filament\Pages\Reports;
+use App\Filament\Resources\PaymentResource\Pages\ListPayments;
 use App\Filament\Resources\QuotationResource\Pages\ListQuotations;
+use App\Filament\Resources\ShipmentResource\Pages\ListShipments;
 use App\Filament\Widgets\LowStock;
 use App\Filament\Widgets\RecentOrders;
 use App\Filament\Widgets\RecentServices;
@@ -12,6 +14,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Inventory;
+use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\QcRecord;
@@ -256,6 +259,92 @@ class AdminPagesTest extends TestCase
             'shipping' => 15000,
             'subtotal' => 10000000,
             'total' => 10005000,
+        ]);
+    }
+
+    public function test_payment_create_modal_action_works(): void
+    {
+        $admin = User::factory()->create(['role' => 'owner']);
+        $customer = Customer::factory()->create();
+        $order = Order::query()->create([
+            'code' => 'ORD-PAY-001',
+            'customer_id' => $customer->id,
+            'type' => 'product',
+            'channel' => 'admin',
+            'status' => 'pending',
+            'subtotal' => 500000,
+            'discount' => 0,
+            'shipping_cost' => 0,
+            'total' => 500000,
+        ]);
+        $invoice = Invoice::query()->create([
+            'order_id' => $order->id,
+            'code' => 'INV-TEST-001',
+            'status' => 'unpaid',
+            'total' => 500000,
+            'due_date' => today()->addDays(7),
+        ]);
+
+        Livewire::actingAs($admin)
+            ->test(ListPayments::class)
+            ->mountAction('create')
+            ->setActionData([
+                'invoice_id' => $invoice->id,
+                'method' => 'transfer',
+                'amount' => 500000,
+                'paid_at' => today()->format('Y-m-d'),
+                'reference' => 'TRF-TEST-123',
+                'notes' => 'Lunas via transfer BCA',
+            ])
+            ->callMountedAction()
+            ->assertHasNoActionErrors();
+
+        $this->assertDatabaseHas('payments', [
+            'invoice_id' => $invoice->id,
+            'method' => 'transfer',
+            'amount' => 500000,
+            'reference' => 'TRF-TEST-123',
+        ]);
+
+        $this->assertEquals('paid', $invoice->fresh()->status);
+    }
+
+    public function test_shipment_create_modal_action_works(): void
+    {
+        $admin = User::factory()->create(['role' => 'owner']);
+        $customer = Customer::factory()->create();
+        $order = Order::query()->create([
+            'code' => 'ORD-SHIP-001',
+            'customer_id' => $customer->id,
+            'type' => 'product',
+            'channel' => 'admin',
+            'status' => 'pending',
+            'subtotal' => 300000,
+            'discount' => 0,
+            'shipping_cost' => 20000,
+            'total' => 320000,
+        ]);
+
+        Livewire::actingAs($admin)
+            ->test(ListShipments::class)
+            ->mountAction('create')
+            ->setActionData([
+                'order_id' => $order->id,
+                'courier' => 'JNE',
+                'tracking_number' => 'JNE-RESI-12345',
+                'shipping_cost' => 20000,
+                'status' => 'preparing',
+                'shipped_at' => today()->format('Y-m-d'),
+                'notes' => 'Packing kayu aman',
+            ])
+            ->callMountedAction()
+            ->assertHasNoActionErrors();
+
+        $this->assertDatabaseHas('shipments', [
+            'order_id' => $order->id,
+            'courier' => 'JNE',
+            'tracking_number' => 'JNE-RESI-12345',
+            'shipping_cost' => 20000,
         ]);
     }
 }
