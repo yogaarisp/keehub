@@ -91,4 +91,45 @@ class ShopControllerTest extends TestCase
             ->assertSee('Produk Serupa')
             ->assertSee('AMD Ryzen 7 5700X');
     }
+
+    public function test_product_detail_page_renders_variants_selector(): void
+    {
+        $cat = Category::factory()->create(['name' => 'SSD', 'slug' => 'ssd', 'is_active' => true]);
+        $brand = Brand::factory()->create(['name' => 'VenomRX', 'slug' => 'venomrx', 'is_active' => true]);
+
+        $ssd128 = Product::factory()->create([
+            'category_id' => $cat->id,
+            'brand_id' => $brand->id,
+            'name' => 'SSD SATA VenomRX 128GB',
+            'slug' => 'ssd-sata-venomrx-128gb',
+            'price' => 180000,
+            'variant_group' => 'ssd-sata-venomrx',
+            'variant_label' => '128GB',
+            'variant_type' => 'Kapasitas',
+            'is_active' => true,
+        ]);
+        Inventory::query()->create(['product_id' => $ssd128->id], ['current_stock' => 10, 'min_stock' => 2]);
+
+        $ssd256 = Product::factory()->create([
+            'category_id' => $cat->id,
+            'brand_id' => $brand->id,
+            'name' => 'SSD SATA VenomRX 256GB',
+            'slug' => 'ssd-sata-venomrx-256gb',
+            'price' => 280000,
+            'variant_group' => 'ssd-sata-venomrx',
+            'variant_label' => '256GB',
+            'variant_type' => 'Kapasitas',
+            'is_active' => true,
+        ]);
+        Inventory::query()->create(['product_id' => $ssd256->id], ['current_stock' => 15, 'min_stock' => 2]);
+
+        $response = $this->get(route('shop.show', 'ssd-sata-venomrx-128gb'));
+        $response->assertSuccessful();
+        $response->assertSee('Pilih Kapasitas');
+        $response->assertSee('128GB');
+        $response->assertSee('256GB');
+        $response->assertSee('Rp180.000');
+        $response->assertSee('Rp280.000');
+        $response->assertSee(route('shop.show', 'ssd-sata-venomrx-256gb'));
+    }
 }

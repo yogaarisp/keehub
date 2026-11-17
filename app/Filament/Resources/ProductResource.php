@@ -69,6 +69,29 @@ class ProductResource extends Resource
                         TextInput::make('warranty')->label('Garansi'),
                     ])->columns(['default' => 1, 'sm' => 2]),
 
+                    Section::make('Varian Produk (Opsional)')
+                        ->icon('heroicon-o-squares-2x2')
+                        ->description('Hubungkan produk ini dengan varian kapasitas/ukuran sejenis (misal: SSD 128GB/256GB/512GB/1TB)')
+                        ->schema([
+                            TextInput::make('variant_group')
+                                ->label('Kode Grup Varian')
+                                ->placeholder('Contoh: ssd-sata-venomrx / samsung-980')
+                                ->helperText('Produk dengan kode grup yang sama akan saling terhubung di halaman toko.')
+                                ->columnSpan(['default' => 1, 'sm' => 1]),
+                            TextInput::make('variant_label')
+                                ->label('Label Varian Produk Ini')
+                                ->placeholder('Contoh: 128GB / 256GB / 512GB / 1TB')
+                                ->helperText('Label tombol yang diklik pembeli di halaman produk.')
+                                ->columnSpan(['default' => 1, 'sm' => 1]),
+                            TextInput::make('variant_type')
+                                ->label('Tipe Varian')
+                                ->default('Kapasitas')
+                                ->placeholder('Contoh: Kapasitas / Warna / Kecepatan')
+                                ->helperText('Judul opsi di halaman toko (misal: "Pilih Kapasitas:").')
+                                ->columnSpan(['default' => 1, 'sm' => 1]),
+                        ])->columns(['default' => 1, 'sm' => 3])
+                        ->collapsible(),
+
                     Section::make('Spesifikasi Terstruktur')->schema([
                         Repeater::make('specs_data')->label('Spesifikasi')
                             ->defaultItems(0)
@@ -149,10 +172,10 @@ class ProductResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->limit(40)
-                    ->description(fn (Product $record): string => ($record->sku ? $record->sku.' • ' : '').'Rp '.number_format((int) $record->price, 0, ',', '.')),
+                    ->description(fn (Product $record): string => ($record->variant_label ? '['.$record->variant_label.'] ' : '').($record->sku ? $record->sku.' • ' : '').'Rp '.number_format((int) $record->price, 0, ',', '.')),
                 TextColumn::make('category.name')->label('Kategori')->sortable()->visibleFrom('md'),
                 TextColumn::make('brand.name')->label('Brand')->sortable()->visibleFrom('lg'),
-                TextColumn::make('price')->label('Harga')->money('IDR')->sortable()->visibleFrom('md'),
+                TextColumn::make('price')->label('Harga')->formatStateUsing(fn ($state): string => 'Rp '.number_format((int) $state, 0, ',', '.'))->sortable()->visibleFrom('md'),
                 TextColumn::make('inventory.current_stock')
                     ->label('Stok')
                     ->default(0)

@@ -81,6 +81,41 @@
                 <p class="mt-1 text-sm font-medium text-emerald-600 dark:text-emerald-400">Stok tersedia: {{ $product->inventory->current_stock }}</p>
             @endif
 
+            {{-- Pilihan Varian (Kapasitas / Ukuran / Warna) --}}
+            @if ($product->variant_group && ($variants = $product->variants()) && $variants->count() > 1)
+                <div class="mt-5 rounded-xl border border-slate-200 bg-slate-50/80 p-3.5 sm:p-4 dark:border-slate-800 dark:bg-slate-800/50">
+                    <div class="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
+                        <span class="uppercase tracking-wider">Pilih {{ $product->variant_type ?: 'Kapasitas' }}:</span>
+                        <span class="font-bold text-amber-600 dark:text-amber-400">{{ $product->variant_label ?: $product->name }}</span>
+                    </div>
+                    <div class="mt-2.5 flex flex-wrap gap-2">
+                        @foreach ($variants as $variant)
+                            @php
+                                $isCurrent = $variant->id === $product->id;
+                                $isOutOfStock = $variant->stockStatus() === 'out_of_stock';
+                            @endphp
+                            <a href="{{ route('shop.show', $variant->slug) }}"
+                               class="group relative flex min-w-[76px] flex-col items-center justify-center rounded-lg border px-3 py-2 text-center transition
+                                   {{ $isCurrent
+                                       ? 'border-amber-500 bg-amber-500/10 text-amber-800 ring-2 ring-amber-500/30 dark:border-amber-400 dark:bg-amber-400/10 dark:text-amber-300'
+                                       : ($isOutOfStock
+                                           ? 'border-slate-200 bg-slate-100/60 text-slate-400 opacity-60 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-500 hover:border-slate-300'
+                                           : 'border-slate-200 bg-white text-slate-700 hover:border-amber-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-amber-400') }}">
+                                <span class="text-xs font-bold sm:text-sm">
+                                    {{ $variant->variant_label ?: $variant->name }}
+                                </span>
+                                <span class="mt-0.5 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                                    Rp{{ number_format($variant->price, 0, ',', '.') }}
+                                </span>
+                                @if ($isOutOfStock)
+                                    <span class="mt-0.5 text-[9px] font-semibold text-rose-500">Habis</span>
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             <div class="mt-6 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:gap-3">
                 @if ($product->stockStatus() !== 'out_of_stock')
                     <form method="POST" action="{{ route('cart.add', $product->id) }}" class="contents">

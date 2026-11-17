@@ -18,6 +18,9 @@ class Product extends Model
         'name',
         'slug',
         'category_id',
+        'variant_group',
+        'variant_label',
+        'variant_type',
         'brand_id',
         'description',
         'price',
@@ -85,6 +88,28 @@ class Product extends Model
         }
 
         return $stock <= ($this->inventory->min_stock ?? 0) ? 'low_stock' : 'in_stock';
+    }
+
+    public function hasVariants(): bool
+    {
+        return ! empty($this->variant_group);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, Product>
+     */
+    public function variants()
+    {
+        if (! $this->variant_group) {
+            return collect([$this]);
+        }
+
+        return static::query()
+            ->active()
+            ->with(['inventory'])
+            ->where('variant_group', $this->variant_group)
+            ->orderBy('price')
+            ->get();
     }
 
     public function spec(string $key): ?ProductSpec
