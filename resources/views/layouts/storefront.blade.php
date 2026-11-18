@@ -18,7 +18,7 @@
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100">
     <div class="flex min-h-screen flex-col">
-        <header class="sticky top-0 z-40 border-b border-slate-200/70 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
+        <header class="sticky top-0 z-40 w-full px-3 pt-2.5 pb-1.5 sm:px-6 sm:pt-3 sm:pb-2 lg:px-8 pointer-events-none">
             @include('shop.partials.navbar')
         </header>
 
