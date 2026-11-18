@@ -1,13 +1,37 @@
 {
-    "name": "KeeHub — Build. Buy. Upgrade.",
+    "id": "/",
+    "name": "KeeHub — Build Your PC. Your Way.",
     "short_name": "KeeHub",
-    "description": "Toko PC parts, PC builder, PC rakitan, dan IT service.",
-    "start_url": "/",
+    "description": "Toko PC parts, PC builder simulator, PC rakitan, dan layanan IT service terpercaya.",
+    "start_url": "/?source=pwa",
+    "scope": "/",
     "display": "standalone",
-    "background_color": "#030712",
+    "display_override": [
+        "window-controls-overlay",
+        "standalone",
+        "minimal-ui"
+    ],
+    "background_color": "#0f172a",
     "theme_color": "#f59e0b",
     "orientation": "portrait-primary",
+    "lang": "id",
+    "dir": "ltr",
+    "prefer_related_applications": false,
+    "categories": [
+        "shopping",
+        "utilities"
+    ],
     "icons": [
+        {
+            "src": "/favicon-32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "/logo-96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
         {
             "src": "/logo-192.png",
             "sizes": "192x192",
@@ -25,6 +49,44 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "PC Builder Simulator",
+            "short_name": "Builder",
+            "description": "Simulasi rakit PC custom online",
+            "url": "/pc-builder?source=shortcut",
+            "icons": [
+                {
+                    "src": "/logo-192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Katalog Toko",
+            "short_name": "Shop",
+            "description": "Katalog sparepart dan aksesoris PC",
+            "url": "/shop?source=shortcut",
+            "icons": [
+                {
+                    "src": "/logo-192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Layanan Servis",
+            "short_name": "Service",
+            "description": "Permintaan servis PC & laptop",
+            "url": "/service/request?source=shortcut",
+            "icons": [
+                {
+                    "src": "/logo-192.png",
+                    "sizes": "192x192"
+                }
+            ]
         }
     ]
 }
