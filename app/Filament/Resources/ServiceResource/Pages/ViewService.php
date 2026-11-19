@@ -105,9 +105,9 @@ class ViewService extends ViewRecord
             Grid::make(['default' => 1, 'lg' => 12])
                 ->schema([
                     Group::make([
-                        InfoSection::make('Daftar Unit Perangkat (Multi-Device B2B)')
+                        InfoSection::make('Daftar Unit Perangkat')
                             ->icon('heroicon-o-computer-desktop')
-                            ->description('Spesifikasi unit, kelengkapan, keluhan pelanggan, serta hasil diagnosa teknisi')
+                            ->description('Opsional — unit perangkat yang diservis. Untuk visit / jasa tanpa unit bisa dikosongkan.')
                             ->schema([
                                 RepeatableEntry::make('devices')
                                     ->hiddenLabel()

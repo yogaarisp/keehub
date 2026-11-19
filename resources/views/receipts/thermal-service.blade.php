@@ -177,7 +177,7 @@
             @else
                 <div class="flex-between">
                     <span>Unit:</span>
-                    <span class="font-bold">{{ $service->devices->first()?->device_name ?: ($service->device_name ?? 'PC / Keyboard') }}</span>
+                    <span class="font-bold">{{ $service->devices->first()?->device_name ?: ($service->device_name ?? 'Jasa / Visit') }}</span>
                 </div>
                 @if($sn = $service->devices->first()?->serial_number ?: $service->serial_number)
                 <div class="flex-between">

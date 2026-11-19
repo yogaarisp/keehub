@@ -55,7 +55,8 @@ class ServiceResource extends Resource
                 Group::make([
                     Section::make('Daftar Unit Perangkat')
                         ->icon('heroicon-o-computer-desktop')
-                        ->description('Kelola 1 atau banyak unit perangkat yang diservis dalam tiket ini (bisa untuk perorangan maupun borongan kantor/instansi)')
+                        ->description('Opsional — tambahkan unit perangkat jika ada. Untuk visit / jasa tanpa unit, langsung isi Detail Barang & Jasa di bawah.')
+                        ->collapsible()
                         ->schema([
                             Hidden::make('service_type')
                                 ->default('troubleshooting'),
@@ -64,8 +65,8 @@ class ServiceResource extends Resource
                                 ->hiddenLabel()
                                 ->relationship('devices')
                                 ->addActionLabel('+ Tambah Unit Perangkat')
-                                ->defaultItems(1)
-                                ->minItems(1)
+                                ->defaultItems(0)
+                                ->minItems(0)
                                 ->itemLabel(fn (array $state): string => filled($state['device_name'] ?? null)
                                     ? ($state['device_name']
                                         .(filled($state['serial_number'] ?? null) ? ' • SN: '.$state['serial_number'] : '')
@@ -540,13 +541,13 @@ class ServiceResource extends Resource
 
     public static function buildInvoiceWaMessage(Service $service): string
     {
-        $service->loadMissing(['customer', 'technician', 'items']);
+        $service->loadMissing(['customer', 'technician', 'items', 'devices']);
 
         $storeName = Setting::get('store_name', 'KeeHub');
         $customerName = $service->customer?->name ?? 'Pelanggan';
         $invoiceNo = $service->invoice_number ?: $service->code;
         $serviceCode = $service->code;
-        $deviceName = $service->device_name ?: 'Unit PC';
+        $deviceName = $service->devicesSummary();
         $serviceType = Service::TYPES[$service->service_type] ?? $service->service_type;
 
         $statusLabels = [

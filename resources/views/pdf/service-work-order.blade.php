@@ -243,7 +243,7 @@
                         <tr><td class="label">Rincian Unit:</td><td class="val" style="font-size: 9.5px; color: #475569;">Tertera pada tabel unit di bawah</td></tr>
                     @else
                         @php $singleDevice = $service->devices->first(); @endphp
-                        <tr><td class="label">Unit / Model:</td><td class="val">{{ $singleDevice?->device_name ?: ($service->device_name ?: 'PC Desktop / Rig') }}</td></tr>
+                        <tr><td class="label">Unit / Model:</td><td class="val">{{ $singleDevice?->device_name ?: ($service->device_name ?: 'Jasa / Visit') }}</td></tr>
                         <tr><td class="label">Serial / Asset:</td><td class="val">{{ $singleDevice?->serial_number ?: ($service->serial_number ?: 'N/A') }}</td></tr>
                     @endif
                     <tr><td class="label">Jenis Layanan:</td><td class="val">{{ \App\Models\Service::TYPES[$service->service_type] ?? $service->service_type }}</td></tr>

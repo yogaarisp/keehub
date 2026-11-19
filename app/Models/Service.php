@@ -99,7 +99,7 @@ class Service extends Model
     {
         $devices = $this->devices;
         if ($devices->isEmpty()) {
-            return $this->device_name ?: 'Unit PC';
+            return $this->device_name ?: 'Jasa / Visit';
         }
 
         if ($devices->count() === 1) {
