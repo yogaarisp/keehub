@@ -211,6 +211,48 @@ class CatalogSeeder extends Seeder
     'name' => 'V-GeN',
     'slug' => 'v-gen',
   ),
+  14 => 
+  array (
+    'id' => 15,
+    'name' => 'TeamGroup',
+    'slug' => 'teamgroup',
+  ),
+  15 => 
+  array (
+    'id' => 16,
+    'name' => 'Apacer',
+    'slug' => 'apacer',
+  ),
+  16 => 
+  array (
+    'id' => 17,
+    'name' => 'Western Digital',
+    'slug' => 'western-digital',
+  ),
+  17 => 
+  array (
+    'id' => 18,
+    'name' => 'Colorful',
+    'slug' => 'colorful',
+  ),
+  18 => 
+  array (
+    'id' => 19,
+    'name' => 'Ocypus',
+    'slug' => 'ocypus',
+  ),
+  19 => 
+  array (
+    'id' => 20,
+    'name' => 'Logitech',
+    'slug' => 'logitech',
+  ),
+  20 => 
+  array (
+    'id' => 21,
+    'name' => 'PC Cooler',
+    'slug' => 'pc-cooler',
+  ),
 );
 
         foreach ($brands as $b) {
@@ -2228,6 +2270,346 @@ Kompatibilitas Motherboard:
         'is_primary' => true,
         'sort_order' => 0,
       ),
+    ),
+  ),
+  34 => 
+  array (
+    'attributes' => 
+    array (
+      'sku' => 'CPU-INT-I7-14700F',
+      'name' => 'Intel Core i7-14700F (20 Core, 28 Thread)',
+      'slug' => 'intel-core-i7-14700f',
+      'category_id' => 1,
+      'brand_id' => 2,
+      'variant_group' => NULL,
+      'variant_label' => NULL,
+      'variant_type' => 'Kapasitas',
+      'description' => 'Intel Core i7-14700F Gen 14 Raptor Lake Refresh, 20 Core (8 P-Core + 12 E-Core), 28 Thread, Up to 5.4GHz, 33MB Intel Smart Cache, Socket LGA1700. Performa monster untuk gaming berat dan content creation profesional.',
+      'cost_price' => 5350000,
+      'price' => 6955000,
+      'warranty' => 'Garansi Resmi Distributor 3 Tahun',
+      'is_active' => true,
+    ),
+    'stock' => 5,
+    'min_stock' => 1,
+    'specs' => 
+    array (
+      0 => array ('key' => 'Socket', 'value' => 'LGA 1700'),
+      1 => array ('key' => 'Jumlah Core / Thread', 'value' => '20 Core / 28 Thread (8 P-Core + 12 E-Core)'),
+      2 => array ('key' => 'Base Clock / Boost Clock', 'value' => '2.1 GHz / 5.4 GHz Max Turbo'),
+      3 => array ('key' => 'Cache', 'value' => '33 MB Intel Smart Cache + 28 MB L2 Cache'),
+      4 => array ('key' => 'TDP / Max Power', 'value' => '65W Base / 219W Turbo'),
+      5 => array ('key' => 'Memory Support', 'value' => 'DDR4 up to 3200MHz / DDR5 up to 5600MHz'),
+    ),
+    'images' => 
+    array (
+      0 => array ('path' => 'products/intel-core-i7-14700f.png', 'is_primary' => true, 'sort_order' => 0),
+    ),
+  ),
+  35 => 
+  array (
+    'attributes' => 
+    array (
+      'sku' => 'MB-GIGA-B760M-DS3H',
+      'name' => 'Gigabyte B760M DS3H DDR4',
+      'slug' => 'gigabyte-b760m-ds3h-ddr4',
+      'category_id' => 2,
+      'brand_id' => 5,
+      'variant_group' => NULL,
+      'variant_label' => NULL,
+      'variant_type' => 'Kapasitas',
+      'description' => 'Motherboard Gigabyte B760M DS3H DDR4 mendukung prosesor Intel Gen 12, 13, dan 14. Dilengkapi 4 slot RAM DDR4 hingga 128GB, dual PCIe 4.0 x4 M.2 dengan thermal guard, serta Realtek 2.5GbE LAN untuk koneksi super cepat.',
+      'cost_price' => 2180000,
+      'price' => 2834000,
+      'warranty' => 'Garansi Resmi Gigabyte Indonesia 3 Tahun',
+      'is_active' => true,
+    ),
+    'stock' => 4,
+    'min_stock' => 1,
+    'specs' => 
+    array (
+      0 => array ('key' => 'Chipset', 'value' => 'Intel B760 Express Chipset'),
+      1 => array ('key' => 'Socket', 'value' => 'LGA 1700 (Support Gen 12 / 13 / 14)'),
+      2 => array ('key' => 'Slot Memory', 'value' => '4x DDR4 DIMM up to 128GB (5333 O.C.)'),
+      3 => array ('key' => 'Storage Interface', 'value' => '2x M.2 PCIe 4.0 x4 NVMe + 4x SATA 6Gb/s'),
+      4 => array ('key' => 'Form Factor', 'value' => 'Micro ATX (24.4cm x 24.4cm)'),
+      5 => array ('key' => 'LAN', 'value' => 'Realtek 2.5GbE LAN chip'),
+    ),
+    'images' => 
+    array (
+      0 => array ('path' => 'products/gigabyte-b760m-ds3h-ddr4.png', 'is_primary' => true, 'sort_order' => 0),
+    ),
+  ),
+  36 => 
+  array (
+    'attributes' => 
+    array (
+      'sku' => 'RAM-TF-DELTA-64GB-3200',
+      'name' => 'Team T-Force Delta RGB 64GB (2x32GB) DDR4 3200MHz',
+      'slug' => 'team-t-force-delta-rgb-64gb-2x32gb-ddr4-3200',
+      'category_id' => 4,
+      'brand_id' => 15,
+      'variant_group' => NULL,
+      'variant_label' => '64GB (2x32GB)',
+      'variant_type' => 'Kapasitas',
+      'description' => 'TeamGroup T-Force Delta RGB DDR4 64GB Kit (2x32GB) 3200MHz CL16. Desain heat spreader geometris aluminium dengan pencahayaan full frame 120° ultra wide angle RGB, support XMP 2.0 untuk performa multitasking dan rendering maksimal.',
+      'cost_price' => 2950000,
+      'price' => 3835000,
+      'warranty' => 'Garansi Resmi Lifetime Warranty (Seumur Hidup)',
+      'is_active' => true,
+    ),
+    'stock' => 6,
+    'min_stock' => 1,
+    'specs' => 
+    array (
+      0 => array ('key' => 'Kapasitas', 'value' => '64GB Kit (2x 32GB Dual Channel)'),
+      1 => array ('key' => 'Frekuensi / Speed', 'value' => 'DDR4 3200MHz (PC4-25600)'),
+      2 => array ('key' => 'Latency', 'value' => 'CL16-20-20-40'),
+      3 => array ('key' => 'Tegangan / Voltage', 'value' => '1.35V'),
+      4 => array ('key' => 'Pencahayaan', 'value' => 'Full Frame 120° Ultra-Wide Angle RGB (Sync Support)'),
+      5 => array ('key' => 'Fitur', 'value' => 'Intel XMP 2.0 One-Click Overclocking'),
+    ),
+    'images' => 
+    array (
+      0 => array ('path' => 'products/team-t-force-delta-rgb-64gb.jpg', 'is_primary' => true, 'sort_order' => 0),
+    ),
+  ),
+  37 => 
+  array (
+    'attributes' => 
+    array (
+      'sku' => 'SSD-APAC-AS2280P4-512GB',
+      'name' => 'Apacer AS2280P4 M.2 NVMe PCIe Gen3x4 SSD 512GB',
+      'slug' => 'apacer-as2280p4-m2-nvme-512gb',
+      'category_id' => 5,
+      'brand_id' => 16,
+      'variant_group' => NULL,
+      'variant_label' => '512 GB',
+      'variant_type' => 'Kapasitas',
+      'description' => 'SSD Apacer AS2280P4 M.2 PCIe Gen3 x4 NVMe 1.3 512GB menghadirkan kecepatan ultra tinggi hingga Read 2100MB/s dan Write 1500MB/s. Dilengkapi teknologi 3D NAND Flash serta proteksi data End-to-End untuk kestabilan sistem maksimal.',
+      'cost_price' => 610000,
+      'price' => 793000,
+      'warranty' => 'Garansi Resmi Apacer 3 Tahun',
+      'is_active' => true,
+    ),
+    'stock' => 10,
+    'min_stock' => 2,
+    'specs' => 
+    array (
+      0 => array ('key' => 'Kapasitas', 'value' => '512 GB'),
+      1 => array ('key' => 'Form Factor', 'value' => 'M.2 2280'),
+      2 => array ('key' => 'Interface', 'value' => 'PCIe Gen3 x4 NVMe 1.3'),
+      3 => array ('key' => 'Sequential Read', 'value' => 'Hingga 2.100 MB/s'),
+      4 => array ('key' => 'Sequential Write', 'value' => 'Hingga 1.500 MB/s'),
+      5 => array ('key' => 'NAND Flash Type', 'value' => '3D NAND Flash TLC'),
+    ),
+    'images' => 
+    array (
+      0 => array ('path' => 'products/apacer-as2280p4-512gb.jpg', 'is_primary' => true, 'sort_order' => 0),
+    ),
+  ),
+  38 => 
+  array (
+    'attributes' => 
+    array (
+      'sku' => 'HDD-WDC-BLUE-8TB',
+      'name' => 'Western Digital Blue 8TB SATA 3.5" HDD (WD80EAZZ)',
+      'slug' => 'wdc-blue-8tb-sata-3-5-inch-wd80eazz',
+      'category_id' => 6,
+      'brand_id' => 17,
+      'variant_group' => NULL,
+      'variant_label' => '8 TB',
+      'variant_type' => 'Kapasitas',
+      'description' => 'Hard Disk Internal WD Blue 8TB 3.5 inch SATA 6 Gb/s (WD80EAZZ) dengan teknologi CMR (Conventional Magnetic Recording) andal, cache 128MB, dan kecepatan 5640 RPM. Pilihan sempurna untuk arsip data besar, game library, dan backup sistem.',
+      'cost_price' => 2650000,
+      'price' => 3445000,
+      'warranty' => 'Garansi Resmi Western Digital Indonesia 2 Tahun',
+      'is_active' => true,
+    ),
+    'stock' => 3,
+    'min_stock' => 1,
+    'specs' => 
+    array (
+      0 => array ('key' => 'Kapasitas', 'value' => '8 TB (8.000 GB)'),
+      1 => array ('key' => 'Form Factor', 'value' => '3.5 Inch'),
+      2 => array ('key' => 'Interface', 'value' => 'SATA 6.0 Gb/s'),
+      3 => array ('key' => 'Kecepatan Putaran', 'value' => '5640 RPM'),
+      4 => array ('key' => 'Cache Buffer', 'value' => '128 MB'),
+      5 => array ('key' => 'Recording Technology', 'value' => 'CMR (Conventional Magnetic Recording)'),
+    ),
+    'images' => 
+    array (
+      0 => array ('path' => 'products/wd-blue-8tb-desktop.png', 'is_primary' => true, 'sort_order' => 0),
+    ),
+  ),
+  39 => 
+  array (
+    'attributes' => 
+    array (
+      'sku' => 'VGA-COL-RTX-5070-12GB',
+      'name' => 'Colorful GeForce RTX 5070 Gaming 12GB GDDR7',
+      'slug' => 'colorful-geforce-rtx-5070-gaming-12gb',
+      'category_id' => 3,
+      'brand_id' => 18,
+      'variant_group' => NULL,
+      'variant_label' => '12 GB',
+      'variant_type' => 'Kapasitas',
+      'description' => 'Colorful GeForce RTX 5070 Gaming 12GB GDDR7 dengan arsitektur generasi terbaru NVIDIA Blackwell. Menghadirkan efisiensi daya luar biasa, Ray Tracing generasi baru, DLSS 4 AI rendering, dan pendingin triple fan kokoh untuk gaming 1440p & 4K maksimal.',
+      'cost_price' => 17900000,
+      'price' => 23270000,
+      'warranty' => 'Garansi Resmi Distributor 3 Tahun',
+      'is_active' => true,
+    ),
+    'stock' => 2,
+    'min_stock' => 1,
+    'specs' => 
+    array (
+      0 => array ('key' => 'GPU Engine', 'value' => 'NVIDIA GeForce RTX 5070 (Blackwell Architecture)'),
+      1 => array ('key' => 'Memory', 'value' => '12 GB GDDR7, 192-bit'),
+      2 => array ('key' => 'Sistem Pendingin', 'value' => 'Triple Fan Air Cooling + Metal Backplate'),
+      3 => array ('key' => 'Output Display', 'value' => '3x DisplayPort 2.1, 1x HDMI 2.1b'),
+      4 => array ('key' => 'Rekomendasi PSU', 'value' => 'Minimum 750W - 850W Gold'),
+      5 => array ('key' => 'Fitur AI', 'value' => '4th Gen RT Cores, 5th Gen Tensor Cores, DLSS 4'),
+    ),
+    'images' => 
+    array (
+      0 => array ('path' => 'products/colorful-geforce-rtx-5070-gaming.jpg', 'is_primary' => true, 'sort_order' => 0),
+    ),
+  ),
+  40 => 
+  array (
+    'attributes' => 
+    array (
+      'sku' => 'CS-OCY-GAMMA-C50-BK',
+      'name' => 'Ocypus Gamma C50 Black Micro-ATX Case (+ 4 Fan)',
+      'slug' => 'ocypus-gamma-c50-black-casing',
+      'category_id' => 8,
+      'brand_id' => 19,
+      'variant_group' => NULL,
+      'variant_label' => 'Black',
+      'variant_type' => 'Warna',
+      'description' => 'Casing PC Gaming Ocypus Gamma C50 Black Micro-ATX dengan panel depan mesh high-airflow dan side panel tempered glass tebal. Sudah include 4 unit kipas pendingin (3 front + 1 rear) dengan sirkulasi udara optimal.',
+      'cost_price' => 395000,
+      'price' => 514000,
+      'warranty' => 'Garansi Toko / Pabrik 1 Tahun',
+      'is_active' => true,
+    ),
+    'stock' => 5,
+    'min_stock' => 1,
+    'specs' => 
+    array (
+      0 => array ('key' => 'Form Factor', 'value' => 'Micro-ATX, Mini-ITX'),
+      1 => array ('key' => 'Bahan', 'value' => 'SPCC Steel Chassis + Tempered Glass Side'),
+      2 => array ('key' => 'Kipas Bawaan', 'value' => '4x 120mm Fans Included (3 Depan, 1 Belakang)'),
+      3 => array ('key' => 'Dukungan Radiator', 'value' => 'Hingga 240mm Top / Front'),
+      4 => array ('key' => 'Maksimal Panjang GPU', 'value' => 'Hingga 340 mm'),
+      5 => array ('key' => 'Front I/O', 'value' => '1x USB 3.0, 2x USB 2.0, HD Audio Jack'),
+    ),
+    'images' => 
+    array (
+      0 => array ('path' => 'products/ocypus-gamma-c50-black.png', 'is_primary' => true, 'sort_order' => 0),
+    ),
+  ),
+  41 => 
+  array (
+    'attributes' => 
+    array (
+      'sku' => 'PSU-CM-MWE-850-GOLD',
+      'name' => 'Cooler Master MWE Gold 850W V2 Fully Modular',
+      'slug' => 'cooler-master-mwe-gold-850w-v2-full-modular',
+      'category_id' => 7,
+      'brand_id' => 10,
+      'variant_group' => NULL,
+      'variant_label' => '850 Watt',
+      'variant_type' => 'Daya',
+      'description' => 'Power Supply Cooler Master MWE Gold 850 V2 Full Modular dengan sertifikasi 80 PLUS Gold (efisiensi 90%). Dilengkapi kabel pipih flat-black modular rapi, kipas 120mm HDB silent, dan proteksi industri lengkap (OVP, OPP, SCP, OCP, UVP, OTP).',
+      'cost_price' => 1550000,
+      'price' => 2015000,
+      'warranty' => 'Garansi Resmi Cooler Master Indonesia 5 Tahun',
+      'is_active' => true,
+    ),
+    'stock' => 4,
+    'min_stock' => 1,
+    'specs' => 
+    array (
+      0 => array ('key' => 'Total Output', 'value' => '850 Watt'),
+      1 => array ('key' => 'Efisiensi', 'value' => '80 PLUS Gold Certified (Typ. 90%)'),
+      2 => array ('key' => 'Kabel', 'value' => 'Fully Modular Flat Black Cables'),
+      3 => array ('key' => 'Ukuran Kipas', 'value' => '120mm HDB Hydro Dynamic Bearing (Silent)'),
+      4 => array ('key' => 'Proteksi Listrik', 'value' => 'OVP, OPP, SCP, OCP, UVP, OTP'),
+      5 => array ('key' => 'Dimensi', 'value' => '160 x 150 x 86 mm (ATX)'),
+    ),
+    'images' => 
+    array (
+      0 => array ('path' => 'products/cooler-master-mwe-850-gold-v2.png', 'is_primary' => true, 'sort_order' => 0),
+    ),
+  ),
+  42 => 
+  array (
+    'attributes' => 
+    array (
+      'sku' => 'KB-LOGI-MK120-COMBO',
+      'name' => 'Logitech MK120 USB Keyboard & Mouse Combo',
+      'slug' => 'logitech-mk120-usb-keyboard-mouse-combo',
+      'category_id' => 11,
+      'brand_id' => 20,
+      'variant_group' => NULL,
+      'variant_label' => 'Black Combo',
+      'variant_type' => 'Warna',
+      'description' => 'Paket keyboard dan mouse kabel USB Logitech MK120 dengan durabilitas tinggi dan kenyamanan kerja seharian. Keyboard full-size tahan tumpahan cairan (spill-resistant) dan tombol low-profile hening dipadukan dengan mouse optik presisi 1000 DPI.',
+      'cost_price' => 195000,
+      'price' => 254000,
+      'warranty' => 'Garansi Resmi Logitech Indonesia 3 Tahun',
+      'is_active' => true,
+    ),
+    'stock' => 15,
+    'min_stock' => 3,
+    'specs' => 
+    array (
+      0 => array ('key' => 'Konektivitas', 'value' => 'Kabel USB Plug-and-Play'),
+      1 => array ('key' => 'Tata Letak Keyboard', 'value' => 'Full Size dengan Numpad'),
+      2 => array ('key' => 'Fitur Keyboard', 'value' => 'Spill-Resistant (Tahan Tumpahan Cairan), Tombol Hening'),
+      3 => array ('key' => 'Sensor Mouse', 'value' => 'High-Definition Optical Tracking 1000 DPI'),
+      4 => array ('key' => 'Desain Mouse', 'value' => 'Ambidextrous (Nyaman Tangan Kanan & Kiri)'),
+      5 => array ('key' => 'Kompatibilitas', 'value' => 'Windows 11 / 10 / 8 / 7, Linux, ChromeOS'),
+    ),
+    'images' => 
+    array (
+      0 => array ('path' => 'products/logitech-mk120-combo.png', 'is_primary' => true, 'sort_order' => 0),
+    ),
+  ),
+  43 => 
+  array (
+    'attributes' => 
+    array (
+      'sku' => 'CLR-PCC-DA240-BK',
+      'name' => 'PCCooler GI-DA240 Black ARGB Dual Fan (240mm AIO Cooler)',
+      'slug' => 'pccooler-gi-da240-black-argb-liquid-cooler',
+      'category_id' => 9,
+      'brand_id' => 21,
+      'variant_group' => NULL,
+      'variant_label' => '240mm Black',
+      'variant_type' => 'Ukuran Radiator',
+      'description' => 'AIO Liquid Cooler PCCooler GI-DA240 Black dengan radiator aluminium 240mm berdensitas sirip tinggi dan dual kipas 120mm PWM ARGB. Base plate tembaga murni ultra-presisi memastikan perpindahan panas prosesor Intel Gen 14 dan Ryzen tetap dingin maksimal.',
+      'cost_price' => 575000,
+      'price' => 748000,
+      'warranty' => 'Garansi Resmi PC Cooler Indonesia 2 Tahun',
+      'is_active' => true,
+    ),
+    'stock' => 5,
+    'min_stock' => 1,
+    'specs' => 
+    array (
+      0 => array ('key' => 'Ukuran Radiator', 'value' => '240 mm (277 x 120 x 27 mm Aluminium)'),
+      1 => array ('key' => 'Kipas Pendingin', 'value' => '2x 120mm PWM Hydraulic Bearing (800-1800 RPM)'),
+      2 => array ('key' => 'Pencahayaan', 'value' => 'Addressable RGB (ARGB 5V 3-Pin Sync)'),
+      3 => array ('key' => 'Base Plate Material', 'value' => 'Pure Copper Heat Base'),
+      4 => array ('key' => 'Noise Level', 'value' => 'Max 31.5 dBA Ultra Quiet'),
+      5 => array ('key' => 'Socket Kompatibel', 'value' => 'Intel LGA 1700/1200/115x, AMD AM5/AM4'),
+    ),
+    'images' => 
+    array (
+      0 => array ('path' => 'products/pccooler-da240-black-argb.jpg', 'is_primary' => true, 'sort_order' => 0),
     ),
   ),
 );
