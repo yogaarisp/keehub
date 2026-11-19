@@ -203,8 +203,13 @@
             <div style="margin-bottom: 4px;">
                 <div class="font-bold">{{ $item->name }}</div>
                 <div class="flex-between" style="font-size: 9.5px;">
-                    <span>{{ $item->quantity }} x @ {{ number_format($item->price, 0, ',', '.') }}</span>
-                    <span>Rp {{ number_format($item->total, 0, ',', '.') }}</span>
+                    @if(! (bool) $item->bill_to_client)
+                        <span>{{ $item->quantity }} x @ Rp 0 (Garansi)</span>
+                        <span>Rp 0</span>
+                    @else
+                        <span>{{ $item->quantity }} x @ {{ number_format($item->price, 0, ',', '.') }}</span>
+                        <span>Rp {{ number_format($item->total, 0, ',', '.') }}</span>
+                    @endif
                 </div>
             </div>
             @endforeach

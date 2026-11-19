@@ -26,7 +26,10 @@
         table.totals { margin-top: 12px; margin-left: auto; width: 45%; }
         table.totals td { padding: 4px 8px; font-size: 12px; }
         table.totals .grand td { font-weight: 900; font-size: 14px; border-top: 2px solid #111827; }
-        .footer { margin-top: 40px; border-top: 1px solid #e5e7eb; padding-top: 10px; color: #6b7280; font-size: 10px; text-align: center; }
+        .signatures { margin-top: 30px; width: 100%; border-collapse: collapse; }
+        .signatures td { width: 50%; text-align: center; vertical-align: top; font-size: 11px; }
+        .sig-line { margin: 2px auto 4px auto; width: 65%; border-bottom: 1px solid #475569; }
+        .footer { margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 10px; color: #6b7280; font-size: 10px; text-align: center; }
     </style>
 </head>
 <body>
@@ -100,6 +103,33 @@
             @endforeach
         </table>
     @endif
+
+    @php
+        $stampPath = public_path('images/keehub-stamp.png');
+        $stampBase64 = file_exists($stampPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($stampPath)) : null;
+    @endphp
+    <table class="signatures">
+        <tr>
+            <td>
+                <div>Finance / Billing,</div>
+                <div style="height: 52px; margin: 4px auto;">
+                    @if ($stampBase64)
+                        <img src="{{ $stampBase64 }}" style="height: 48px; max-width: 140px;" alt="KeeHub Stamp">
+                    @else
+                        <div style="height: 48px;"></div>
+                    @endif
+                </div>
+                <div class="sig-line"></div>
+                <strong>{{ \App\Models\Setting::get('invoice_signature_name') ?: 'KeeHub Finance' }}</strong>
+            </td>
+            <td>
+                <div>Penerima Tagihan,</div>
+                <div style="height: 52px; margin: 4px auto;"></div>
+                <div class="sig-line"></div>
+                <strong>{{ $invoice->customer?->name ?? 'Pelanggan' }}</strong>
+            </td>
+        </tr>
+    </table>
 
     <div class="footer">
         KeeHub — Build. Buy. Upgrade. • Invoice ini dibuat otomatis oleh sistem • {{ config('app.name') }}

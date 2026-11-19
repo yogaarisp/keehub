@@ -317,8 +317,8 @@ class ManageSettings extends Page implements HasForms
 
                                                 TextInput::make('invoice_signature_name')
                                                     ->label('Nama Bagian Penandatangan / Finance')
-                                                    ->placeholder('Keetech Finance Dept.')
-                                                    ->helperText('Nama pihak penandatangan di bawah garis tanda tangan (Default: Keetech Finance Dept.).')
+                                                    ->placeholder('KeeHub Finance')
+                                                    ->helperText('Nama pihak penandatangan di bawah garis tanda tangan (Default: KeeHub Finance).')
                                                     ->live(debounce: 300),
                                             ]),
 

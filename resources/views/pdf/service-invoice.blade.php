@@ -162,7 +162,7 @@
             font-size: 10px;
         }
         .sig-line {
-            margin: 50px auto 4px auto;
+            margin: 2px auto 4px auto;
             width: 65%;
             border-bottom: 1px solid #475569;
         }
@@ -316,14 +316,14 @@
                     </td>
                     <td class="num">{{ $item->quantity }}</td>
                     <td class="num">
-                        @if($item->part_source === 'vendor')
+                        @if(! (bool) $item->bill_to_client)
                             <span style="color: #64748b; font-style: italic;">Rp 0</span>
                         @else
                             Rp {{ number_format($item->price, 0, ',', '.') }}
                         @endif
                     </td>
                     <td class="num">
-                        @if($item->part_source === 'vendor')
+                        @if(! (bool) $item->bill_to_client)
                             <span style="color: #64748b; font-style: italic;">Rp 0</span>
                         @else
                             Rp {{ number_format($item->total, 0, ',', '.') }}
@@ -345,16 +345,26 @@
             <td class="num">Rp {{ number_format($service->keehubPartsTotal(), 0, ',', '.') }}</td>
         </tr>
         @endif
+        @php
+            $vendorBilled = $service->items->filter(fn($i) => $i->part_source === 'vendor' && (bool) $i->bill_to_client)->sum('total');
+            $vendorUnbilled = $service->items->filter(fn($i) => $i->part_source === 'vendor' && ! (bool) $i->bill_to_client)->sum('total');
+        @endphp
+        @if($vendorBilled > 0)
+        <tr>
+            <td>Part dari Vendor:</td>
+            <td class="num">Rp {{ number_format($vendorBilled, 0, ',', '.') }}</td>
+        </tr>
+        @endif
         @if($service->laborTotal() > 0)
         <tr>
             <td>Biaya Jasa / Pengerjaan:</td>
             <td class="num">Rp {{ number_format($service->laborTotal(), 0, ',', '.') }}</td>
         </tr>
         @endif
-        @if($service->vendorPartsTotal() > 0)
+        @if($vendorUnbilled > 0)
             <tr>
-                <td style="color: #64748b; font-style: italic;">Part Disediakan Vendor:</td>
-                <td class="num" style="color: #64748b; font-style: italic;">Rp 0 (Termasuk)</td>
+                <td style="color: #64748b; font-style: italic;">Part Vendor (Garansi / Non-Tagihan):</td>
+                <td class="num" style="color: #64748b; font-style: italic;">Rp 0</td>
             </tr>
         @endif
         <tr class="grand-total">
@@ -391,12 +401,24 @@
     <table class="signatures">
         <tr>
             <td>
-                Finance / Billing,
+                <div>Finance / Billing,</div>
+                <div style="height: 52px; margin: 4px auto;">
+                    @php
+                        $stampPath = public_path('images/keehub-stamp.png');
+                        $stampBase64 = file_exists($stampPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($stampPath)) : null;
+                    @endphp
+                    @if ($stampBase64)
+                        <img src="{{ $stampBase64 }}" style="height: 48px; max-width: 140px;" alt="KeeHub Stamp">
+                    @else
+                        <div style="height: 48px;"></div>
+                    @endif
+                </div>
                 <div class="sig-line"></div>
-                <strong>{{ \App\Models\Setting::get('invoice_signature_name', 'Keetech Finance Dept.') ?: 'Keetech Finance Dept.' }}</strong>
+                <strong>{{ \App\Models\Setting::get('invoice_signature_name') ?: 'KeeHub Finance' }}</strong>
             </td>
             <td>
-                Penerima Tagihan,
+                <div>Penerima Tagihan,</div>
+                <div style="height: 52px; margin: 4px auto;"></div>
                 <div class="sig-line"></div>
                 <strong>{{ $service->customer?->name ?? 'Klien' }}</strong>
                 @if($service->company_name)

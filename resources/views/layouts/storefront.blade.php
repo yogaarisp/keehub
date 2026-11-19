@@ -34,7 +34,7 @@
             @include('shop.partials.navbar')
         </header>
 
-        <main class="flex-1 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
+        <main class="flex-1 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
             @yield('content')
         </main>
 

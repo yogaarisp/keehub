@@ -23,7 +23,7 @@ class ListServices extends ListRecords
                 ->modalHeading('Buat Tiket Servis Baru')
                 ->modalSubmitActionLabel('Simpan Tiket Servis')
                 ->modalCancelAction(false)
-                ->modalWidth(MaxWidth::FiveExtraLarge)
+                ->modalWidth(MaxWidth::SevenExtraLarge)
                 ->url(null)
                 ->mutateFormDataUsing(function (array $data): array {
                     $data['code'] = $data['code'] ?? Service::generateCode();

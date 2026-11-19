@@ -12,6 +12,7 @@ class ServiceItem extends Model
         'service_device_id',
         'item_type',
         'part_source',
+        'bill_to_client',
         'product_id',
         'name',
         'description',
@@ -24,6 +25,7 @@ class ServiceItem extends Model
     protected function casts(): array
     {
         return [
+            'bill_to_client' => 'boolean',
             'quantity' => 'integer',
             'price' => 'integer',
             'total' => 'integer',
@@ -63,13 +65,22 @@ class ServiceItem extends Model
         };
     }
 
+    public function isBilledToClient(): bool
+    {
+        if ($this->bill_to_client !== null) {
+            return (bool) $this->bill_to_client;
+        }
+
+        return ! $this->isFromVendor();
+    }
+
     public function invoicePrice(): int
     {
-        return $this->isFromVendor() ? 0 : (int) $this->price;
+        return $this->isBilledToClient() ? (int) $this->price : 0;
     }
 
     public function invoiceTotal(): int
     {
-        return $this->isFromVendor() ? 0 : (int) $this->total;
+        return $this->isBilledToClient() ? (int) $this->total : 0;
     }
 }

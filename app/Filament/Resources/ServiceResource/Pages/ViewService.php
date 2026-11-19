@@ -196,6 +196,13 @@ class ViewService extends ViewRecord
                                             ->color(fn ($state): string => $state === 'vendor' ? 'warning' : 'info')
                                             ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
 
+                                        TextEntry::make('bill_to_client')
+                                            ->label('Penagihan')
+                                            ->badge()
+                                            ->formatStateUsing(fn ($state): string => (bool) $state ? 'Ditagihkan' : 'Non-Tagihan (Rp 0)')
+                                            ->color(fn ($state): string => (bool) $state ? 'success' : 'gray')
+                                            ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
+
                                         TextEntry::make('warranty_info')
                                             ->label('Garansi')
                                             ->placeholder('—')
@@ -208,7 +215,7 @@ class ViewService extends ViewRecord
                                         TextEntry::make('price')
                                             ->label('Harga Satuan')
                                             ->money('IDR')
-                                            ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 2]),
+                                            ->columnSpan(['default' => 1, 'sm' => 1, 'lg' => 1]),
 
                                         TextEntry::make('total')
                                             ->label('Subtotal')

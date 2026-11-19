@@ -7,7 +7,7 @@
 @endphp
 
 {{-- iOS Floating Glassmorphism Bottom Navigation Bar --}}
-<nav class="fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] inset-x-3 sm:inset-x-6 max-w-lg mx-auto z-50 md:hidden pointer-events-none">
+<nav class="fixed bottom-[calc(0.25rem+env(safe-area-inset-bottom,0px))] inset-x-3 sm:inset-x-6 max-w-lg mx-auto z-50 md:hidden pointer-events-none">
     <div class="pointer-events-auto relative flex items-center justify-around h-16 rounded-[1.75rem] border border-white/70 bg-white/80 px-1.5 shadow-[0_12px_32px_-4px_rgba(0,0,0,0.12),0_4px_12px_-2px_rgba(0,0,0,0.06)] backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/80 dark:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.5)]">
         {{-- Home --}}
         <a href="{{ route('home') }}"

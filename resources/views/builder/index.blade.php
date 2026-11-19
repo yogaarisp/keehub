@@ -374,7 +374,7 @@ $slotMeta = [
     </div>
 
     {{-- Mobile Floating Summary Bar (Positioned above mobile-nav) --}}
-    <div class="fixed bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px))] left-0 right-0 z-40 border-t border-gray-200 bg-white/95 p-3.5 backdrop-blur dark:border-gray-800 dark:bg-gray-950/95 lg:hidden">
+    <div class="fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] left-0 right-0 z-40 border-t border-gray-200 bg-white/95 p-3.5 backdrop-blur dark:border-gray-800 dark:bg-gray-950/95 lg:hidden">
         <div class="mx-auto flex max-w-7xl items-center justify-between gap-3">
             <div class="min-w-0">
                 <div class="flex items-center gap-1.5">

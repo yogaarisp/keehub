@@ -340,8 +340,16 @@
                             <span class="badge-source badge-labor">JASA / LABOR</span>
                         @elseif($item->part_source === 'vendor')
                             <span class="badge-source badge-vendor">DARI VENDOR</span>
+                            @if(! (bool) $item->bill_to_client)
+                                <div style="font-size: 8px; color: #b45309; font-weight: bold; margin-top: 2px;">(Rp 0 di Invoice)</div>
+                            @else
+                                <div style="font-size: 8px; color: #15803d; font-weight: bold; margin-top: 2px;">(Ditagihkan)</div>
+                            @endif
                         @else
                             <span class="badge-source badge-keehub">DARI KEEHUB</span>
+                            @if(! (bool) $item->bill_to_client)
+                                <div style="font-size: 8px; color: #b45309; font-weight: bold; margin-top: 2px;">(Rp 0 di Invoice)</div>
+                            @endif
                         @endif
                     </td>
                     <td>{{ $item->warranty_info ?: '-' }}</td>

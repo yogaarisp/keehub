@@ -22,7 +22,7 @@ class ListOrders extends ListRecords
                 ->modalHeading('Buat Pesanan Baru')
                 ->modalSubmitActionLabel('Simpan Pesanan')
                 ->modalCancelAction(false)
-                ->modalWidth(MaxWidth::FiveExtraLarge)
+                ->modalWidth(MaxWidth::SevenExtraLarge)
                 ->url(null)
                 ->mutateFormDataUsing(function (array $data): array {
                     $data['channel'] = $data['channel'] ?? 'admin';

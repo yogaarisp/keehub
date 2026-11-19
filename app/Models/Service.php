@@ -150,7 +150,7 @@ class Service extends Model
     public function invoiceTotal(): int
     {
         return (int) $this->items
-            ->filter(fn (ServiceItem $item) => $item->part_source !== 'vendor')
+            ->filter(fn (ServiceItem $item) => (bool) ($item->bill_to_client ?? true))
             ->sum('total');
     }
 

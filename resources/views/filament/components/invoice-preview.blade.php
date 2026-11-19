@@ -12,7 +12,7 @@
     $defaultTagline = 'IT Solutions & PC Hardware Specialist';
     $defaultContact = $storeAddress . ' • WhatsApp: ' . $storePhone . "\nEmail: " . $storeEmail . ' • Website: ' . config('app.url');
     $defaultPayment = "Instruksi Pembayaran Bank Transfer:\n" . $bankName . ": " . $bankAcc . ($bankHolder ? " a/n " . $bankHolder : "") . "\n*Mohon cantumkan No. Invoice pada berita transfer.";
-    $defaultSignature = 'Keetech Finance Dept.';
+    $defaultSignature = 'KeeHub Finance';
     $defaultServiceFooter = 'Terima kasih atas kepercayaan Anda kepada Keetech & KeeHub. Hubungi tim kami jika terdapat pertanyaan terkait tagihan ini.';
     $defaultWarranty = 'Garansi servis berlaku selama 14 hari terhitung sejak tanggal unit selesai dikerjakan. Tidak mencakup kerusakan akibat cairan atau kelalaian pengguna.';
 @endphp
@@ -333,12 +333,16 @@
                     <div class="grid grid-cols-2 text-center text-[9px] text-slate-600">
                         <div>
                             <div class="sig-label">Finance / Billing,</div>
-                            <div class="sig-line w-20 border-b border-slate-400 mx-auto mt-6 mb-1"></div>
+                            <div class="h-8 my-1 flex items-center justify-center">
+                                <img src="{{ asset('images/keehub-stamp.png') }}" class="h-7 max-w-[100px] object-contain opacity-90 mx-auto" alt="KeeHub Stamp" />
+                            </div>
+                            <div class="sig-line w-20 border-b border-slate-400 mx-auto mb-1"></div>
                             <div class="sig-name font-bold text-slate-900" x-text="signatureName || defaults.signature"></div>
                         </div>
                         <div>
                             <div class="sig-label">Penerima Tagihan,</div>
-                            <div class="sig-line w-20 border-b border-slate-400 mx-auto mt-6 mb-1"></div>
+                            <div class="h-8 my-1"></div>
+                            <div class="sig-line w-20 border-b border-slate-400 mx-auto mb-1"></div>
                             <div class="sig-name font-bold text-slate-900">Bpk. Hendra Wijaya</div>
                         </div>
                     </div>

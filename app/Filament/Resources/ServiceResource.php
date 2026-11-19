@@ -148,10 +148,11 @@ class ServiceResource extends Resource
                                                 $set('price', $product->price);
                                                 $set('item_type', 'product');
                                                 $set('part_source', 'keehub');
+                                                $set('bill_to_client', true);
                                             }
                                         })
                                         ->live()
-                                        ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 6]),
+                                        ->columnSpan(['default' => 12, 'md' => 6]),
 
                                     Select::make('service_device_id')
                                         ->label('Untuk Unit Perangkat (Opsional)')
@@ -175,13 +176,13 @@ class ServiceResource extends Resource
                                             return [];
                                         })
                                         ->placeholder('Semua Unit / Umum')
-                                        ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 6]),
+                                        ->columnSpan(['default' => 12, 'md' => 6]),
 
                                     TextInput::make('name')
                                         ->label('Nama Item / Jasa')
                                         ->required()
-                                        ->placeholder('Contoh: Thermal Paste Arctic MX-6 / Jasa Deep Cleaning')
-                                        ->columnSpan(['default' => 2, 'sm' => 2, 'md' => 6]),
+                                        ->placeholder('Contoh: Rool P.Kertas Epson L5190 / Gear Box / Jasa Service Printer')
+                                        ->columnSpan(['default' => 12, 'md' => 8]),
 
                                     Select::make('item_type')
                                         ->label('Jenis Item')
@@ -192,19 +193,38 @@ class ServiceResource extends Resource
                                         ->default('product')
                                         ->required()
                                         ->live()
-                                        ->columnSpan(['default' => 1, 'sm' => 1, 'md' => 3]),
+                                        ->columnSpan(['default' => 12, 'md' => 4]),
 
                                     Select::make('part_source')
-                                        ->label('Sumber Part')
+                                        ->label('Sumber Part / Asal')
                                         ->options([
-                                            'keehub' => 'Dari KeeHub',
-                                            'vendor' => 'Dari Vendor',
+                                            'keehub' => '🏢 Dari KeeHub (Stok Sendiri)',
+                                            'vendor' => '🚚 Dari Vendor / Luar',
                                         ])
                                         ->default('keehub')
                                         ->required()
                                         ->live()
-                                        ->helperText(fn (Get $get): ?string => $get('part_source') === 'vendor' ? 'Dicatat ke Work Order, Rp 0 di Invoice klien.' : null)
-                                        ->columnSpan(['default' => 1, 'sm' => 1, 'md' => 3]),
+                                        ->afterStateUpdated(function (Get $get, Set $set, ?string $state): void {
+                                            if ($state === 'keehub') {
+                                                $set('bill_to_client', true);
+                                            }
+                                        })
+                                        ->columnSpan(['default' => 12, 'md' => 6]),
+
+                                    Select::make('bill_to_client')
+                                        ->label('Opsi Tagihan ke Invoice Klien')
+                                        ->options([
+                                            1 => '✅ Tetap Munculkan (Ditagihkan ke Klien)',
+                                            0 => '📝 Catat ke Work Order Saja (Rp 0 di Invoice)',
+                                        ])
+                                        ->default(1)
+                                        ->required()
+                                        ->live()
+                                        ->helperText(fn (Get $get): ?string => (int) $get('bill_to_client') === 0
+                                            ? 'Dicatat riil di Work Order toko, Rp 0 di Invoice klien (garansi/klaim).'
+                                            : null
+                                        )
+                                        ->columnSpan(['default' => 12, 'md' => 6]),
 
                                     TextInput::make('quantity')
                                         ->label('Qty')
@@ -213,7 +233,7 @@ class ServiceResource extends Resource
                                         ->minValue(1)
                                         ->required()
                                         ->live(debounce: 350)
-                                        ->columnSpan(['default' => 1, 'sm' => 1, 'md' => 2]),
+                                        ->columnSpan(['default' => 6, 'md' => 2]),
 
                                     TextInput::make('price')
                                         ->label('Harga Satuan')
@@ -222,24 +242,30 @@ class ServiceResource extends Resource
                                         ->default(0)
                                         ->required()
                                         ->live(debounce: 350)
-                                        ->columnSpan(['default' => 1, 'sm' => 1, 'md' => 4]),
+                                        ->columnSpan(['default' => 6, 'md' => 4]),
 
                                     TextInput::make('warranty_info')
                                         ->label('Garansi')
                                         ->placeholder('Contoh: 1 Bulan / 1 Tahun')
-                                        ->columnSpan(['default' => 1, 'sm' => 1, 'md' => 3]),
+                                        ->columnSpan(['default' => 12, 'md' => 3]),
 
                                     TextInput::make('description')
                                         ->label('Keterangan / Serial Part')
-                                        ->placeholder('SN / Catatan teknis')
-                                        ->columnSpan(['default' => 1, 'sm' => 1, 'md' => 3]),
+                                        ->placeholder('SN / Catatan teknis part')
+                                        ->columnSpan(['default' => 12, 'md' => 3]),
                                 ])
-                                ->columns(['default' => 2, 'sm' => 2, 'md' => 12])
+                                ->columns(['default' => 1, 'md' => 12])
                                 ->live()
                                 ->defaultItems(0)
                                 ->addActionLabel('+ Tambah Item / Jasa')
                                 ->itemLabel(fn (array $state): ?string => filled($state['name'] ?? null)
-                                    ? ($state['name'].' ('.($state['quantity'] ?? 1).'x'.(isset($state['price']) ? ' @ Rp '.number_format((int) $state['price'], 0, ',', '.') : '').' • '.(($state['part_source'] ?? '') === 'vendor' ? 'Vendor' : 'KeeHub').')')
+                                    ? ($state['name']
+                                        .' ('.($state['quantity'] ?? 1).'x'
+                                        .(isset($state['price']) ? ' @ Rp '.number_format((int) $state['price'], 0, ',', '.') : '')
+                                        .' • '.((($state['part_source'] ?? '') === 'vendor') ? 'Vendor' : 'KeeHub')
+                                        .((isset($state['bill_to_client']) && ! (bool) $state['bill_to_client']) ? ' • Rp 0 di Invoice' : '')
+                                        .')'
+                                    )
                                     : null
                                 )
                                 ->collapsible()
@@ -259,7 +285,7 @@ class ServiceResource extends Resource
 
                                     return new HtmlString('<span style="font-size: 1.25rem; font-weight: 700; color: #059669; font-variant-numeric: tabular-nums;">Rp '.number_format($totals['invoice'], 0, ',', '.').'</span>');
                                 })
-                                ->helperText('Hanya menghitung Part KeeHub + Jasa')
+                                ->helperText('Total nominal yang ditagihkan ke klien')
                                 ->columnSpanFull(),
 
                             Placeholder::make('live_work_order_total')
@@ -354,6 +380,7 @@ class ServiceResource extends Resource
     {
         $invoice = 0;
         $vendor = 0;
+        $workOrder = 0;
 
         foreach ($items as $item) {
             if (! is_array($item)) {
@@ -363,16 +390,25 @@ class ServiceResource extends Resource
             $price = max(0, (int) ($item['price'] ?? 0));
             $lineTotal = $qty * $price;
 
-            if (($item['part_source'] ?? 'keehub') === 'vendor') {
+            $workOrder += $lineTotal;
+
+            $isVendor = ($item['part_source'] ?? 'keehub') === 'vendor';
+            if ($isVendor) {
                 $vendor += $lineTotal;
-            } else {
+            }
+
+            $billToClient = array_key_exists('bill_to_client', $item)
+                ? (bool) $item['bill_to_client']
+                : ! $isVendor;
+
+            if ($billToClient) {
                 $invoice += $lineTotal;
             }
         }
 
         return [
             'invoice' => $invoice,
-            'work_order' => $invoice + $vendor,
+            'work_order' => $workOrder,
             'vendor' => $vendor,
         ];
     }
@@ -577,12 +613,13 @@ class ServiceResource extends Resource
             $msg .= "\n*Rincian Suku Cadang & Jasa:*\n";
             $idx = 1;
             foreach ($service->items as $item) {
-                if ($item->part_source === 'vendor') {
-                    $priceText = 'Part Vendor (Garansi)';
+                if (! (bool) $item->bill_to_client) {
+                    $priceText = 'Rp 0 (Garansi / Non-Tagihan)';
                 } else {
                     $priceText = 'Rp '.number_format($item->total, 0, ',', '.');
                 }
-                $msg .= "{$idx}. {$item->name} ({$item->quantity}x) : {$priceText}\n";
+                $sourceBadge = $item->part_source === 'vendor' ? ' [Vendor]' : '';
+                $msg .= "{$idx}. {$item->name}{$sourceBadge} ({$item->quantity}x) : {$priceText}\n";
                 $idx++;
             }
         }

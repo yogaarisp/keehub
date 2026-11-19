@@ -50,6 +50,7 @@ class ServiceFeatureTest extends TestCase
             'service_id' => $service->id,
             'item_type' => 'product',
             'part_source' => 'vendor',
+            'bill_to_client' => false,
             'name' => 'Motherboard Replacement (Garansi Vendor)',
             'quantity' => 1,
             'price' => 3500000,
@@ -114,6 +115,30 @@ class ServiceFeatureTest extends TestCase
 
         // Vendor parts total
         $this->assertEquals(3500000, $service->vendorPartsTotal());
+    }
+
+    public function test_vendor_part_billed_to_client_is_included_in_invoice(): void
+    {
+        $service = Service::query()->create([
+            'code' => 'SVC-VENDOR-01',
+            'customer_id' => null,
+            'service_type' => 'troubleshooting',
+            'status' => 'processing',
+        ]);
+
+        ServiceItem::query()->create([
+            'service_id' => $service->id,
+            'item_type' => 'product',
+            'part_source' => 'vendor',
+            'bill_to_client' => true,
+            'name' => 'Rool P.Kertas Epson L5190',
+            'quantity' => 1,
+            'price' => 150000,
+            'total' => 150000,
+        ]);
+
+        $this->assertEquals(150000, $service->invoiceTotal());
+        $this->assertEquals(150000, $service->workOrderTotal());
     }
 
     public function test_admin_can_download_work_order_and_invoice_pdf(): void

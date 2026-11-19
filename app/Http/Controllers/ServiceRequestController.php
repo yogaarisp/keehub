@@ -52,12 +52,17 @@ class ServiceRequestController extends Controller
             }
         }
 
+        $activeTab = $request->routeIs('service.create')
+            ? 'request'
+            : ($request->query('tab', $searched ? 'track' : 'track'));
+
         return view('shop.service-tracker', [
             'search' => $search,
             'searched' => $searched,
             'services' => $services,
             'selectedService' => $selectedService,
             'serviceTypes' => Service::TYPES,
+            'activeTab' => $activeTab,
         ]);
     }
 
