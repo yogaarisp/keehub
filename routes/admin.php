@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\InvoicePdfController;
+use App\Http\Controllers\Admin\ProjectInvoicePdfController;
 use App\Http\Controllers\Admin\QuotationPdfController;
 use App\Http\Controllers\Admin\ServicePdfController;
 use App\Http\Controllers\Admin\ThermalReceiptController;
@@ -14,6 +15,8 @@ Route::middleware(['web', 'auth', EnsureAdminAccess::class])->prefix('admin')->g
     Route::redirect('/service', '/admin/services');
     Route::get('/quotations/{quotation}/pdf', [QuotationPdfController::class, 'stream'])->name('admin.quotation.pdf');
     Route::get('/quotations/{quotation}/pdf/download', [QuotationPdfController::class, 'download'])->name('admin.quotation.pdf.download');
+    Route::get('/project-invoices/{projectInvoice}/pdf', [ProjectInvoicePdfController::class, 'stream'])->name('admin.project-invoice.pdf');
+    Route::get('/project-invoices/{projectInvoice}/pdf/download', [ProjectInvoicePdfController::class, 'download'])->name('admin.project-invoice.pdf.download');
     Route::get('/invoices/{invoice}/pdf', [InvoicePdfController::class, 'download'])->name('admin.invoice.pdf');
     Route::get('/services/{service}/work-order-pdf', [ServicePdfController::class, 'workOrder'])->name('admin.service.work-order.pdf');
     Route::get('/services/{service}/invoice-pdf', [ServicePdfController::class, 'invoice'])->name('admin.service.invoice.pdf');
